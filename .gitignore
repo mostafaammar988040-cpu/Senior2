@@ -137,3 +137,14 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+# ===== ASP.NET Core =====
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+
+# Rider / VS
+.idea/
