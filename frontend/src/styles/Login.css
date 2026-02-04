@@ -1,0 +1,139 @@
+.background {
+    background-image: url("/images/beirut-bg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: -2; /* IMPORTANT */
+}
+.background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1; /* IMPORTANT */
+}
+.form-container {
+    width: 420px;
+    padding: 90px 45px 40px;
+
+    background: rgba(255, 255, 255, 0.20);
+    backdrop-filter: blur(20px);
+
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.45),
+        inset 0 0 50px rgba(255,255,255,0.1);
+
+    position: absolute;
+    top: 50%;
+    right: 2%;          /* 👈 move to right */
+    transform: translateY(-50%);
+
+    z-index: 2;
+}
+
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 46px;
+    margin-bottom: 10px;
+}
+
+.logo h1 {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+.input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+
+    background: rgba(255,255,255,0.95);
+    border: none;
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    outline: none;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+    transition: 0.25s ease;
+}
+
+.input:focus {
+    box-shadow:
+        inset 0 0 0 2px #0a5e2a,
+        0 0 10px rgba(10,94,42,0.25);
+}
+
+.submit-btn {
+    margin-top: 10px;
+    padding: 15px 0;
+
+    background: linear-gradient(135deg, #2b00ff, #2b00ff);
+    color: white;
+
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.45);
+}
+
+.google-btn {
+    margin-top: 18px;
+    padding: 14px;
+
+    border-radius: 14px;
+    border: none;
+
+    background: white;
+    font-weight: 600;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.already {
+    margin-top: 20px;
+    font-size: 20px;
+    opacity: 2;
+        color:aliceblue;
+
+}
+
+.already a {
+    color: #2b00ff;
+    font-weight: 700;
+}
+
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+

@@ -13,5 +13,7 @@ namespace Senior2.Api.Data
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<ActivityType> ActivityTypes { get; set; } = null!;
         public DbSet<Place> Places { get; set; } = null!;
+        public DbSet<Users> Users { get; set; }
+
     }
 }
