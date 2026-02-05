@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminReviews from "./pages/AdminReviews";
 import AdminUsers from "./pages/AdminUsers";
 import Preferences from "./pages/Preferences";
+import Introduction from "./pages/Introduction";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
 
 </Route>
 <Route path="/preferences" element={<Preferences />} />
+<Route path="/introduction" element={<Introduction />} />
 
     </Routes>
   );
