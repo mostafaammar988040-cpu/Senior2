@@ -1,0 +1,190 @@
+/* ===== MAIN CONTAINER ===== */
+
+.pref-container {
+  min-height: 100vh;
+  padding: 60px 40px;
+
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124,92,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(49,208,170,0.18), transparent 45%),
+    linear-gradient(180deg,#020617,#020617 60%,#020617);
+
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pref-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== PROGRESS BAR ===== */
+
+.progress-bar {
+  width: 420px;
+  height: 7px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 45px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg,#7c5cff,#31d0aa);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(124,92,255,0.5);
+}
+
+/* ===== CARD GRID ===== */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 28px;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* ===== CARD DESIGN ===== */
+
+.pref-card {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+
+  backdrop-filter: blur(18px);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.35s ease;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+
+.pref-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+
+  filter: brightness(0.65);
+  transition: 0.4s;
+}
+
+/* Gradient overlay */
+.pref-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+  pointer-events: none;
+}
+
+/* Label */
+.pref-card span {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* ===== HOVER EFFECT ===== */
+
+.pref-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 55px rgba(0,0,0,0.5);
+}
+
+.pref-card:hover img {
+  filter: brightness(0.85);
+}
+
+/* ===== SELECTED CARD ===== */
+
+.pref-card.selected {
+  border: 2px solid #31d0aa;
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 2px rgba(49,208,170,0.3),
+    0 0 25px rgba(49,208,170,0.45),
+    0 20px 60px rgba(0,0,0,0.55);
+}
+
+/* ===== BUTTONS ===== */
+
+.pref-actions {
+  margin-top: 50px;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+
+/* CONTINUE BUTTON */
+
+.continue-btn {
+  padding: 14px 34px;
+  border-radius: 14px;
+  border: none;
+
+  background: linear-gradient(135deg,#7c5cff,#31d0aa);
+  color: white;
+
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+
+  box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+  transition: 0.3s;
+}
+
+.continue-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+}
+
+/* SKIP BUTTON */
+
+.skip-btn {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.skip-btn:hover {
+  color: white;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:900px){
+
+  .card-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .progress-bar {
+    width: 90%;
+  }
+}
+
+@media(max-width:550px){
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pref-container h2 {
+    font-size: 22px;
+  }
+}

@@ -4,7 +4,11 @@ import "../styles/Homepage.css";
 export default function Navbar() {
   return (
     <nav>
-      <h2>AHLA BI HA TTALLEH</h2>
+      <h1>
+            <span style={{ color: "#d62828" }}>AHLA</span>{" "}
+            <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
+            <span style={{ color: "#000000" }}>TALLEH</span>
+          </h1>
       <div>
         <Link to="/">Home</Link>
         <Link to="/explore">Explore</Link>

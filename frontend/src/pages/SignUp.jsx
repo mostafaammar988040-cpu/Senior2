@@ -34,7 +34,7 @@ function SignUp() {
       });
 
       alert("Account created successfully!");
-      navigate("/"); // go to login
+navigate("/preferences");
     } catch (error) {
       const message =
         error.response?.data ||

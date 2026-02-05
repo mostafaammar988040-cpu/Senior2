@@ -1,0 +1,57 @@
+.admin-page {
+  padding: 25px;
+  color: white;
+}
+
+.admin-page h2 {
+  margin-bottom: 20px;
+}
+
+/* Search */
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 20px;
+  background: #0b1426;
+  color: white;
+}
+
+/* Table */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0b1426;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+}
+
+.admin-table th {
+  opacity: 0.7;
+}
+
+/* Buttons */
+
+.danger-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ff5c7a;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.danger-btn:hover {
+  transform: translateY(-2px);
+}

@@ -26,7 +26,7 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert("Login successful!");
-      navigate("/");
+navigate("/preferences");
     } catch (error) {
       const message =
         error.response?.data ||
