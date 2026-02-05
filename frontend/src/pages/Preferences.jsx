@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Preferences.css";
 
 const interests = [
@@ -20,8 +21,8 @@ const activities = [
 ];
 
 function Preferences() {
-
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
 
   const [selected, setSelected] = useState({
     interests: [],
@@ -61,8 +62,6 @@ function Preferences() {
 
   return (
     <div className="pref-container">
-
-      {/* Progress */}
       <div className="progress-bar">
         <div
           className="progress-fill"
@@ -72,7 +71,6 @@ function Preferences() {
 
       <h2>{title}</h2>
 
-      {/* Cards */}
       <div className="card-grid">
         {currentData.map(item => (
           <div
@@ -88,12 +86,10 @@ function Preferences() {
         ))}
       </div>
 
-      {/* Buttons */}
       <div className="pref-actions">
-
         <button
           className="skip-btn"
-          onClick={() => setStep(4)}
+          onClick={() => navigate("/introduction")}
         >
           Skip
         </button>
@@ -110,14 +106,12 @@ function Preferences() {
         {step === 3 && (
           <button
             className="continue-btn"
-            onClick={() => console.log("Preferences:", selected)}
+            onClick={() => navigate("/introduction")}
           >
             Finish
           </button>
         )}
-
       </div>
-
     </div>
   );
 }
