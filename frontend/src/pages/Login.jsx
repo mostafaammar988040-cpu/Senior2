@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+
 import "../styles/Login.css";
 
 function Login() {
@@ -25,45 +26,41 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      alert("Login successful!");
-navigate("/preferences");
+      navigate("/preferences");
     } catch (error) {
       const message =
-        error.response?.data ||
-        "Invalid email or password";
+        error.response?.data || "Invalid email or password";
 
       alert(message);
     }
   };
 
-  const handleGoogleLogin = () => {
-    alert("Google login will be implemented later");
-  };
-
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    navigate("/signup");
-  };
-
   return (
-    <>
-      <div className="background"></div>
+   <div className="login-page">
 
-      <div className="form-container">
-        <div className="logo">
-          <img src="/images/cedar-icon.png" alt="Logo" />
-          <h1>
-            <span style={{ color: "#d62828" }}>AHLA</span>{" "}
-            <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-            <span style={{ color: "#000000" }}>TALLEH</span>
-          </h1>
+  {/* Background */}
+  <div className="background"></div>
+
+  <div className="login-wrapper">
+
+    {/* GLASS CARD */}
+    <div className="login-card">
+
+      {/* CONTENT */}
+      <div className="arch-content">
+
+        <div className="cedar-logo">
+          <img src="/images/cedar.png" alt="Cedar  Logo"/>
         </div>
 
+        <h1>Welcome to Lebanon</h1>
+        <h4>Discover the beauty of the Middle East</h4>
+
         <form onSubmit={handleLogin}>
+
           <input
             type="text"
             placeholder="Email or Username"
-            className="input"
             value={emailOrUsername}
             onChange={(e) => setEmailOrUsername(e.target.value)}
           />
@@ -71,33 +68,25 @@ navigate("/preferences");
           <input
             type="password"
             placeholder="Password"
-            className="input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit" className="submit-btn">
-            Log In
+          <button type="submit" className="login-btn">
+            Login
           </button>
 
-          <button
-            type="button"
-            className="google-btn"
-            onClick={handleGoogleLogin}
-          >
-            <img src="/images/google.png" alt="Google" />
-            Continue with Google
-          </button>
+          <div className="links">
+            <span onClick={() => navigate("/signup")}>Sign Up</span>
+            <span>Forgot Password?</span>
+          </div>
 
-          <p className="already">
-            Don&apos;t have an account?{" "}
-            <a href="#" onClick={handleSignUp}>
-              Sign Up
-            </a>
-          </p>
         </form>
+
       </div>
-    </>
+    </div>
+  </div>
+</div>
   );
 }
 

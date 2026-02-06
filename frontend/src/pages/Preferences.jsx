@@ -62,6 +62,7 @@ function Preferences() {
 
   return (
     <div className="pref-container">
+      <div className="pref-panel">
       <div className="progress-bar">
         <div
           className="progress-fill"
@@ -85,7 +86,6 @@ function Preferences() {
           </div>
         ))}
       </div>
-
       <div className="pref-actions">
         <button
           className="skip-btn"
@@ -111,6 +111,7 @@ function Preferences() {
             Finish
           </button>
         )}
+      </div>
       </div>
     </div>
   );

@@ -34,81 +34,90 @@ function SignUp() {
       });
 
       alert("Account created successfully!");
-navigate("/preferences");
+      navigate("/preferences");
     } catch (error) {
       const message =
-        error.response?.data ||
-        "Something went wrong during signup";
+        error.response?.data || "Something went wrong during signup";
 
       alert(message);
     }
   };
 
   return (
-    <>
-      <div className="background"></div>
+  <div className="login-page">
 
-      <div className="form-container">
-        <div className="logo">
-          <img src="/images/cedar-icon.png" alt="Logo" />
-          <h1>
-            <span style={{ color: "#d62828" }}>AHLA</span>{" "}
-            <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-            <span style={{ color: "#000000" }}>TALLEH</span>
-          </h1>
+    {/* Background */}
+    <div className="background"></div>
+
+    <div className="login-wrapper">
+
+      {/* GLASS CARD */}
+      <div className="login-card">
+
+        {/* CONTENT */}
+        <div className="arch-content">
+
+          <div className="cedar-logo">
+                      <img src="/images/cedar.png" alt="Cedar  Logo"/>
+
+          </div>
+
+          <h2>Create Account</h2>
+
+          <form onSubmit={handleSignUp}>
+
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+
+            <button type="submit" className="login-btn">
+              Create Account
+            </button>
+
+            <div className="links">
+              <span onClick={() => navigate("/login")}>
+                Already have an account?
+              </span>
+            </div>
+
+          </form>
+
         </div>
-
-        <form onSubmit={handleSignUp}>
-          <input
-            type="text"
-            placeholder="First Name"
-            className="input"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="input"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-
-          <input
-            type="email"
-            placeholder="Email"
-            className="input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="input"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-
-          <button type="submit" className="submit-btn">
-            Create Account
-          </button>
-
-          <p className="already">
-            Already have an account? <a href="/">Log In</a>
-          </p>
-        </form>
       </div>
-    </>
+    </div>
+  </div>
+
   );
 }
 
