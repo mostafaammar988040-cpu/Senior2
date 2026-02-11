@@ -1,0 +1,156 @@
+/* GLOBAL BACKGROUND */
+.chat {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top left, #f8f9fa, #e9ecef);
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* MAIN CHAT CONTAINER */
+.chat-wrapper {
+  width: 90%;
+  max-width: 1100px;
+  height: 90vh;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  border-radius: 25px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* HEADER */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 40px;
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo img {
+  width: 55px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+}
+
+.logo h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.ai-subtitle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #666;
+}
+
+/* CHAT AREA */
+.chat-messages {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* MESSAGE BUBBLES */
+.user-message,
+.ai-message {
+  padding: 15px 22px;
+  border-radius: 25px;
+  max-width: 65%;
+  font-size: 15px;
+  line-height: 1.5;
+  animation: slideIn 0.25s ease-out;
+  position: relative;
+}
+
+/* USER */
+.user-message {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #e10600, #8c0000);
+  color: white;
+  box-shadow: 0 10px 25px rgba(225, 6, 0, 0.25);
+}
+
+/* AI */
+.ai-message {
+  align-self: flex-start;
+  background: white;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* INPUT SECTION */
+.chat-input-area {
+  padding: 25px 40px;
+  background: transparent;
+}
+
+.input-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 50px;
+  padding: 12px 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.input-card:focus-within {
+  box-shadow: 0 15px 40px rgba(225, 6, 0, 0.3);
+}
+
+.input-card input {
+  flex: 1;
+  border: none;
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+  color: #333;
+}
+
+/* SEND BUTTON */
+.input-card button {
+  background: linear-gradient(135deg, #e10600, #8c0000);
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.input-card button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(225, 6, 0, 0.4);
+}
+
+/* ANIMATION */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

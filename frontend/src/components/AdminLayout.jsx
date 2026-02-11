@@ -12,7 +12,6 @@ function AdminLayout() {
   return (
     <div className="admin-dashboard">
 
-      {/* Sidebar */}
       <aside className="sidebar">
 
         <div className="brand">

@@ -13,7 +13,7 @@ export default function Navbar() {
         <Link to="/">Home</Link>
         <Link to="/explore">Explore</Link>
         <Link to="/events">Events</Link>
-        <Link to="/ai">AI Assistant</Link>
+        <Link to="/ai-assistant">AI Assistant</Link>
         <Link to="/login">Login</Link>
       </div>
     </nav>

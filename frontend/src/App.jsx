@@ -8,6 +8,7 @@ import AdminReviews from "./pages/AdminReviews";
 import AdminUsers from "./pages/AdminUsers";
 import Preferences from "./pages/Preferences";
 import Introduction from "./pages/Introduction";
+import AIAssistant from "./pages/ai-assistant/AIAssistant";
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
 </Route>
 <Route path="/preferences" element={<Preferences />} />
 <Route path="/introduction" element={<Introduction />} />
-
+<Route path="/ai-assistant"element={<AIAssistant/>}/>
     </Routes>
   );
 }

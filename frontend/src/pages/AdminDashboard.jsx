@@ -68,7 +68,6 @@ function AdminDashboard() {
   return (
     <div className="dashboard-container">
 
-      {/* Welcome */}
       <h2 className="dashboard-title">
 
             <span style={{ color: " #000000"}}> Welcome Back Admin</span>{""} 
