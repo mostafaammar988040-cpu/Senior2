@@ -8,7 +8,7 @@ function AdminReviews() {
   const [reviews, setReviews] = useState([
     {
       id: 1,
-      user: "Maya Haddad",
+      user: "Maaya Haddad",
       place: "Jeita Grotto",
       rating: 5,
       comment: "Amazing place!"

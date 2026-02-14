@@ -40,6 +40,7 @@ export default function Navbar() {
         <Link to="/explore">Explore</Link>
         <Link to="/events">Events</Link>
         <Link to="/ai-assistant">AI Assistant</Link>
+<<<<<<< HEAD
 
         {isLoggedIn ? (
           <span
@@ -51,6 +52,12 @@ export default function Navbar() {
         ) : (
           <Link to="/login">Login</Link>
         )}
+=======
+        <Link to="/login">Login</Link>
+         <Link to="/SmartItineraryintro">SmartItineraryintro</Link>
+        
+
+>>>>>>> b7fbef53bd16cd465c644d9fd340d9c52a20f9cd
       </div>
     </nav>
   );
