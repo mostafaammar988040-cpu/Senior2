@@ -15,6 +15,9 @@ export default function Navbar() {
         <Link to="/events">Events</Link>
         <Link to="/ai-assistant">AI Assistant</Link>
         <Link to="/login">Login</Link>
+         <Link to="/SmartItineraryintro">SmartItineraryintro</Link>
+        
+
       </div>
     </nav>
   );

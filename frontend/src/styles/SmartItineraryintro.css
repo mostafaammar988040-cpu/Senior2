@@ -1,0 +1,87 @@
+.form-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  margin-top: 30px;
+  color: #0a3d62;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select,
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.date-row {
+  display: flex;
+  gap: 10px;
+}
+
+.budget-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.options-row button {
+  border: 1px solid #0dc052;   
+  background: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+
+.options-row button:hover {
+  background: #0dc052;
+  color: white;
+}
+
+textarea {
+  height: 100px;
+}
+
+.estimated-box {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 15px;
+  background: linear-gradient(90deg, #0077b6, #00b894);
+  color: white;
+  text-align: center;
+}
+
+.generate-btn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 15px;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0077b6, #00b894);
+  color: white;
+  cursor: pointer;
+}

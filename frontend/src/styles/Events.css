@@ -1,0 +1,198 @@
+/* ================= PAGE ================= */
+
+.events-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f1f5f9, #e0e7ff);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* ================= HEADER ================= */
+
+.events-header {
+  position: relative;
+  padding: 1.5rem 2rem;
+  background-color: #1e40af;
+  color: white;
+}
+
+.events-title {
+  text-align: center;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.back-button {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.6rem 1.2rem;
+  background-color: white;
+  color: #1e40af;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #e0e7ff;
+  transform: translateY(-50%) scale(1.05);
+}
+
+
+/* ================= FILTER BUTTONS ================= */
+
+.events-options {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.option-button {
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #1e40af;
+  border-radius: 10px;
+  background: transparent;
+  color: #1e40af;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.option-button.active {
+  background-color: #1e40af;
+  color: white;
+}
+
+.option-button:hover {
+  background-color: #1e3a8a;
+  color: white;
+}
+
+
+/* ================= GRID ================= */
+
+.events-main {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+/* ================= CARD ================= */
+
+.event-card {
+  width: 340px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  transition: all 0.35s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-10px) scale(1.04);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+
+/* ================= IMAGE ================= */
+
+.card-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s ease;
+}
+
+.event-card:hover .card-image img {
+  transform: scale(1.1);
+}
+
+
+/* ================= CONTENT ================= */
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-content h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  color: #111;
+}
+
+.card-content p {
+  margin: 0.4rem 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.ticket-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  font-size: 0.95rem;
+  background: #14b8a6;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.ticket-btn:hover {
+  background: #0d9488;
+  transform: scale(1.03);
+}
+
+.map-btn {
+  width: 100%;
+  margin-top: 0.7rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  font-size: 0.95rem;
+  background: #1e3a8a;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.map-btn:hover {
+  background: #1e40af;
+  transform: scale(1.03);
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .event-card {
+    width: 100%;
+  }
+
+  .events-main {
+    padding: 1rem;
+  }
+}

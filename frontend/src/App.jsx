@@ -9,15 +9,24 @@ import AdminUsers from "./pages/AdminUsers";
 import Preferences from "./pages/Preferences";
 import Introduction from "./pages/Introduction";
 import AIAssistant from "./pages/ai-assistant/AIAssistant";
+import Events from "./pages/Events";
+import SmartItineraryintro from "./pages/SmartItineraryintro";
+
+import SmartItineraryForm from "./pages/SmartItineraryForm";
+
+
+
 
 
 function App() {
   return (
     <Routes>
+      <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
+      <Route path="/SmartItineraryintro" element={<SmartItineraryintro />} />
       <Route path="/" element={<Homepage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      
+      <Route path="/events" element={<Events />} />
 <Route path="/admin" element={<AdminLayout />}>
 
   <Route index element={<AdminDashboard />} />
@@ -27,7 +36,7 @@ function App() {
 </Route>
 <Route path="/preferences" element={<Preferences />} />
 <Route path="/introduction" element={<Introduction />} />
-<Route path="/ai-assistant"element={<AIAssistant/>}/>
+<Route path="/ai-assistant" element={<AIAssistant/>}/>
     </Routes>
   );
 }
