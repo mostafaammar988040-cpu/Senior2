@@ -10,7 +10,6 @@ import Preferences from "./pages/Preferences";
 import Introduction from "./pages/Introduction";
 import AIAssistant from "./pages/ai-assistant/AIAssistant";
 
-
 function App() {
   return (
     <Routes>

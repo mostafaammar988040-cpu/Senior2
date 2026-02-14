@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Senior2.Api.Data;
+using Senior2.Api.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,13 @@ builder.Services.AddControllers();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ChatOrchestratorService>();
+builder.Services.AddScoped<IntentService>();
+builder.Services.AddScoped<GuardrailService>();
+builder.Services.AddScoped<WikipediaService>();
+builder.Services.AddScoped<OpenStreetMapService>();
+builder.Services.AddScoped<LLMService>();
+
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -29,15 +37,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // =======================
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
+    options.AddPolicy("AllowReact",
         policy =>
         {
-            policy
-                .WithOrigins("http://localhost:5173")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+            policy.WithOrigins("http://localhost:5173") // your Vite port
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
         });
 });
+
+
 
 // =======================
 // JWT AUTHENTICATION
@@ -65,6 +74,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -83,7 +93,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 // 👉 CORS MUST BE HERE
-app.UseCors("AllowFrontend");
+app.UseCors("AllowReact");
 
 app.UseAuthentication();
 app.UseAuthorization();

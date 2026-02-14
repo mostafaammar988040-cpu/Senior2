@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at top left, #f8f9fa, #e9ecef);
+  background: radial-gradient(circle at top left, #000000, #e9ecef);
   font-family: "Inter", "Segoe UI", sans-serif;
 }
 

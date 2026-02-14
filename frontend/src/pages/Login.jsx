@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { GoogleLogin } from "@react-oauth/google";
 
 import "../styles/Login.css";
 
@@ -80,6 +81,29 @@ function Login() {
             <span onClick={() => navigate("/signup")}>Sign Up</span>
             <span>Forgot Password?</span>
           </div>
+         <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
+  <GoogleLogin
+    onSuccess={async (credentialResponse) => {
+      try {
+        const res = await api.post(
+          "/auth/google",
+          credentialResponse.credential
+        );
+
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        navigate("/preferences");
+      } catch {
+        alert("Google login failed");
+      }
+    }}
+    onError={() => {
+      alert("Google Login Failed");
+    }}
+  />
+</div>
+
 
         </form>
 

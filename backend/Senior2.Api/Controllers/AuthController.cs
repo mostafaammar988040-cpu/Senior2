@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Google.Apis.Auth;
 
 namespace Senior2.Api.Controllers
 {
@@ -110,6 +111,77 @@ namespace Senior2.Api.Controllers
                 }
             });
         }
+        [HttpPost("google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(idToken);
+
+                var email = payload.Email;
+                var firstName = payload.GivenName ?? "Google";
+                var lastName = payload.FamilyName ?? "User";
+
+                // Check if user exists
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                if (user == null)
+                {
+                    user = new Users
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        PasswordHash = "" // No password for Google users
+                    };
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Generate JWT (same logic as login)
+                var claims = new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.FirstName)
+        };
+
+                var key = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_config["Jwt:Key"])
+                );
+
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: _config["Jwt:Issuer"],
+                    audience: _config["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddMinutes(
+                        int.Parse(_config["Jwt:ExpiresInMinutes"])
+                    ),
+                    signingCredentials: creds
+                );
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    user = new
+                    {
+                        id = user.Id,
+                        firstName = user.FirstName,
+                        lastName = user.LastName,
+                        email = user.Email
+                    }
+                });
+            }
+            catch
+            {
+                return Unauthorized("Invalid Google token");
+            }
+        }
 
     }
+
 }
