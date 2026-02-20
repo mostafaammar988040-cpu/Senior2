@@ -1,0 +1,68 @@
+.activities-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  padding: 50px 60px;
+}
+
+/* HERO */
+.activities-hero {
+  text-align: center;
+  color: white;
+  margin-bottom: 50px;
+}
+
+.activities-hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.activities-hero p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* GRID */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* CARD */
+.activity-card {
+  position: relative;
+  height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: 0.4s;
+  display: flex;
+  align-items: flex-end;
+  padding: 25px;
+}
+
+.activity-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.2)
+  );
+}
+
+/* TITLE */
+.activity-card h2 {
+  position: relative;
+  color: white;
+  font-size: 28px;
+  z-index: 2;
+}

@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BCrypt.Net;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Senior2.Api.Data;
 using Senior2.Api.DTOs.Auth;
 using Senior2.Api.Models;
-using BCrypt.Net;
-using Microsoft.IdentityModel.Tokens;
+using Senior2.Api.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Google.Apis.Auth;
 
 namespace Senior2.Api.Controllers
 {
@@ -19,13 +20,17 @@ namespace Senior2.Api.Controllers
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
 
-        public AuthController(AppDbContext context, IConfiguration config)
+        private readonly EmailService _emailService;
+
+        public AuthController(AppDbContext context, IConfiguration config, EmailService emailService)
         {
             _context = context;
             _config = config;
+            _emailService = emailService;
         }
 
-       
+
+
         // =====================
         // REGISTER (SIGN UP)
         // =====================
@@ -180,6 +185,70 @@ namespace Senior2.Api.Controllers
             {
                 return Unauthorized("Invalid Google token");
             }
+        }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user == null)
+                return Ok("If the email exists, a reset link has been sent.");
+
+            var token = Guid.NewGuid().ToString();
+
+            user.PasswordResetToken = token;
+            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
+
+            await _context.SaveChangesAsync();
+
+            var resetLink = $"http://localhost:5173/reset-password?token={token}";
+
+            var emailBody = $@"
+        <h2>Password Reset Request</h2>
+        <p>Hello {user.FirstName},</p>
+        <p>Click the button below to reset your password:</p>
+        <a href='{resetLink}' 
+           style='padding:10px 20px;
+                  background:#0dc052;
+                  color:white;
+                  text-decoration:none;
+                  border-radius:6px;'>
+           Reset Password
+        </a>
+        <p>This link expires in 30 minutes.</p>
+    ";
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Reset Your Password - Senior2",
+                emailBody
+            );
+
+            return Ok("Reset link sent to your email.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u =>
+                    u.PasswordResetToken == dto.Token);
+
+            if (user == null ||
+                user.PasswordResetTokenExpiry < DateTime.UtcNow)
+            {
+                return BadRequest("Invalid or expired token");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+
+            user.PasswordResetToken = null;
+            user.PasswordResetTokenExpiry = null;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Password reset successful");
         }
 
     }

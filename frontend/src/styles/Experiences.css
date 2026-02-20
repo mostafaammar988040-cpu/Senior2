@@ -1,0 +1,72 @@
+.experiences-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  padding-bottom: 60px;
+  color: white;
+}
+
+/* HERO */
+.experiences-hero {
+  text-align: center;
+  padding: 80px 20px 40px 20px;
+}
+
+.experiences-hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.experiences-hero p {
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.85;
+  font-size: 18px;
+}
+
+/* GRID */
+.experiences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 40px 80px;
+}
+
+/* CARD */
+.experience-card {
+  position: relative;
+  height: 320px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 30px;
+}
+
+.experience-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+}
+
+/* DARK OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.2)
+  );
+}
+
+/* TITLE */
+.experience-card h2 {
+  position: relative;
+  font-size: 26px;
+  font-weight: 600;
+  z-index: 2;
+}

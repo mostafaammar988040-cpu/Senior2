@@ -5,7 +5,9 @@ import "../styles/Homepage.css";
 export default function Navbar() {
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("token")
+  );
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -37,12 +39,13 @@ export default function Navbar() {
         <Link to="/events" style={{ marginLeft: "25px" }}>Events</Link>
         <Link to="/ai-assistant" style={{ marginLeft: "25px" }}>AI Assistant</Link>
         <Link to="/taxis" style={{ marginLeft: "25px" }}>Transportation</Link>
-
-        
-
         <Link to="/SmartItineraryintro" style={{ marginLeft: "25px" }}>
           Smart Itinerary
         </Link>
+        <Link to="/experiences" style={{ marginLeft: "25px" }}>
+          Experiences
+        </Link>
+
         {isLoggedIn ? (
           <span
             onClick={handleLogout}

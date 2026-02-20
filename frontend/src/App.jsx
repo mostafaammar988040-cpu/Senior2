@@ -8,9 +8,23 @@ import AdminReviews from "./pages/AdminReviews";
 import AdminUsers from "./pages/AdminUsers";
 import Preferences from "./pages/Preferences";
 import Introduction from "./pages/Introduction";
+<<<<<<< HEAD
 import TaxiServices from "./pages/TaxiServices";
 
 
+=======
+import AIAssistant from "./pages/ai-assistant/AIAssistant";
+import Events from "./pages/Events";
+import SmartItineraryintro from "./pages/SmartItineraryintro";
+
+import SmartItineraryForm from "./pages/SmartItineraryForm";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
+import Experiences from "./pages/Experiences";
+import Explore from "./pages/Explore";
+import ActivityTypes from "./pages/Activitytypes";
+import Activities from "./pages/Activities";
+>>>>>>> 11e8a0f (Work in progress - activities update)
 function App() {
   return (
     <Routes>
@@ -24,10 +38,23 @@ function App() {
         <Route path="users" element={<AdminUsers />} />
       </Route>
 
+<<<<<<< HEAD
       <Route path="/preferences" element={<Preferences />} />
       <Route path="/introduction" element={<Introduction />} />
       <Route path="/taxis" element={<TaxiServices />} />
     </Routes>
+=======
+</Route>
+<Route path="/preferences" element={<Preferences />} />
+<Route path="/introduction" element={<Introduction />} />
+<Route path="/ai-assistant" element={<AIAssistant/>}/>
+<Route path="/reset-password" element={<ResetPassword />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/experiences" element={<Experiences />} />
+<Route path="/explore" element={<Explore />} />
+<Route path="/activities" element={<Activities />} />
+      </Routes>
+>>>>>>> 11e8a0f (Work in progress - activities update)
   );
 }
 

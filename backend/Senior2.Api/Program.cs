@@ -23,6 +23,7 @@ builder.Services.AddScoped<GuardrailService>();
 builder.Services.AddScoped<WikipediaService>();
 builder.Services.AddScoped<OpenStreetMapService>();
 builder.Services.AddScoped<LLMService>();
+builder.Services.AddScoped<EmailService>(); // ADD THIS
 
 
 // Database
@@ -89,6 +90,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRouting();
 

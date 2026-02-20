@@ -79,8 +79,9 @@ function Login() {
 
           <div className="links">
             <span onClick={() => navigate("/signup")}>Sign Up</span>
-            <span>Forgot Password?</span>
-          </div>
+<span onClick={() => navigate("/forgot-password")}>
+  Forgot Password?
+</span>          </div>
          <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
   <GoogleLogin
     onSuccess={async (credentialResponse) => {
