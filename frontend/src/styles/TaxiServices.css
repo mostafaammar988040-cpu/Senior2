@@ -1,0 +1,188 @@
+/* TaxiServices.css */
+
+.taxiPage {
+  padding: 28px 18px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+    Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.taxiHeader {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.taxiKicker {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.taxiTitle {
+  font-size: 34px;
+  line-height: 1.15;
+  margin: 6px 0 8px;
+}
+
+.taxiSub {
+  margin: 0;
+  opacity: 0.72;
+  max-width: 560px;
+}
+
+.taxiTip {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 10px 12px;
+  border-radius: 14px;
+  max-width: 420px;
+}
+
+.taxiTipLabel {
+  display: inline-block;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  margin-right: 8px;
+}
+
+.taxiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* Card */
+.taxiCard {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.taxiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
+.taxiCardTop {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.taxiAvatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.02));
+}
+
+.taxiInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.taxiNameRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.taxiName {
+  font-weight: 900;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taxiCity {
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.taxiMeta {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.taxiMetaItem {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Buttons */
+.taxiButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  filter: brightness(0.98);
+}
+
+.btn.primary {
+  border-color: rgba(0, 0, 0, 0.14);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0.02));
+}
+
+/* Fine print */
+.taxiFine {
+  font-size: 12.5px;
+  opacity: 0.7;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 10px;
+}
+
+.taxiFineLabel {
+  font-weight: 800;
+}
+
+.taxiSep {
+  margin: 0 8px;
+  opacity: 0.55;
+}
