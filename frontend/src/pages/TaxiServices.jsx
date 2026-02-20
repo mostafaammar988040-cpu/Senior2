@@ -85,6 +85,7 @@ function getBestStoreLink(app) {
 export default function TaxiServices() {
   return (
     <div className="taxiPage">
+     <div className="taxiContainer">
       <header className="taxiHeader">
         <div>
           <div className="taxiKicker">Transportation</div>
@@ -176,6 +177,7 @@ export default function TaxiServices() {
           );
         })}
       </section>
+        </div>
     </div>
   );
 }

@@ -14,19 +14,18 @@
 
 .taxiPage{
   min-height: 100vh;
-  padding: 32px 18px 44px;
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 32px 0 44px;     /* remove side padding */
+  margin: 0;
+
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
     Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text);
 
-  /* green background + soft red/white accents */
   background:
     radial-gradient(900px 500px at 12% 8%, rgba(214,40,40,.20), transparent 55%),
     radial-gradient(900px 520px at 90% 18%, rgba(255,255,255,.12), transparent 58%),
     linear-gradient(180deg, var(--lb-green) 0%, var(--lb-green-2) 100%);
-  border-radius: 18px;
 }
 
 .taxiHeader{
@@ -37,7 +36,11 @@
   flex-wrap:wrap;
   margin-bottom: 18px;
 }
-
+.taxiContainer{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
 .taxiKicker{
   font-size: 12px;
   font-weight: 800;

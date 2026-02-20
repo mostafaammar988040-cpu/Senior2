@@ -32,27 +32,29 @@ export default function Navbar() {
       </h1>
 
       <div>
-        <Link to="/">Home</Link>
-        <Link to="/explore">Explore</Link>
-        <Link to="/events">Events</Link>
-        <Link to="/ai-assistant">AI Assistant</Link>
+        <Link to="/" style={{ marginLeft: "25px" }}>Home</Link>
+        <Link to="/explore" style={{ marginLeft: "25px" }}>Explore</Link>
+        <Link to="/events" style={{ marginLeft: "25px" }}>Events</Link>
+        <Link to="/ai-assistant" style={{ marginLeft: "25px" }}>AI Assistant</Link>
+        <Link to="/taxis" style={{ marginLeft: "25px" }}>Transportation</Link>
 
+        
+
+        <Link to="/SmartItineraryintro" style={{ marginLeft: "25px" }}>
+          Smart Itinerary
+        </Link>
         {isLoggedIn ? (
           <span
             onClick={handleLogout}
-            style={{ cursor: "pointer", marginLeft: "15px" }}
+            style={{ cursor: "pointer", marginLeft: "25px" }}
           >
             Logout
           </span>
         ) : (
-          <Link to="/login" style={{ marginLeft: "15px" }}>
+          <Link to="/login" style={{ marginLeft: "25px" }}>
             Login
           </Link>
         )}
-
-        <Link to="/SmartItineraryintro" style={{ marginLeft: "15px" }}>
-          Smart Itinerary
-        </Link>
       </div>
     </nav>
   );
