@@ -5,18 +5,14 @@ import "../styles/Homepage.css";
 export default function Navbar() {
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !!localStorage.getItem("token")
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
-  // Update login state if token changes (optional improvement)
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
     };
 
     window.addEventListener("storage", handleStorageChange);
-
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
@@ -40,7 +36,6 @@ export default function Navbar() {
         <Link to="/explore">Explore</Link>
         <Link to="/events">Events</Link>
         <Link to="/ai-assistant">AI Assistant</Link>
-<<<<<<< HEAD
 
         {isLoggedIn ? (
           <span
@@ -50,14 +45,14 @@ export default function Navbar() {
             Logout
           </span>
         ) : (
-          <Link to="/login">Login</Link>
+          <Link to="/login" style={{ marginLeft: "15px" }}>
+            Login
+          </Link>
         )}
-=======
-        <Link to="/login">Login</Link>
-         <Link to="/SmartItineraryintro">SmartItineraryintro</Link>
-        
 
->>>>>>> b7fbef53bd16cd465c644d9fd340d9c52a20f9cd
+        <Link to="/SmartItineraryintro" style={{ marginLeft: "15px" }}>
+          Smart Itinerary
+        </Link>
       </div>
     </nav>
   );
