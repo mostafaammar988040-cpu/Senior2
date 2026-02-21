@@ -10,51 +10,38 @@ import cedarsImg from "../assets/cedars.jpg";
 export default function Home() {
   const videoRef = useRef(null);
 
-  const handleFullScreen = () => {
-    if (videoRef.current) {
-      videoRef.current.requestFullscreen();
-    }
-  };
-
   return (
     <>
       <Navigation />
 
-      {/* 🎬 FULL WIDTH VIDEO HERO */}
-    {/* 🎬 VIDEO TITLE STRIP */}
-<section className="video-header">
-  <h1>Experience Lebanon in Motion</h1>
-</section>
-
-{/* 🎬 FULL WIDTH VIDEO HERO */}
-<section className="video-hero" onClick={handleFullScreen}>
-  <video
-    ref={videoRef}
-    className="video-bg"
-    src="/images/leb.mp4"
-    autoPlay
-    muted
-    loop
-    playsInline
-  />
-</section>
-      {/* HERO SECTION */}
       <section className="hero">
         <img src={heroImg} className="hero-bg" alt="Hero Background" />
 
-        <div className="hero-text">
-          <h1>Explore Lebanon Like Never Before</h1>
-          <p>
-            Colorful, modern, and intuitive plan trips with AI, explore hidden
-            gems, find events, view interactive maps, and experience Lebanon’s
-            beauty.
-          </p>
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1>Explore Lebanon Like Never Before</h1>
+            <p>
+              Colorful, modern, and intuitive plan trips with AI, explore hidden
+              gems, find events, view interactive maps, and experience Lebanon’s
+              beauty.
+            </p>
+            <button>Start Your Journey</button>
+          </div>
 
-          <button>Start Your Journey</button>
+          <div className="hero-video-card">
+            <video
+              className="hero-video"
+              src="/images/leb.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
+          </div>
         </div>
       </section>
 
-      {/* STRIP */}
       <div className="strip">
         <div>✨ Smart Itinerary</div>
         <div>🤖 AI Travel Assistant</div>
@@ -62,7 +49,6 @@ export default function Home() {
         <div>🎉 Live Events</div>
       </div>
 
-      {/* TOP DESTINATIONS */}
       <section className="explore-section">
         <h2>Top Destinations</h2>
 
@@ -84,9 +70,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
-        ©️ 2026 AHLA BI HA TTALLEH — A Colorful Way to Explore Lebanon
-      </footer>
+      <footer>©️ 2026 AHLA BI HA TTALLEH — A Colorful Way to Explore Lebanon</footer>
     </>
   );
 }

@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background: #f0f4ff;
   color: #222;
 }
 
 /* NAVBAR */
 nav {
-  background: linear-gradient(90deg, #1F4025, #4E7D39);
+  background: linear-gradient(90deg, #1f4025, #4e7d39);
   padding: 14px 40px;
   display: flex;
   justify-content: space-between;
@@ -16,7 +16,7 @@ nav {
   position: sticky;
   top: 0;
   z-index: 999;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
 }
 
 nav h2 {
@@ -37,10 +37,13 @@ nav a:hover {
   opacity: 0.7;
 }
 
-/* HERO */
+/* =====================
+   HERO
+===================== */
+
 .hero {
   position: relative;
-  height: 500px;
+  min-height: 720px;
   display: flex;
   align-items: center;
   padding: 60px;
@@ -57,10 +60,44 @@ nav a:hover {
   filter: brightness(60%);
 }
 
-.hero-text {
-  max-width: 600px;
+/* Make content truly full width */
+.hero-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 80px;
 }
 
+/* Left side stays left */
+.hero-text {
+  flex: 0 0 520px;
+  max-width: 520px;
+}
+
+/* Push video HARD to the right edge */
+.hero-video-card {
+  margin-left: auto;         /* key */
+  margin-right: 0;           /* key */
+  width: 900px;
+  max-width: 65vw;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35); /* more blended */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Blend the video: rounded + subtle contrast */
+.hero-video {
+  width: 100%;
+  height: 540px;
+  display: block;
+  object-fit: cover;
+  filter: contrast(1.03) saturate(1.05);
+}
+
+/* Text styles */
 .hero-text h1 {
   font-size: 3.5rem;
   font-weight: 900;
@@ -76,7 +113,7 @@ nav a:hover {
   margin-top: 25px;
   padding: 15px 35px;
   font-size: 1.1rem;
-  background: #2F5233;
+  background: #2f5233;
   border: none;
   border-radius: 30px;
   color: white;
@@ -89,18 +126,24 @@ nav a:hover {
   background: #234027;
 }
 
-/* STRIP */
+/* =====================
+   STRIP
+===================== */
+
 .strip {
   margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   text-align: center;
-  background: linear-gradient(90deg, #234027, #2F5233, #4E7D39);
+  background: linear-gradient(90deg, #234027, #2f5233, #4e7d39);
   padding: 40px 20px;
   color: white;
 }
 
-/* EXPLORE */
+/* =====================
+   EXPLORE
+===================== */
+
 .explore-section {
   padding: 60px;
   text-align: center;
@@ -116,13 +159,29 @@ nav a:hover {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
 }
 
 .explore-card:hover {
   transform: translateY(-8px);
 }
+
+.explore-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.explore-card h3 {
+  margin: 14px 0 18px;
+  font-weight: 800;
+}
+
+/* =====================
+   FOOTER
+===================== */
 
 footer {
   background: #1e1e1e;
@@ -131,133 +190,132 @@ footer {
   text-align: center;
   margin-top: 60px;
 }
-/* ============================= */
-/* 🎬 VIDEO SECTION */
-/* ============================= */
 
-.video-section {
-  padding: 70px 60px;
-  text-align: center;
-background: #FFFFFF;
-}
+/* =====================
+   MOBILE
+===================== */
 
-.video-section h2 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-  font-weight: 800;
-}
-
-.video-section p {
-  color: #555;
-  margin-bottom: 30px;
-}
-
-.video-container {
+@media (max-width: 900px) {
+/* HERO layout: text left, big video anchored right */
+.hero {
   position: relative;
-  max-width: 1000px;
-  margin: auto;
-  border-radius: 20px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-  transition: transform 0.4s ease;
-}
-
-.video-container:hover {
-  transform: scale(1.02);
-}
-
-.video-container video {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.video-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
+  min-height: 720px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 60px;
   color: white;
-  font-size: 1.4rem;
-  font-weight: 700;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
-.video-container:hover .video-overlay {
-  opacity: 1;
-}
-/* ========================= */
-/* CINEMATIC VIDEO HERO */
-/* ========================= */
-
-.video-hero {
-  width: 100%;
-  height: calc(75vh-80px);
-  margin-top: 80px;
+.hero-content {
   position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.video-bg {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  padding-right: 0;
 }
 
-/* Text above video */
-.video-overlay-text {
+/* text stays on the left and has room */
+.hero-text {
+  max-width: 520px;
+  padding-right: 720px; /* reserve space for the video on the right */
+}
+
+/* video is pinned to the right, not affected by flex space */
+.hero-video-card {
   position: absolute;
-  bottom: 40px;
-  left: 50px;
-  color: white;
-  z-index: 2;
-  text-shadow: 0 4px 18px rgba(0,0,0,0.6);
-}
-
-.video-overlay-text h1 {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 10px;
-}
-
-.video-overlay-text p {
-  font-size: 1.2rem;
-}/* ===== VIDEO TITLE STRIP ===== */
-.video-header {
-  background: #000;
-  color: white;
-  text-align: center;
-  padding: 18px 20px;
-}
-
-.video-header h1 {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 800;
-}
-
-.video-header p {
-  margin-top: 8px;
-  font-size: 15px;
-  opacity: 0.8;
-}
-
-/* ===== VIDEO HERO ===== */
-.video-hero {
-  width: 100%;
-  height: 75vh;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(920px, 62vw); /* BIG */
+  border-radius: 24px;
   overflow: hidden;
-  cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.video-bg {
+.hero-video {
   width: 100%;
-  height: 100%;
+  height: 540px;
+  display: block;
   object-fit: cover;
+}
+
+/* Mobile: stack normally */
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding: 40px 20px;
+    padding-right: 0;
+  }
+
+  .hero-text {
+    padding-right: 0;
+    max-width: 100%;
+  }
+
+  .hero-video-card {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 22px;
+    right: -60px;
+  }
+
+  .hero-video {
+    height: auto;
+    aspect-ratio: 848 / 480;
+  }
+
+  .hero-text h1 {
+    font-size: 2.6rem;
+  }
+}
+}
+
+/* ===== HERO: lock layout + push video to right ===== */
+.hero-content{
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(360px, 540px) minmax(520px, 1fr) !important;
+  align-items: center !important;
+  gap: 200px !important;
+}
+
+/* keep text on the left */
+.hero-text{
+  max-width: 540px !important;
+}
+
+/* push video all the way to the right */
+.hero-video-card{
+  justify-self: end !important;
+  width: min(950px, 55vw) !important;   /* bigger */
+  max-width: none !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.5) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+/* IMPORTANT: make it widescreen instead of “phone” */
+.hero-video{
+  width: 100% !important;
+  aspect-ratio: 848 / 480 !important;
+  height: auto !important;
+  object-fit: cover !important; /* crops vertical video to fill widescreen */
+  display: block !important;
+}
+
+/* mobile stack */
+@media (max-width: 900px){
+  .hero-content{
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+  .hero-video-card{
+    width: 100% !important;
+    justify-self: stretch !important;
+  }
 }
