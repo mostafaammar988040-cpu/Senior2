@@ -22,6 +22,7 @@ import Experiences from "./pages/Experiences";
 import Explore from "./pages/Explore";
 import ActivityTypes from "./pages/Activitytypes";
 import Activities from "./pages/Activities";
+import Help from "./pages/Help";
 function App() {
   return (
     <Routes>
@@ -46,6 +47,10 @@ function App() {
       <Route path="/experiences" element={<Experiences />} />
       <Route path="/explore" element={<Explore />} />
       <Route path="/activities" element={<Activities />} />
+      <Route path="events" element={<Events />} />
+      <Route path="/SmartItineraryintro" element={<SmartItineraryintro />} />
+      <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
+      <Route path="/help" element={<Help />} />
     </Routes>
 
   );

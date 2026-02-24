@@ -1,137 +1,156 @@
-/* =========================
-   PAGE BACKGROUND
-========================= */
+/* ===== GLOBAL ===== */
+
 .explore-page {
+  background: #f2f4f8;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #1f2f3a, #0f2027 60%);
-  color: #f5f5f5;
+  font-family: "Poppins", sans-serif;
 }
 
-/* =========================
-   HERO SECTION
-========================= */
-.explore-hero {
-  text-align: center;
-  padding: 100px 20px 70px;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.25)
-  );
-  backdrop-filter: blur(4px);
-}
+/* ===== BACK BUTTON ===== */
 
-.explore-hero h1 {
-  font-size: 52px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 18px;
+.back-home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 999;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
   color: white;
-  text-shadow: 0 8px 25px rgba(0,0,0,0.7);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.explore-hero h1::after {
-  content: "";
-  display: block;
-  width: 90px;
-  height: 4px;
-  margin: 20px auto 0;
-  background: linear-gradient(to right, #0dc052, #00ff99);
-  border-radius: 10px;
+.back-home:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.35);
 }
 
-.explore-hero p {
-  font-size: 18px;
-  opacity: 0.85;
-  color: #d0d0d0;
-}
+/* ===== VIDEO HERO ===== */
 
-/* =========================
-   GRID LAYOUT
-========================= */
-.explore-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  padding: 60px 100px 100px;
-}
-
-/* Tablet */
-@media (max-width: 1100px) {
-  .explore-grid {
-    grid-template-columns: repeat(2, 1fr);
-    padding: 50px 60px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 700px) {
-  .explore-grid {
-    grid-template-columns: 1fr;
-    padding: 40px 25px;
-  }
-}
-
-/* =========================
-   CARD DESIGN
-========================= */
-.place-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 22px;
+.video-hero {
+  position: relative;
+  height: 80vh;
   overflow: hidden;
-  backdrop-filter: blur(12px);
-  transition: all 0.4s ease;
-  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
 }
 
-.place-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 25px 45px rgba(0,0,0,0.7);
-}
-
-/* =========================
-   IMAGE SECTION
-========================= */
-.place-image-wrapper {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-.place-image-wrapper img {
+.video-bg {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* show full image */
-  background-color: #111;
-  transition: transform 0.4s ease;
+  object-fit: cover;
 }
 
-.place-card:hover img {
-  transform: scale(1.05);
+/* Dark cinematic overlay */
+.video-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.2),
+    transparent
+  );
 }
 
-/* =========================
-   CARD CONTENT
-========================= */
-.place-content {
-  padding: 22px;
-}
-
-.place-content h3 {
-  margin-bottom: 8px;
-  font-size: 20px;
-  font-weight: 600;
+.video-overlay-text {
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
   color: white;
+  z-index: 2;
 }
 
-.place-content p {
-  font-size: 14px;
-  opacity: 0.75;
+.video-overlay-text h1 {
+  font-size: 3rem;
+  font-weight: 800;
   margin-bottom: 10px;
 }
 
-.place-content span {
-  color: #0dc052;
-  font-weight: 600;
-  font-size: 18px;
+.video-overlay-text p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* ===== GALLERY ===== */
+
+.lebanon-gallery {
+  padding: 80px 50px;
+  text-align: center;
+  animation: fadeUp 1s ease;
+}
+
+.lebanon-gallery h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #123;
+  margin-bottom: 40px;
+}
+
+/* GRID */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+/* CARD */
+
+.gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: 0.5s;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+/* Overlay */
+
+.gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  color: white;
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.gallery-card:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-overlay h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

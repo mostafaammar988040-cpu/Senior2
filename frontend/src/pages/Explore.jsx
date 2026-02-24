@@ -1,61 +1,87 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import api from "../services/api";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Explore.css";
 
+import img1 from "../assets/lebanon1.jpg";
+import img2 from "../assets/lebanon2.jpg";
+import img3 from "../assets/lebanon3.jpg";
+import img4 from "../assets/lebanon4.jpg";
+import img5 from "../assets/lebanon5.jpg";
+import img6 from "../assets/lebanon6.jpg";
+import img7 from "../assets/lebanon7.jpg";
+import img8 from "../assets/lebanon8.jpg";
+import img9 from "../assets/lebanon9.jpg";
+import img10 from "../assets/lebanon10.jpg";
+import img11 from "../assets/lebanon11.jpg";
+import img12 from "../assets/lebanon12.jpg";
+
 export default function Explore() {
-  const [places, setPlaces] = useState([]);
-  const [searchParams] = useSearchParams();
-const category = searchParams.get("category");
-const activityType = searchParams.get("activityType");
- useEffect(() => {
+  const videoRef = useRef(null);
+  const navigate = useNavigate();
 
-  let url = "/places?";
+  const handleFullScreen = () => {
+    if (videoRef.current) {
+      videoRef.current.requestFullscreen();
+    }
+  };
 
-  if (category) {
-    url += `category=${category}&`;
-  }
+  const images = [
+    { img: img1, title: "Beirut Skyline" },
+    { img: img2, title: "Mountain Villages" },
+    { img: img3, title: "Baalbek Ruins" },
+    { img: img4, title: "Coastal Views" },
+    { img: img5, title: "Hidden Caves" },
+    { img: img6, title: "Old Souks" },
+    { img: img7, title: "Nature Trails" },
+    { img: img8, title: "Snow Mountains" },
+    { img: img9, title: "Sunset Peaks" },
+    { img: img10, title: "Winter Lebanon" },
+    { img: img11, title: "Raoche Lebanon" },
+    { img: img12, title: "hikes Lebanon" },
 
-  if (activityType) {
-    url += `activityType=${activityType}`;
-  }
+  ];
 
-  api.get(url)
-    .then(res => setPlaces(res.data))
-    .catch(err => console.error(err));
-
-}, [category, activityType]);
   return (
     <div className="explore-page">
 
-      <div className="explore-hero">
-        <h1>{category ? category.toUpperCase() : "Explore Lebanon"}</h1>
-        <p>
-          Discover handpicked destinations across Lebanon.
-        </p>
-      </div>
+      {/* BACK BUTTON */}
+      <button className="back-home" onClick={() => navigate("/")}>
+        ← Back to Home
+      </button>
 
-      <div className="explore-grid">
-        {places.map(place => (
-         <div key={place.id} className="place-card">
-  
-  <div className="place-image-wrapper">
-    <img
-      src={`${import.meta.env.VITE_API_BASE_URL}${place.imageUrl}`}
-      alt={place.name}
-    />
-  </div>
+      {/* VIDEO HERO */}
+      <section className="video-hero" onClick={handleFullScreen}>
+        <video
+          ref={videoRef}
+          className="video-bg"
+          src="/images/leb.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
 
-  <div className="place-content">
-    <h3>{place.name}</h3>
-    <p>{place.location}</p>
-    <span>${place.price}</span>
-  </div>
+        <div className="video-overlay-text">
+          <h1>Explore Lebanon</h1>
+          <p>Click anywhere to watch fullscreen ✨</p>
+        </div>
+      </section>
 
+      {/* GALLERY */}
+      <section className="lebanon-gallery">
+        <h2>Discover Beautiful Lebanon</h2>
 
-          </div>
-        ))}
-      </div>
+        <div className="gallery-grid">
+          {images.map((item, index) => (
+            <div className="gallery-card" key={index}>
+              <img src={item.img} alt={item.title} />
+              <div className="gallery-overlay">
+                <h3>{item.title}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
     </div>
   );

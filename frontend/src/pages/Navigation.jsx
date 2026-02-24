@@ -35,12 +35,13 @@ export default function Navbar() {
 
       <div>
         <Link to="/" style={{ marginLeft: "25px" }}>Home</Link>
-        <Link to="/explore" style={{ marginLeft: "25px" }}>Explore</Link>
         <Link to="/events" style={{ marginLeft: "25px" }}>Events</Link>
         <Link to="/ai-assistant" style={{ marginLeft: "25px" }}>AI Assistant</Link>
-        <Link to="/taxis" style={{ marginLeft: "25px" }}>Transportation</Link>
         <Link to="/SmartItineraryintro" style={{ marginLeft: "25px" }}>
           Smart Itinerary
+        </Link>
+        <Link to="/taxis" style={{ marginLeft: "25px" }}>
+          Taxi Services
         </Link>
         <Link to="/experiences" style={{ marginLeft: "25px" }}>
           Experiences

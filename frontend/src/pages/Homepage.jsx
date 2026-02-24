@@ -8,40 +8,31 @@ import byblosImg from "../assets/byblos.jpg";
 import cedarsImg from "../assets/cedars.jpg";
 
 export default function Home() {
-  const videoRef = useRef(null);
+
 
   return (
     <>
       <Navigation />
 
+     
+
+      {/* HERO SECTION */}
       <section className="hero">
         <img src={heroImg} className="hero-bg" alt="Hero Background" />
 
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1>Explore Lebanon Like Never Before</h1>
-            <p>
-              Colorful, modern, and intuitive plan trips with AI, explore hidden
-              gems, find events, view interactive maps, and experience Lebanon’s
-              beauty.
-            </p>
-            <button>Start Your Journey</button>
-          </div>
+        <div className="hero-text">
+          <h1>Explore Lebanon Like Never Before</h1>
+          <p>
+            Colorful, modern, and intuitive plan trips with AI, explore hidden
+            gems, find events, view interactive maps, and experience Lebanon’s
+            beauty.
+          </p>
 
-          <div className="hero-video-card">
-            <video
-              className="hero-video"
-              src="/images/leb.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-            />
-          </div>
+          <button>Start Your Journey</button>
         </div>
       </section>
 
+      {/* STRIP */}
       <div className="strip">
         <div>✨ Smart Itinerary</div>
         <div>🤖 AI Travel Assistant</div>
@@ -49,6 +40,7 @@ export default function Home() {
         <div>🎉 Live Events</div>
       </div>
 
+      {/* TOP DESTINATIONS */}
       <section className="explore-section">
         <h2>Top Destinations</h2>
 
@@ -69,8 +61,24 @@ export default function Home() {
           </div>
         </div>
       </section>
+<section className="home-actions">
+  <h2>Ready to Explore Lebanon?</h2>
 
-      <footer>©️ 2026 AHLA BI HA TTALLEH — A Colorful Way to Explore Lebanon</footer>
+  <div className="home-buttons">
+    <button onClick={() => window.location.href = "/explore"}>
+      Explore
+    </button>
+
+    <button onClick={() => window.location.href = "/help"}>
+      Help
+    </button>
+  </div>
+</section>
+      <footer>
+        ©️ 2026 AHLA BI HA TTALLEH — A Colorful Way to Explore Lebanon
+        
+      </footer>
+      
     </>
   );
 }
