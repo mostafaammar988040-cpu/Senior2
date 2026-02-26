@@ -35,7 +35,7 @@ onClick={() => {
   if (exp.slug === "activities") {
     navigate("/activities");
   } else {
-    navigate(`/explore?category=${exp.slug}`);
+    navigate(`/places?category=${exp.slug}`);
   }
 }}            style={{
               backgroundImage: `url(${import.meta.env.VITE_API_BASE_URL}${exp.imageUrl})`

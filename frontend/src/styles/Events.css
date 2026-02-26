@@ -2,7 +2,7 @@
 
 .events-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f1f5f9, #e0e7ff);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -12,7 +12,7 @@
 .events-header {
   position: relative;
   padding: 1.5rem 2rem;
-  background-color: #1e40af;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
 }
 

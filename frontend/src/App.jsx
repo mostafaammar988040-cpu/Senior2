@@ -23,6 +23,7 @@ import Explore from "./pages/Explore";
 import ActivityTypes from "./pages/Activitytypes";
 import Activities from "./pages/Activities";
 import Help from "./pages/Help";
+import Places from "./pages/Places";
 function App() {
   return (
     <Routes>
@@ -51,6 +52,7 @@ function App() {
       <Route path="/SmartItineraryintro" element={<SmartItineraryintro />} />
       <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
       <Route path="/help" element={<Help />} />
+      <Route path="/places" element={<Places />} />
     </Routes>
 
   );

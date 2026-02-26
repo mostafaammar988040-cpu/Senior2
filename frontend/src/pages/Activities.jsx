@@ -28,7 +28,7 @@ export default function Activities() {
             key={type.id}
             className="activity-card"
             onClick={() =>
-              navigate(`/explore?activityType=${type.id}`)
+              navigate(`/places?activityType=${type.id}`)
             }
             style={{
               backgroundImage: `url(${import.meta.env.VITE_API_BASE_URL}${type.imageUrl})`
