@@ -24,6 +24,8 @@ import ActivityTypes from "./pages/Activitytypes";
 import Activities from "./pages/Activities";
 import Help from "./pages/Help";
 import Places from "./pages/Places";
+import Profile from "./pages/Profile";
+import PrivateRoute from "./components/PrivateRoute";
 function App() {
   return (
     <Routes>
@@ -53,6 +55,14 @@ function App() {
       <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
       <Route path="/help" element={<Help />} />
       <Route path="/places" element={<Places />} />
+      <Route
+  path="/profile"
+  element={
+    <PrivateRoute>
+      <Profile />
+    </PrivateRoute>
+  }
+/>
     </Routes>
 
   );

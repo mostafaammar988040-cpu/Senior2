@@ -10,14 +10,35 @@ namespace Senior2.Api.Data
         {
         }
 
+        // ===============================
+        // EXISTING TABLES
+        // ===============================
         public DbSet<Category> Categories { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; } = null!;
         public DbSet<Place> Places { get; set; } = null!;
         public DbSet<Users> Users { get; set; }
 
+        // ===============================
+        // PROFILE SYSTEM (NEW)
+        // ===============================
+        public DbSet<UserPreference> UserPreferences { get; set; }
+
+        public DbSet<TripPlan> TripPlans { get; set; }
+
+        public DbSet<JourneyEntry> JourneyEntries { get; set; }
+
+        public DbSet<Traveler> Travelers { get; set; }
+
+        // 🚨 THESE WERE MISSING
+        public DbSet<SmartItineraryRequest> SmartItineraryRequest { get; set; }
+
+        public DbSet<SupportRequest> SupportRequests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // (YOUR EXISTING SEED DATA — KEEP EVERYTHING BELOW)
 
             // ===============================
             // 🟢 CATEGORIES

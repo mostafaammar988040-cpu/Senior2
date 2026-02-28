@@ -1,0 +1,142 @@
+/* ===============================
+   DASHBOARD LAYOUT
+=============================== */
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background: #f5f7fb;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===============================
+   SIDEBAR
+=============================== */
+
+.sidebar {
+  background: linear-gradient(180deg, #1f4025, #4e7d39);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.profile-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  margin-bottom: 15px;
+}
+
+.email {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.bio {
+  margin-top: 10px;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.stats {
+  margin-top: 30px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+/* ===============================
+   MAIN CONTENT
+=============================== */
+
+.main-content {
+  padding: 30px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h2 {
+  margin-bottom: 15px;
+  color: #1f4025;
+}
+
+/* ===============================
+   CARDS
+=============================== */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+  gap: 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* ===============================
+   TIMELINE
+=============================== */
+
+.timeline {
+  border-left: 3px solid #1f8f4f;
+  padding-left: 20px;
+}
+
+.timeline-item {
+  background: white;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.timeline-item small {
+  color: #666;
+}
+
+/* ===============================
+   LOADING
+=============================== */
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2rem;
+}
+
+/* ===============================
+   RESPONSIVE
+=============================== */
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-radius: 0 0 20px 20px;
+  }
+}

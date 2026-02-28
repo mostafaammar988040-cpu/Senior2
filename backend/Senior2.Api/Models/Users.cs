@@ -16,6 +16,10 @@ public class Users
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
 
+    // 🔥 NEW (Profile Page)
+    public string? ProfileImageUrl { get; set; }
+    public string? Bio { get; set; }
+
     public string? PasswordResetToken { get; set; }
     public DateTime? PasswordResetTokenExpiry { get; set; }
 
