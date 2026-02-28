@@ -1,23 +1,25 @@
 /* ===============================
-   DASHBOARD LAYOUT
+   LAYOUT
 =============================== */
 
 .dashboard {
   display: grid;
   grid-template-columns: 280px 1fr;
   min-height: 100vh;
-  background: #f5f7fb;
+  background: #f4f6fa;
   font-family: "Poppins", sans-serif;
 }
-
+.section h2{
+  background-color:#f4f6fa;
+}
 /* ===============================
    SIDEBAR
 =============================== */
 
 .sidebar {
-  background: linear-gradient(180deg, #1f4025, #4e7d39);
+   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
-  padding: 30px 20px;
+  padding: 35px 20px;
   text-align: center;
 }
 
@@ -41,80 +43,48 @@
   font-size: 0.85rem;
 }
 
-.stats {
-  margin-top: 30px;
-}
-
-.stat-card {
-  background: rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-
-.stat-card h3 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
 /* ===============================
    MAIN CONTENT
 =============================== */
 
 .main-content {
-  padding: 30px;
+  padding: 50px;
 }
 
-.section {
-  margin-bottom: 40px;
-}
-
-.section h2 {
-  margin-bottom: 15px;
+.dashboard-title {
+  margin-bottom: 30px;
   color: #1f4025;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 /* ===============================
-   CARDS
+   BUTTON GRID
 =============================== */
 
-.cards-grid {
+.dashboard-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
-.card {
+.dash-btn {
   background: white;
-  border-radius: 16px;
-  padding: 16px;
+  border: none;
+  padding: 30px 20px;
+  border-radius: 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: 0.25s;
+  transition: all 0.25s ease;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-/* ===============================
-   TIMELINE
-=============================== */
-
-.timeline {
-  border-left: 3px solid #1f8f4f;
-  padding-left: 20px;
-}
-
-.timeline-item {
-  background: white;
-  margin-bottom: 15px;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.timeline-item small {
-  color: #666;
+.dash-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  background: #f8fff9;
 }
 
 /* ===============================

@@ -16,8 +16,9 @@ export default function SmartItineraryForm() {
   const [transport, setTransport] = useState(null);
 
   const [specialRequirements, setSpecialRequirements] = useState("");
-
   const [loading, setLoading] = useState(false);
+
+  const [generatedPlaces, setGeneratedPlaces] = useState([]);
 
   /* ===== TOGGLE ACTIVITIES ===== */
   const toggleActivity = (activity) => {
@@ -33,21 +34,23 @@ export default function SmartItineraryForm() {
     try {
       setLoading(true);
 
+      const user = JSON.parse(localStorage.getItem("user"));
+
       const payload = {
-        userId: 1, // later replace with logged user
+        userId: user?.id || 1,
         travelers,
         startDate,
         endDate,
         budgetPerDay: budget,
         tripType,
-        activities,
+        activitiesJson: JSON.stringify(activities), // ⭐ FIXED
         transport,
         specialRequirements
       };
 
       const res = await api.post("/smartitinerary", payload);
 
-      console.log("Generated trip:", res.data);
+      setGeneratedPlaces(res.data.recommendedPlaces || []);
 
       alert("Trip generated successfully!");
 
@@ -113,6 +116,7 @@ export default function SmartItineraryForm() {
             key={type}
             className={tripType === type ? "selected" : ""}
             onClick={() => setTripType(type)}
+            type="button"
           >
             {type}
           </button>
@@ -135,6 +139,7 @@ export default function SmartItineraryForm() {
             key={act}
             className={activities.includes(act) ? "selected" : ""}
             onClick={() => toggleActivity(act)}
+            type="button"
           >
             {act}
           </button>
@@ -150,6 +155,7 @@ export default function SmartItineraryForm() {
             key={t}
             className={transport === t ? "selected" : ""}
             onClick={() => setTransport(t)}
+            type="button"
           >
             {t}
           </button>
@@ -179,6 +185,24 @@ export default function SmartItineraryForm() {
       >
         {loading ? "Generating..." : "Generate My Trip Plan"}
       </button>
+
+      {/* RESULTS (same design style) */}
+      {generatedPlaces.length > 0 && (
+        <>
+          <h2>🎯 Recommended Places</h2>
+
+          <div className="cards-grid">
+            {generatedPlaces.map(place => (
+              <div key={place.id} className="card">
+                <img src={place.imageUrl} alt={place.name} />
+                <h4>{place.name}</h4>
+                <p>{place.location}</p>
+                <p>{place.activityType}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
     </div>
   );

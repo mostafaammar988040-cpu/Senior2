@@ -1,0 +1,39 @@
+.trips-page {
+  padding: 40px;
+  background: #f5f7fb;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.trips-page h1 {
+  color: #1f4025;
+  margin-bottom: 5px;
+}
+
+.trips-grid {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+  gap: 20px;
+}
+
+.trip-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: 0.25s;
+}
+
+.trip-card:hover {
+  transform: translateY(-5px);
+}
+
+.trip-card h3 {
+  color: #1f8f4f;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+}
