@@ -117,17 +117,27 @@ namespace Senior2.Api.Controllers
             });
         }
         [HttpPost("google")]
-        public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleDto dto)
         {
+            if (string.IsNullOrEmpty(dto.IdToken))
+                return BadRequest("Google token is missing");
+
             try
             {
-                var payload = await GoogleJsonWebSignature.ValidateAsync(idToken);
+                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>()
+            {
+                _config["Google:ClientId"]
+            }
+                };
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken, validationSettings);
 
                 var email = payload.Email;
                 var firstName = payload.GivenName ?? "Google";
                 var lastName = payload.FamilyName ?? "User";
 
-                // Check if user exists
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == email);
 
@@ -138,14 +148,13 @@ namespace Senior2.Api.Controllers
                         FirstName = firstName,
                         LastName = lastName,
                         Email = email,
-                        PasswordHash = "" // No password for Google users
+                        PasswordHash = ""
                     };
 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                 }
 
-                // Generate JWT (same logic as login)
                 var claims = new[]
                 {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -172,6 +181,7 @@ namespace Senior2.Api.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiresIn = token.ValidTo,
                     user = new
                     {
                         id = user.Id,
@@ -181,9 +191,9 @@ namespace Senior2.Api.Controllers
                     }
                 });
             }
-            catch
+            catch (Exception ex)
             {
-                return Unauthorized("Invalid Google token");
+                return Unauthorized($"Google token validation failed: {ex.Message}");
             }
         }
         [HttpPost("forgot-password")]

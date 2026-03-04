@@ -27,6 +27,8 @@ import Places from "./pages/Places";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import MyTrips from "./pages/MyTrips";
+import Journey from "./pages/Journey";
+
 function App() {
   return (
     <Routes>
@@ -57,6 +59,8 @@ function App() {
       <Route path="/help" element={<Help />} />
       <Route path="/places" element={<Places />} />
       <Route path="/my-trips" element={<MyTrips />} />
+            <Route path="/profile/journeys" element={<Journey />} />
+
       <Route
   path="/profile"
   element={

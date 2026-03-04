@@ -100,11 +100,9 @@ function Login() {
                 <GoogleLogin
                   onSuccess={async (credentialResponse) => {
                     try {
-                      const res = await api.post(
-                        "/auth/google",
-                        credentialResponse.credential
-                      );
-
+                     const res = await api.post("/auth/google", {
+  idToken: credentialResponse.credential
+});
                       localStorage.setItem("token", res.data.token);
                       localStorage.setItem("user", JSON.stringify(res.data.user));
 
