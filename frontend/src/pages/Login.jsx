@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { GoogleLogin } from "@react-oauth/google";
-
 import "../styles/Login.css";
 
 function Login() {
@@ -30,7 +29,7 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // 🔥 IMPORTANT (update navbar instantly)
+      // update navbar instantly
       window.dispatchEvent(new Event("loginChange"));
 
       navigate("/preferences");
@@ -89,38 +88,39 @@ function Login() {
                 </span>
               </div>
 
-              {/* ===== GOOGLE LOGIN ===== */}
-              <div
-                style={{
-                  marginTop: "20px",
-                  display: "flex",
-                  justifyContent: "center"
-                }}
-              >
-                <GoogleLogin
-                  onSuccess={async (credentialResponse) => {
-                    try {
-                     const res = await api.post("/auth/google", {
-  idToken: credentialResponse.credential
-});
-                      localStorage.setItem("token", res.data.token);
-                      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-                      // 🔥 IMPORTANT
-                      window.dispatchEvent(new Event("loginChange"));
-
-                      navigate("/preferences");
-                    } catch {
-                      alert("Google login failed");
-                    }
-                  }}
-                  onError={() => {
-                    alert("Google Login Failed");
-                  }}
-                />
-              </div>
-
             </form>
+<div
+  style={{
+    marginTop: "20px",
+    display: "flex",
+    justifyContent: "center"
+  }}
+><GoogleLogin
+  onSuccess={async (credentialResponse) => {
+    try {
+      const idToken = credentialResponse.credential;
+
+      const res = await api.post("/auth/google", {
+        idToken: idToken
+      });
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      window.dispatchEvent(new Event("loginChange"));
+
+      navigate("/preferences");
+
+    } catch (err) {
+      console.error(err);
+      alert("Google login failed");
+    }
+  }}
+  onError={() => {
+    alert("Google login failed");
+  }}
+/>
+</div>
           </div>
 
         </div>

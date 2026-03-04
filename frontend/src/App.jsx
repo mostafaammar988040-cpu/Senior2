@@ -28,6 +28,8 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import MyTrips from "./pages/MyTrips";
 import Journey from "./pages/Journey";
+import JourneyEditor from "./pages/JourneyEditor";
+import SuggestionPage from "./pages/SuggestionPage";
 
 function App() {
   return (
@@ -60,6 +62,9 @@ function App() {
       <Route path="/places" element={<Places />} />
       <Route path="/my-trips" element={<MyTrips />} />
             <Route path="/profile/journeys" element={<Journey />} />
+                        <Route path="/profile/journey/new" element={<JourneyEditor />} />
+                        <Route path="/profile/suggestions" element={<SuggestionPage />} />
+
 
       <Route
   path="/profile"

@@ -7,6 +7,8 @@ export default function MyTrips() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [selectedTrip, setSelectedTrip] = useState(null);
+
   useEffect(() => {
     api.get("/profile/me")
       .then(res => {
@@ -31,26 +33,53 @@ export default function MyTrips() {
         )}
 
         {trips.map(t => (
-          <div key={t.id} className="trip-card">
-
+          <div
+            key={t.id}
+            className="trip-card"
+            onClick={() => setSelectedTrip(t)}
+          >
             <h3>{t.tripType}</h3>
-
-            <p>
-              📅 {new Date(t.startDate).toLocaleDateString()}
-              {" → "}
-              {new Date(t.endDate).toLocaleDateString()}
-            </p>
-
-            <p>💰 Budget/day: ${t.budgetPerDay}</p>
-
-            <p>👥 {t.travelers}</p>
-
-            <p>🚗 {t.transport}</p>
-
           </div>
         ))}
 
       </div>
+
+
+      {/* POPUP MODAL */}
+
+      {selectedTrip && (
+        <div className="trip-modal-overlay" onClick={() => setSelectedTrip(null)}>
+
+          <div
+            className="trip-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            <button
+              className="close-btn"
+              onClick={() => setSelectedTrip(null)}
+            >
+              ✕
+            </button>
+
+            <h2>{selectedTrip.tripType}</h2>
+
+            <p>
+              📅 {new Date(selectedTrip.startDate).toLocaleDateString()}
+              {" → "}
+              {new Date(selectedTrip.endDate).toLocaleDateString()}
+            </p>
+
+            <p>💰 Budget/day: ${selectedTrip.budgetPerDay}</p>
+
+            <p>👥 {selectedTrip.travelers}</p>
+
+            <p>🚗 {selectedTrip.transport}</p>
+
+          </div>
+
+        </div>
+      )}
 
     </section>
   );

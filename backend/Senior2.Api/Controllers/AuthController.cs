@@ -116,86 +116,7 @@ namespace Senior2.Api.Controllers
                 }
             });
         }
-        [HttpPost("google")]
-        public async Task<IActionResult> GoogleLogin([FromBody] GoogleDto dto)
-        {
-            if (string.IsNullOrEmpty(dto.IdToken))
-                return BadRequest("Google token is missing");
-
-            try
-            {
-                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
-                {
-                    Audience = new List<string>()
-            {
-                _config["Google:ClientId"]
-            }
-                };
-
-                var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken, validationSettings);
-
-                var email = payload.Email;
-                var firstName = payload.GivenName ?? "Google";
-                var lastName = payload.FamilyName ?? "User";
-
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email == email);
-
-                if (user == null)
-                {
-                    user = new Users
-                    {
-                        FirstName = firstName,
-                        LastName = lastName,
-                        Email = email,
-                        PasswordHash = ""
-                    };
-
-                    _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
-                }
-
-                var claims = new[]
-                {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, user.FirstName)
-        };
-
-                var key = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_config["Jwt:Key"])
-                );
-
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken(
-                    issuer: _config["Jwt:Issuer"],
-                    audience: _config["Jwt:Audience"],
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(
-                        int.Parse(_config["Jwt:ExpiresInMinutes"])
-                    ),
-                    signingCredentials: creds
-                );
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiresIn = token.ValidTo,
-                    user = new
-                    {
-                        id = user.Id,
-                        firstName = user.FirstName,
-                        lastName = user.LastName,
-                        email = user.Email
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized($"Google token validation failed: {ex.Message}");
-            }
-        }
+        
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
         {
@@ -260,7 +181,82 @@ namespace Senior2.Api.Controllers
 
             return Ok("Password reset successful");
         }
+        [HttpPost("google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleDto dto)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(
+                    dto.IdToken,
+                    new GoogleJsonWebSignature.ValidationSettings
+                    {
+                        Audience = new List<string> { _config["Google:ClientId"] }
+                    });
 
+                var email = payload.Email;
+                var firstName = payload.GivenName ?? "Google";
+                var lastName = payload.FamilyName ?? "User";
+
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                if (user == null)
+                {
+                    user = new Users
+                    {
+                        Email = email,
+                        FirstName = firstName,
+                        LastName = lastName
+                    };
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                // ===== GENERATE JWT =====
+
+                var claims = new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.FirstName)
+        };
+
+                var key = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_config["Jwt:Key"])
+                );
+
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: _config["Jwt:Issuer"],
+                    audience: _config["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddMinutes(
+                        int.Parse(_config["Jwt:ExpiresInMinutes"])
+                    ),
+                    signingCredentials: creds
+                );
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiresIn = token.ValidTo,
+                    user = new
+                    {
+                        id = user.Id,
+                        firstName = user.FirstName,
+                        lastName = user.LastName,
+                        email = user.Email
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized($"Google token validation failed: {ex.Message}");
+            }
+        }
     }
+
 
 }

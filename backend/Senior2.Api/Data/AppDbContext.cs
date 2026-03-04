@@ -28,7 +28,7 @@ namespace Senior2.Api.Data
         public DbSet<JourneyEntry> JourneyEntries { get; set; }
 
         public DbSet<Traveler> Travelers { get; set; }
-
+        public DbSet<Suggestion> Suggestions { get; set; }
         // 🚨 THESE WERE MISSING
         public DbSet<SmartItineraryRequest> SmartItineraryRequest { get; set; }
 
