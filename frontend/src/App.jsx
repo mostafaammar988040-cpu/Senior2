@@ -30,7 +30,8 @@ import MyTrips from "./pages/MyTrips";
 import Journey from "./pages/Journey";
 import JourneyEditor from "./pages/JourneyEditor";
 import SuggestionPage from "./pages/SuggestionPage";
-
+import AdminSuggestions from "./pages/AdminSuggestions";
+import AdminTrips from "./pages/AdminTrips";
 function App() {
   return (
     <Routes>
@@ -42,6 +43,8 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="reviews" element={<AdminReviews />} />
         <Route path="users" element={<AdminUsers />} />
+          <Route path="suggestions" element={<AdminSuggestions />} />
+<Route path="/admin/trips" element={<AdminTrips />} />
       </Route>
 
       <Route path="/preferences" element={<Preferences />} />

@@ -40,6 +40,12 @@ function AdminLayout() {
           <Link to="/admin/users" className={isActive("/admin/users")}>
             Users
           </Link>
+            <Link to="/admin/suggestions" className={isActive("/admin/suggestions")}>
+    Suggestions
+  </Link>
+   <Link to="/admin/trips" className={isActive("/admin/trips")}>
+    Trips
+  </Link>
         </nav>
 
       </aside>

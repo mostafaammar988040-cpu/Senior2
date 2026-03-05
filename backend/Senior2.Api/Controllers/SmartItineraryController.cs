@@ -17,11 +17,13 @@ namespace Senior2.Api.Controllers
             _context = context;
         }
 
+        // =========================
+        // GENERATE TRIP
+        // =========================
         [HttpPost]
         public async Task<IActionResult> GenerateTrip(
             [FromBody] SmartItineraryRequest request)
         {
-            // ===== FILTER PLACES =====
             var allPlaces = await _context.Places
                 .Include(p => p.ActivityType)
                 .ToListAsync();
@@ -39,8 +41,11 @@ namespace Senior2.Api.Controllers
                 .Take(6)
                 .ToList();
 
-            // ===== SAVE TRIP =====
+            // default status
+            request.Status = "Active";
+
             _context.Set<SmartItineraryRequest>().Add(request);
+
             await _context.SaveChangesAsync();
 
             var result = places.Select(p => new
@@ -58,6 +63,97 @@ namespace Senior2.Api.Controllers
             {
                 recommendedPlaces = result
             });
+        }
+
+        // =========================
+        // GET ALL TRIPS (ADMIN)
+        // =========================
+        [HttpGet]
+        public async Task<IActionResult> GetTrips()
+        {
+            // load trips (entities) to update statuses
+            var tripEntities = await _context.Set<SmartItineraryRequest>()
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+
+            foreach (var trip in tripEntities)
+            {
+                if (trip.Status == "Active" && trip.EndDate < DateTime.UtcNow)
+                {
+                    trip.Status = "Completed";
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // return trips joined with users to get username
+            var trips = await _context.Set<SmartItineraryRequest>()
+                .Join(_context.Users,
+                    trip => trip.UserId,
+                    user => user.Id,
+                    (trip, user) => new
+                    {
+                        trip.Id,
+                        trip.UserId,
+                        userName = user.FirstName + " " + user.LastName,
+                        trip.Travelers,
+                        trip.StartDate,
+                        trip.EndDate,
+                        trip.BudgetPerDay,
+                        trip.TripType,
+                        trip.ActivitiesJson,
+                        trip.Transport,
+                        trip.SpecialRequirements,
+                        trip.Status,
+                        trip.CreatedAt
+                    })
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+
+            return Ok(trips);
+        }
+        // =========================
+        // DELETE TRIP
+        // =========================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTrip(int id)
+        {
+            var trip = await _context.Set<SmartItineraryRequest>()
+                .FindAsync(id);
+
+            if (trip == null)
+                return NotFound("Trip not found");
+
+            _context.Remove(trip);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Trip deleted successfully"
+            });
+        }
+
+        // =========================
+        // CANCEL TRIP
+        // =========================
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelTrip(int id)
+        {
+            var trip = await _context.Set<SmartItineraryRequest>()
+                .FindAsync(id);
+
+            if (trip == null)
+                return NotFound("Trip not found");
+
+            if (trip.Status == "Completed")
+                return BadRequest("Completed trips cannot be cancelled");
+
+            trip.Status = "Cancelled";
+
+            await _context.SaveChangesAsync();
+
+            return Ok(trip);
         }
     }
 }

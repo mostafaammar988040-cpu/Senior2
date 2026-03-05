@@ -24,4 +24,6 @@ public class SmartItineraryRequest
     public string SpecialRequirements { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string Status { get; set; } = "Active";
+
 }

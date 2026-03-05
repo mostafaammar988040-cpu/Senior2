@@ -6,17 +6,62 @@ export default function MyTrips() {
 
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [selectedTrip, setSelectedTrip] = useState(null);
 
   useEffect(() => {
-    api.get("/profile/me")
-      .then(res => {
-        setTrips(res.data.trips || []);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+    fetchTrips();
   }, []);
+
+  const fetchTrips = async () => {
+
+    try {
+
+      const res = await api.get("/profile/me");
+
+      setTrips(res.data.trips || []);
+
+    } catch (error) {
+
+      console.error("Error fetching trips:", error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  const cancelTrip = async (tripId) => {
+
+    const confirm = window.confirm("Are you sure you want to cancel this trip?");
+
+    if (!confirm) return;
+
+    try {
+
+      await api.put(`/SmartItinerary/cancel/${tripId}`);
+
+      // update UI without refresh
+      setTrips(prev =>
+        prev.map(t =>
+          t.id === tripId ? { ...t, status: "Cancelled" } : t
+        )
+      );
+
+      setSelectedTrip(prev => ({
+        ...prev,
+        status: "Cancelled"
+      }));
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Failed to cancel trip");
+
+    }
+
+  };
 
   if (loading) return <p className="loading">Loading trips...</p>;
 
@@ -33,22 +78,41 @@ export default function MyTrips() {
         )}
 
         {trips.map(t => (
-          <div
-            key={t.id}
-            className="trip-card"
-            onClick={() => setSelectedTrip(t)}
-          >
-            <h3>{t.tripType}</h3>
-          </div>
-        ))}
 
+  <div
+    key={t.id}
+    className={`trip-card ${t.status === "Cancelled" ? "cancelled" : ""}`}
+    onClick={() => setSelectedTrip(t)}
+  >
+
+    <h3>{t.tripType}</h3>
+
+    {t.status === "Cancelled" && (
+      <div className="trip-overlay">
+        Cancelled
+      </div>
+    )}
+
+    {t.status === "Completed" && (
+      <div className="trip-overlay completed">
+        Completed
+      </div>
+    )}
+
+  </div>
+
+))}
       </div>
 
 
-      {/* POPUP MODAL */}
+      {/* MODAL */}
 
       {selectedTrip && (
-        <div className="trip-modal-overlay" onClick={() => setSelectedTrip(null)}>
+
+        <div
+          className="trip-modal-overlay"
+          onClick={() => setSelectedTrip(null)}
+        >
 
           <div
             className="trip-modal"
@@ -62,7 +126,7 @@ export default function MyTrips() {
               ✕
             </button>
 
-            <h2>{selectedTrip.tripType}</h2>
+            <h2>{selectedTrip.tripType} Trip</h2>
 
             <p>
               📅 {new Date(selectedTrip.startDate).toLocaleDateString()}
@@ -72,13 +136,37 @@ export default function MyTrips() {
 
             <p>💰 Budget/day: ${selectedTrip.budgetPerDay}</p>
 
-            <p>👥 {selectedTrip.travelers}</p>
+            <p>👥 Travelers: {selectedTrip.travelers}</p>
 
-            <p>🚗 {selectedTrip.transport}</p>
+            <p>🚗 Transport: {selectedTrip.transport}</p>
+
+            <p>
+              Created:
+              {" "}
+              {new Date(selectedTrip.createdAt).toLocaleDateString()}
+            </p>
+
+            {/* STATUS */}
+
+            <p className="trip-status">
+              Status: {selectedTrip.status || "Active"}
+            </p>
+
+            {/* CANCEL BUTTON */}
+
+            {selectedTrip.status !== "Cancelled" && (
+              <button
+                className="cancel-trip-btn"
+                onClick={() => cancelTrip(selectedTrip.id)}
+              >
+                Cancel Trip
+              </button>
+            )}
 
           </div>
 
         </div>
+
       )}
 
     </section>
