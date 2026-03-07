@@ -1,0 +1,133 @@
+.admin-suggestions {
+  padding: 40px;
+  color: white;
+}
+
+.admin-suggestions h1 {
+  margin-bottom: 30px;
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+  gap: 20px;
+}
+
+.suggestion-card {
+
+  background: linear-gradient(145deg,#0f172a,#020617);
+
+  border-radius: 16px;
+
+  padding: 22px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+}
+
+.suggestion-card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+}
+
+.suggestion-title {
+
+  font-size: 18px;
+
+  margin-bottom: 12px;
+
+}
+
+.suggestion-meta {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  font-size: 13px;
+
+  opacity: 0.85;
+
+}
+.suggestion-card{
+cursor:pointer;
+}
+
+/* MODAL */
+
+.suggestion-modal-overlay{
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.6);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+z-index:1000;
+
+}
+
+.suggestion-modal{
+
+background:#0f172a;
+
+padding:30px;
+
+border-radius:16px;
+
+width:500px;
+
+max-height:80vh;
+
+overflow:auto;
+
+color:white;
+
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+
+}
+
+.modal-user{
+
+margin-bottom:15px;
+
+opacity:0.8;
+
+}
+
+.modal-image{
+
+width:100%;
+border-radius:10px;
+margin-top:15px;
+
+}
+
+.close-modal{
+
+margin-top:20px;
+
+background:#d62828;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:8px;
+
+color:white;
+
+cursor:pointer;
+
+}

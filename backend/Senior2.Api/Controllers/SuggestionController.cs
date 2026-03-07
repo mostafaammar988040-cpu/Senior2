@@ -27,21 +27,20 @@ namespace Senior2.Api.Controllers
             [FromForm] CreateSuggestionDto dto,
             IFormFile? image)
         {
-
             string? imageUrl = null;
 
-            if (image != null)
+            if (image != null && image.Length > 0)
             {
                 var folder = Path.Combine(_env.WebRootPath, "suggestions");
 
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
 
-                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
 
-                var path = Path.Combine(folder, fileName);
+                var filePath = Path.Combine(folder, fileName);
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await image.CopyToAsync(stream);
                 }
@@ -67,7 +66,6 @@ namespace Senior2.Api.Controllers
             return Ok(suggestion);
         }
 
-
         // =========================
         // GET USER SUGGESTIONS
         // =========================
@@ -77,6 +75,43 @@ namespace Senior2.Api.Controllers
             var suggestions = await _context.Suggestions
                 .Where(s => s.UserId == userId)
                 .OrderByDescending(s => s.CreatedAt)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Title,
+                    s.Description,
+                    s.Type,
+                    s.Location,
+                    s.ImageUrl,
+                    s.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(suggestions);
+        }
+
+        // =========================
+        // GET ALL SUGGESTIONS (ADMIN)
+        // =========================
+        [HttpGet]
+        public async Task<IActionResult> GetAllSuggestions()
+        {
+            var suggestions = await _context.Suggestions
+                .Include(s => s.User)
+                .OrderByDescending(s => s.CreatedAt)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Title,
+                    s.Description,
+                    s.Type,
+                    s.Location,
+                    s.ImageUrl,
+                    s.CreatedAt,
+                    userName = s.User != null
+                        ? s.User.FirstName + " " + s.User.LastName
+                        : "Unknown User"
+                })
                 .ToListAsync();
 
             return Ok(suggestions);
