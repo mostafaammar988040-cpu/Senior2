@@ -1,224 +1,160 @@
-/* TaxiServices.css — Lebanese theme (green / white / red) */
-
-:root{
-  --lb-green: #0f5b3e;
-  --lb-green-2: #0b4a33;
-  --lb-red: #d62828;
-  --lb-white: #ffffff;
-
-  --card: rgba(255,255,255,.08);
-  --border: rgba(255,255,255,.14);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.72);
+.taxiPage{
+  min-height:100vh;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 }
 
-.taxiPage{
-  min-height: 100vh;
-  width: 100%;
-  padding: 32px 0 44px;     /* remove side padding */
-  margin: 0;
-
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
-    Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  color: var(--text);
-
-  background:
-    radial-gradient(900px 500px at 12% 8%, rgba(214,40,40,.20), transparent 55%),
-    radial-gradient(900px 520px at 90% 18%, rgba(255,255,255,.12), transparent 58%),
-    linear-gradient(180deg, var(--lb-green) 0%, var(--lb-green-2) 100%);
+.taxiContainer{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px;
 }
 
 .taxiHeader{
   display:flex;
-  gap:16px;
-  align-items:flex-start;
   justify-content:space-between;
-  flex-wrap:wrap;
-  margin-bottom: 18px;
-}
-.taxiContainer{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 18px;
-}
-
-.taxiKicker{
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .9px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.75);
+  align-items:flex-start;
+  margin-bottom:40px;
+  color:white;
 }
 
 .taxiTitle{
-  font-size: 36px;
-  line-height: 1.12;
-  margin: 6px 0 8px;
+  font-size:32px;
+  margin:5px 0;
 }
 
 .taxiSub{
-  margin: 0;
-  max-width: 560px;
-  color: var(--muted);
+  opacity:0.8;
+}
+
+.taxiKicker{
+  font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:0.7;
 }
 
 .taxiTip{
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.08);
-  padding: 10px 12px;
-  border-radius: 14px;
-  max-width: 430px;
-  color: var(--muted);
-  backdrop-filter: blur(10px);
+  background:white;
+  color:#333;
+  padding:12px 16px;
+  border-radius:10px;
+  max-width:250px;
+  font-size:14px;
 }
 
 .taxiTipLabel{
-  display:inline-block;
-  font-weight: 900;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(214,40,40,.55);
-  background: rgba(214,40,40,.18);
-  color: rgba(255,255,255,.92);
-  margin-right: 8px;
+  font-weight:bold;
+  margin-right:6px;
 }
 
 .taxiGrid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:25px;
 }
 
 .taxiCard{
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--card);
-  box-shadow: 0 12px 34px rgba(0,0,0,.22);
-  padding: 14px;
-  display:flex;
-  flex-direction:column;
-  gap: 12px;
-  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  backdrop-filter: blur(10px);
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,0.15);
+  transition:0.35s;
 }
 
 .taxiCard:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 18px 46px rgba(0,0,0,.28);
-  border-color: rgba(255,255,255,.22);
+  transform:translateY(-8px);
+  box-shadow:0 25px 50px rgba(0,0,0,0.3);
 }
 
-.taxiCardTop{
-  display:flex;
-  gap: 12px;
-  align-items:flex-start;
+.taxiImage{
+  height:200px;
+  overflow:hidden;
 }
 
-.taxiAvatar{
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight: 900;
-  color: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,255,255,.18);
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+.taxiImage img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:0.4s;
 }
 
-.taxiInfo{ flex:1; min-width:0; }
+.taxiCard:hover .taxiImage img{
+  transform:scale(1.1);
+}
+
+.taxiContent{
+  padding:20px;
+}
 
 .taxiNameRow{
   display:flex;
-  align-items:baseline;
   justify-content:space-between;
-  gap: 10px;
-}
-
-.taxiName{
-  font-weight: 900;
-  font-size: 16px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.taxiCity{
-  font-size: 13px;
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.taxiMeta{
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 6px;
-  display:flex;
-  flex-wrap:wrap;
-  gap: 6px;
   align-items:center;
 }
 
-.taxiMetaItem{
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.14);
-  color: rgba(255,255,255,.84);
+.taxiNameRow h2{
+  font-size:1.3rem;
+  margin:0;
 }
 
-/* Buttons */
+.taxiCity{
+  font-size:13px;
+  color:#666;
+}
+
 .taxiButtons{
   display:flex;
-  gap: 10px;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
 }
 
 .btn{
-  flex:1;
-  text-align:center;
-  padding: 10px 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.08);
+  padding:8px 14px;
+  border-radius:10px;
+  background:#14b8a6;
+  color:white;
   text-decoration:none;
-  color: rgba(255,255,255,.92);
-  font-weight: 900;
-  font-size: 14px;
-  cursor:pointer;
-  transition: transform .12s ease, filter .12s ease, background .12s ease, border-color .12s ease;
+  font-size:14px;
+  font-weight:500;
+  transition:0.2s;
 }
 
 .btn:hover{
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,.28);
+  background:#0d9488;
 }
 
 .btn.primary{
-  border-color: rgba(214,40,40,.55);
-  background: linear-gradient(135deg, rgba(214,40,40,.30), rgba(255,255,255,.10));
+  background:#1e3a8a;
 }
 
 .btn.primary:hover{
-  filter: brightness(1.08);
+  background:#1e40af;
 }
 
-/* Fine print */
 .taxiFine{
-  font-size: 12.5px;
-  color: rgba(255,255,255,.74);
-  border-top: 1px solid rgba(255,255,255,.12);
-  padding-top: 10px;
+  margin-top:15px;
+  font-size:13px;
+  color:#555;
 }
 
-.taxiFineLabel{ font-weight: 900; color: rgba(255,255,255,.88); }
-.taxiSep{ margin: 0 8px; opacity: .6; }
+.taxiFineLabel{
+  font-weight:600;
+}
 
-@media (max-width: 520px){
-  .taxiTitle{ font-size: 30px; }
-  .taxiButtons{ flex-direction: column; }
+.taxiSep{
+  margin:0 6px;
+}
+
+@media (max-width:768px){
+
+  .taxiHeader{
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .taxiCard{
+    width:100%;
+  }
+
 }

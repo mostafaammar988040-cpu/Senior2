@@ -46,7 +46,7 @@ export default function Navbar() {
       <h1>
         <span style={{ color: "#d62828" }}>AHLA</span>{" "}
         <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-        <span style={{ color: "#000000" }}>TALLEH</span>
+        <span style={{ color: "#f9f7f7" }}>TALLEH</span>
       </h1>
 
       <div>
