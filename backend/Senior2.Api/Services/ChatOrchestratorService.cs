@@ -10,7 +10,6 @@ public class ChatOrchestratorService
     private readonly OpenStreetMapService _osmService;
     private readonly LLMService _llmService;
 
-    // Simple memory (per request scope)
     private string? _lastTopic;
 
     public ChatOrchestratorService(
@@ -31,7 +30,7 @@ public class ChatOrchestratorService
     {
         var lower = message.ToLower();
 
-        // 1️⃣ Guardrail
+        // 1) Guardrail
         if (_guardrailService.IsObviouslyOutOfScope(message))
         {
             return new ChatResponse
@@ -41,10 +40,8 @@ public class ChatOrchestratorService
             };
         }
 
-        // 2️⃣ Follow-up detection (ADD IT HERE)
-        if (lower.Contains("another") ||
-            lower.Contains("more") ||
-            lower.Contains("continue"))
+        // 2) Follow-up detection
+        if (lower.Contains("another") || lower.Contains("more") || lower.Contains("continue"))
         {
             if (_lastTopic != null)
             {
@@ -70,11 +67,10 @@ public class ChatOrchestratorService
             };
         }
 
-        // 3️⃣ Detect intent (THIS STAYS AFTER)
+        // 3) Detect intent
         var intent = _intentService.DetectIntent(message);
 
-
-        // 4️⃣ History intent
+        // 4) History intent
         if (intent == "History")
         {
             var wikiData = await _wikiService.GetInfoAsync(message);
@@ -88,7 +84,6 @@ public class ChatOrchestratorService
                 };
             }
 
-            // Save topic for follow-ups
             _lastTopic = message;
 
             var formatted = await _llmService.FormatAsync(wikiData);
@@ -101,12 +96,19 @@ public class ChatOrchestratorService
             };
         }
 
-        // 5️⃣ Location intent
+        // 5) Location intent
         if (intent == "Location")
         {
-            var places = await _osmService.SearchAsync(message);
+            var osmResults = await _osmService.SearchPlaces(message, 5);
 
-            if (places == null || places.Count == 0)
+            var places = osmResults.Select(p => new PlaceResult
+            {
+                Name = p.GetType().GetProperty("name")?.GetValue(p)?.ToString() ?? "",
+                Type = "Place",
+                City = p.GetType().GetProperty("location")?.GetValue(p)?.ToString() ?? ""
+            }).ToList();
+
+            if (places.Count == 0)
             {
                 return new ChatResponse
                 {
@@ -125,6 +127,7 @@ public class ChatOrchestratorService
             };
         }
 
+        // 6) Default fallback
         return new ChatResponse
         {
             Reply = "I'm not sure how to answer that yet.",

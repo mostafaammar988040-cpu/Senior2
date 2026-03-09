@@ -21,12 +21,14 @@ builder.Services.AddScoped<ChatOrchestratorService>();
 builder.Services.AddScoped<IntentService>();
 builder.Services.AddScoped<GuardrailService>();
 builder.Services.AddScoped<WikipediaService>();
-builder.Services.AddScoped<OpenStreetMapService>();
 builder.Services.AddScoped<LLMService>();
 builder.Services.AddScoped<EmailService>(); // ADD THIS
-
-
-// Database
+builder.Services.AddScoped<RecommendationService>();
+builder.Services.AddHttpClient<OpenStreetMapService>();
+builder.Services.AddHttpClient<GeoapifyService>(client =>
+{
+    client.DefaultRequestHeaders.Add("User-Agent", "Senior2TourismApp/1.0");
+});
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")

@@ -34,7 +34,7 @@ function SignUp() {
       });
 
       alert("Account created successfully!");
-      navigate("/preferences");
+      navigate("/login");
     } catch (error) {
       const message =
         error.response?.data || "Something went wrong during signup";

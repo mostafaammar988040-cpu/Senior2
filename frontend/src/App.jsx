@@ -32,6 +32,7 @@ import JourneyEditor from "./pages/JourneyEditor";
 import SuggestionPage from "./pages/SuggestionPage";
 import AdminSuggestions from "./pages/AdminSuggestions";
 import AdminTrips from "./pages/AdminTrips";
+import Recommendations from "./pages/Recommendations";   
 function App() {
   return (
     <Routes>
@@ -67,6 +68,7 @@ function App() {
             <Route path="/profile/journeys" element={<Journey />} />
                         <Route path="/profile/journey/new" element={<JourneyEditor />} />
                         <Route path="/profile/suggestions" element={<SuggestionPage />} />
+<Route path="/recommendations" element={<Recommendations />} />
 
 
       <Route

@@ -79,8 +79,14 @@ export default function Navbar() {
           <Link to="/profile" style={{ marginLeft: "25px" }}>
             Profile
           </Link>
+          
         )}
-
+   {isLoggedIn && (
+          <Link to="/recommendations" style={{ marginLeft: "25px" }}>
+            Recommendations
+          </Link>
+          
+        )}
         {/* LOGIN / LOGOUT */}
         {isLoggedIn ? (
           <span
