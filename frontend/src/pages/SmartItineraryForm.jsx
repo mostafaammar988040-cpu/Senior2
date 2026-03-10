@@ -4,7 +4,6 @@ import "../styles/SmartItinerary.css";
 
 export default function SmartItineraryForm() {
 
-  /* ===== STATES ===== */
   const [budget, setBudget] = useState(110);
   const [travelers, setTravelers] = useState("Solo");
 
@@ -18,9 +17,10 @@ export default function SmartItineraryForm() {
   const [specialRequirements, setSpecialRequirements] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [generatedPlaces, setGeneratedPlaces] = useState([]);
+  const [generatedDays, setGeneratedDays] = useState([]);
 
-  /* ===== TOGGLE ACTIVITIES ===== */
+  const [includeSavedPlaces, setIncludeSavedPlaces] = useState(false);
+
   const toggleActivity = (activity) => {
     if (activities.includes(activity)) {
       setActivities(activities.filter(a => a !== activity));
@@ -29,9 +29,20 @@ export default function SmartItineraryForm() {
     }
   };
 
-  /* ===== GENERATE TRIP ===== */
   const handleGenerate = async () => {
+
+    if (!tripType) {
+      alert("Please select a trip type");
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      alert("Please select trip dates");
+      return;
+    }
+
     try {
+
       setLoading(true);
 
       const user = JSON.parse(localStorage.getItem("user"));
@@ -43,21 +54,23 @@ export default function SmartItineraryForm() {
         endDate,
         budgetPerDay: budget,
         tripType,
-        activitiesJson: JSON.stringify(activities), // ⭐ FIXED
+        activitiesJson: JSON.stringify(activities),
         transport,
-        specialRequirements
+        specialRequirements,
+        includeSavedPlaces
       };
 
       const res = await api.post("/smartitinerary", payload);
 
-      setGeneratedPlaces(res.data.recommendedPlaces || []);
+      setGeneratedDays(res.data.itinerary || []);
 
       alert("Trip generated successfully!");
 
     } catch (err) {
       console.error(err);
       alert("Failed to generate trip");
-    } finally {
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -65,7 +78,6 @@ export default function SmartItineraryForm() {
   return (
     <div className="form-container">
 
-      {/* BASIC DETAILS */}
       <h2>📋 Basic Trip Details</h2>
 
       <label>Number of Travelers</label>
@@ -80,12 +92,14 @@ export default function SmartItineraryForm() {
       </select>
 
       <label>Trip Duration</label>
+
       <div className="date-row">
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
+
         <input
           type="date"
           value={endDate}
@@ -93,11 +107,11 @@ export default function SmartItineraryForm() {
         />
       </div>
 
-      {/* BUDGET */}
       <h2>💰 Your Budget Per Day</h2>
 
       <div className="budget-card">
         <p>${budget} / day</p>
+
         <input
           type="range"
           min="20"
@@ -107,7 +121,6 @@ export default function SmartItineraryForm() {
         />
       </div>
 
-      {/* TRIP TYPE */}
       <h2>✨ What Type of Trip Are You Looking For?</h2>
 
       <div className="options-row">
@@ -123,7 +136,6 @@ export default function SmartItineraryForm() {
         ))}
       </div>
 
-      {/* ACTIVITIES */}
       <h2>🌍 What Activities Do You Prefer?</h2>
 
       <div className="options-row">
@@ -146,7 +158,6 @@ export default function SmartItineraryForm() {
         ))}
       </div>
 
-      {/* TRANSPORT */}
       <h2>🚗 Preferred Transportation</h2>
 
       <div className="options-row">
@@ -162,7 +173,6 @@ export default function SmartItineraryForm() {
         ))}
       </div>
 
-      {/* SPECIAL */}
       <h2>📝 Special Requirements</h2>
 
       <textarea
@@ -171,13 +181,22 @@ export default function SmartItineraryForm() {
         onChange={(e) => setSpecialRequirements(e.target.value)}
       />
 
-      {/* ESTIMATED */}
       <div className="estimated-box">
         <h3>📄 Estimated Trip Cost</h3>
         <h1>${budget * 2}</h1>
       </div>
 
-      {/* GENERATE */}
+      <h2 className="personal-title">⭐ Personal Options</h2>
+
+      <label className="saved-option">
+        <input
+          type="checkbox"
+          checked={includeSavedPlaces}
+          onChange={() => setIncludeSavedPlaces(!includeSavedPlaces)}
+        />
+        Include places I saved while exploring
+      </label>
+
       <button
         className="generate-btn"
         onClick={handleGenerate}
@@ -186,21 +205,45 @@ export default function SmartItineraryForm() {
         {loading ? "Generating..." : "Generate My Trip Plan"}
       </button>
 
-      {/* RESULTS (same design style) */}
-      {generatedPlaces.length > 0 && (
+      {generatedDays.length > 0 && (
         <>
-          <h2>🎯 Recommended Places</h2>
+          <h2>🗺️ Your AI Trip Plan</h2>
 
-          <div className="cards-grid">
-            {generatedPlaces.map(place => (
-              <div key={place.id} className="card">
-                <img src={place.imageUrl} alt={place.name} />
-                <h4>{place.name}</h4>
-                <p>{place.location}</p>
-                <p>{place.activityType}</p>
-              </div>
-            ))}
-          </div>
+          {generatedDays.map(day => (
+
+  <div key={day.day} className="day-block">
+
+    <h3>Day {day.day} — {day.region}</h3>
+
+    <div className="cards-grid">
+
+      {day.activities?.map(place => (
+
+        <div key={place.id} className="card">
+
+          <img src={place.imageUrl} alt={place.name} />
+
+          <h4>{place.name}</h4>
+
+          <p>{place.location}</p>
+
+          <p>{place.activityType}</p>
+
+        </div>
+
+      ))}
+
+    </div>
+
+    {day.restaurant && (
+      <p className="day-restaurant">
+        🍽 Restaurant: {day.restaurant.name}
+      </p>
+    )}
+
+  </div>
+
+))}
         </>
       )}
 

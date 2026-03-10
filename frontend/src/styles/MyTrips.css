@@ -160,3 +160,17 @@ text-transform:uppercase;
 .trip-overlay.completed{
 background:rgba(100,100,100,0.8);
 }
+.trip-itinerary{
+margin-top:20px;
+padding-top:15px;
+border-top:1px solid #eee;
+}
+
+.trip-day{
+margin-top:10px;
+}
+
+.trip-day h4{
+margin-bottom:5px;
+color:#2d5a27;
+}

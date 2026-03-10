@@ -139,6 +139,43 @@ export default function MyTrips() {
             <p>👥 Travelers: {selectedTrip.travelers}</p>
 
             <p>🚗 Transport: {selectedTrip.transport}</p>
+            {/* TRIP ITINERARY */}
+
+{selectedTrip.itineraryJson && (
+
+  <div className="trip-itinerary">
+
+    <h3>🗺️ Trip Itinerary</h3>
+
+    {JSON.parse(selectedTrip.itineraryJson).map(day => (
+
+  <div key={day.day} className="trip-day">
+
+    <h4>Day {day.day} — {day.region}</h4>
+
+    {/* ACTIVITIES */}
+    {day.activities?.map(place => (
+
+      <p key={place.id}>
+        • {place.name} — {place.location}
+      </p>
+
+    ))}
+
+    {/* RESTAURANT */}
+    {day.restaurant && (
+      <p>
+        🍽 Restaurant: {day.restaurant.name}
+      </p>
+    )}
+
+  </div>
+
+))}
+
+  </div>
+
+)}
 
             <p>
               Created:

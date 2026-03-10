@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Recommendations.css";
 
@@ -6,6 +7,7 @@ export default function Recommendations() {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -18,7 +20,14 @@ export default function Recommendations() {
 
   }, []);
 
-  if (loading) return <p>Loading recommendations...</p>;
+  if (loading) {
+    return (
+      <div className="rec-page">
+        <h1 className="rec-title">Recommended For You</h1>
+        <p className="loading">Loading recommendations...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="rec-page">
@@ -33,18 +42,23 @@ export default function Recommendations() {
 
           <div className="rec-row">
 
-            {row.places.map((place, i) => (
+            {row.places?.length > 0 && row.places.map((place, i) => (
 
-              <div key={i} className="rec-card">
+              <div
+                key={i}
+                className="rec-card"
+                onClick={() => navigate(`/places/${place.id}`)}
+              >
 
-              <img
-  src={place.imageUrl}
-  alt={place.name}
-  loading="lazy"
-  onError={(e) => {
-    e.target.src = "/images/default-place.jpg";
-  }}
-/>
+                <img
+                  src={place.imageUrl}
+                  alt={place.name}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = "/images/default-place.jpg";
+                  }}
+                />
+
                 <div className="rec-info">
                   <h3>{place.name}</h3>
                   <p>{place.city}</p>

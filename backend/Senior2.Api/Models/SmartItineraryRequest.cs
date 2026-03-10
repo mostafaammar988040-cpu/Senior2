@@ -2,7 +2,7 @@
 
 public class SmartItineraryRequest
 {
-    public int Id { get; set; } // NEW (DB primary key)
+    public int Id { get; set; }
 
     public int UserId { get; set; }
 
@@ -16,7 +16,6 @@ public class SmartItineraryRequest
 
     public string TripType { get; set; } = string.Empty;
 
-    // store as JSON string (clean EF way)
     public string ActivitiesJson { get; set; } = string.Empty;
 
     public string Transport { get; set; } = string.Empty;
@@ -24,6 +23,10 @@ public class SmartItineraryRequest
     public string SpecialRequirements { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     public string Status { get; set; } = "Active";
 
+    // ⭐ NEW OPTION
+    public bool IncludeSavedPlaces { get; set; } = false;
+    public string? ItineraryJson { get; set; }
 }

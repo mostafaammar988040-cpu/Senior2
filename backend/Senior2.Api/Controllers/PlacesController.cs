@@ -43,7 +43,6 @@ namespace Senior2.Api.Controllers
                     p.Name,
                     p.Description,
                     p.Location,
-                    p.Price,
                     p.ImageUrl,
                     Category = p.Category.Name,
                     Slug = p.Category.Slug

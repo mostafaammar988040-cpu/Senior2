@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senior2.Api.Data;
 
@@ -11,9 +12,11 @@ using Senior2.Api.Data;
 namespace Senior2.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260310081433_AddPlaceReviews")]
+    partial class AddPlaceReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -783,32 +786,6 @@ namespace Senior2.Api.Migrations
                     b.ToTable("Suggestions");
                 });
 
-            modelBuilder.Entity("Senior2.Api.Models.TripPlanPlace", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripPlanId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlaceId");
-
-                    b.HasIndex("TripPlanId");
-
-                    b.ToTable("TripPlanPlaces");
-                });
-
             modelBuilder.Entity("SmartItineraryRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -829,12 +806,6 @@ namespace Senior2.Api.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IncludeSavedPlaces")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ItineraryJson")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpecialRequirements")
                         .IsRequired()
@@ -1086,25 +1057,6 @@ namespace Senior2.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Senior2.Api.Models.TripPlanPlace", b =>
-                {
-                    b.HasOne("Senior2.Api.Models.Place", "Place")
-                        .WithMany()
-                        .HasForeignKey("PlaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TripPlan", "TripPlan")
-                        .WithMany()
-                        .HasForeignKey("TripPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Place");
-
-                    b.Navigation("TripPlan");
                 });
 
             modelBuilder.Entity("TripPlan", b =>

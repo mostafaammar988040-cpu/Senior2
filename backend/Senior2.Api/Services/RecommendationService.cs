@@ -23,18 +23,12 @@ namespace Senior2.Api.Services
             var pref = await _context.UserPreferences
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            List<string> preferences = new();
-
-            if (pref != null)
-            {
-                preferences = JsonSerializer.Deserialize<List<string>>(pref.PreferencesJson) ?? new();
-            }
-
-            // 2️⃣ Popular places from your platform database
+            // 2️⃣ Popular places from your platform
             var dbPlaces = await _context.Places
                 .Include(p => p.Category)
-                .Take(10)
+                .Take(8)
                 .ToListAsync();
+
             result.Add(new
             {
                 title = "Popular on Platform",
@@ -42,35 +36,115 @@ namespace Senior2.Api.Services
                 {
                     id = p.Id,
                     name = p.Name,
-                    imageUrl = string.IsNullOrEmpty(p.ImageUrl)
-                        ? "/images/default-place.jpg"
-                        : p.ImageUrl,
+                    imageUrl = string.IsNullOrEmpty(p.ImageUrl) ? "/images/default-place.jpg" : p.ImageUrl,
                     city = p.Location
                 })
             });
 
-            // 3️⃣ External recommendations from Geoapify
-            var externalPlaces = await _geo.GetLebanonPlaces();
+            // 3️⃣ Restaurants from database
+            var restaurants = await _context.Places
+                .Include(p => p.Category)
+                .Where(p => p.Category.Slug == "restaurants")
+                .Take(8)
+                .ToListAsync();
+
+            result.Add(new
+            {
+                title = "Best Restaurants For You",
+                places = restaurants.Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    imageUrl = p.ImageUrl,
+                    city = p.Location
+                })
+            });
+
+            // 4️⃣ Personalized recommendations
+            if (pref != null)
+            {
+                var prefs = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(pref.PreferencesJson);
+
+                if (prefs != null && prefs.ContainsKey("activities"))
+                {
+                    var activities = prefs["activities"];
+
+                    // 🥾 Hiking
+                    if (activities.Any(a => a.Contains("hike")))
+                    {
+                        var hiking = await _context.Places
+                            .Include(p => p.ActivityType)
+                            .Where(p => p.ActivityType != null && p.ActivityType.Slug == "hiking")
+                            .Take(6)
+                            .ToListAsync();
+
+                        result.Add(new
+                        {
+                            title = "Hiking Adventures",
+                            places = hiking.Select(p => new
+                            {
+                                id = p.Id,
+                                name = p.Name,
+                                imageUrl = p.ImageUrl,
+                                city = p.Location
+                            })
+                        });
+                    }
+
+                    // 🏖 Beaches / Swimming
+                    if (activities.Any(a => a.Contains("beach")))
+                    {
+                        var swimming = await _context.Places
+                            .Include(p => p.ActivityType)
+                            .Where(p => p.ActivityType != null && p.ActivityType.Slug == "swimming")
+                            .Take(6)
+                            .ToListAsync();
+
+                        result.Add(new
+                        {
+                            title = "Best Swimming Spots",
+                            places = swimming.Select(p => new
+                            {
+                                id = p.Id,
+                                name = p.Name,
+                                imageUrl = p.ImageUrl,
+                                city = p.Location
+                            })
+                        });
+                    }
+
+                    // 🎿 Skiing
+                    if (activities.Any(a => a.Contains("ski")))
+                    {
+                        var skiing = await _context.Places
+                            .Include(p => p.ActivityType)
+                            .Where(p => p.ActivityType != null && p.ActivityType.Slug == "skiing")
+                            .Take(6)
+                            .ToListAsync();
+
+                        result.Add(new
+                        {
+                            title = "Skiing Adventures",
+                            places = skiing.Select(p => new
+                            {
+                                id = p.Id,
+                                name = p.Name,
+                                imageUrl = p.ImageUrl,
+                                city = p.Location
+                            })
+                        });
+                    }
+                }
+            }
+
+            // 5️⃣ Explore Lebanon (external discovery)
+            var explore = await _geo.GetLebanonPlaces("tourism.sights");
 
             result.Add(new
             {
                 title = "Explore Lebanon",
-                places = externalPlaces
+                places = explore
             });
-
-            // 4️⃣ Preference-based recommendations
-            if (preferences.Any())
-            {
-                var prefQuery = preferences.First();
-
-                var prefPlaces = await _geo.GetLebanonPlaces();
-
-                result.Add(new
-                {
-                    title = $"Because you like {prefQuery}",
-                    places = prefPlaces
-                });
-            }
 
             return result;
         }

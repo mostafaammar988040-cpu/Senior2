@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 import "../styles/Preferences.css";
 
 const interests = [
@@ -21,8 +22,11 @@ const activities = [
 ];
 
 function Preferences() {
-  const [step, setStep] = useState(1);
+
   const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   const [selected, setSelected] = useState({
     interests: [],
@@ -45,6 +49,23 @@ function Preferences() {
 
   const nextStep = () => setStep(step + 1);
 
+  const finish = async () => {
+
+    try {
+
+      await api.post("/preferences", {
+        userId: user.id,
+        preferences: selected
+      });
+
+      navigate("/introduction");
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
+
   const currentData =
     step === 1 ? interests :
     step === 2 ? food :
@@ -62,7 +83,9 @@ function Preferences() {
 
   return (
     <div className="pref-container">
+
       <div className="pref-panel">
+
       <div className="progress-bar">
         <div
           className="progress-fill"
@@ -73,7 +96,9 @@ function Preferences() {
       <h2>{title}</h2>
 
       <div className="card-grid">
+
         {currentData.map(item => (
+
           <div
             key={item.id}
             className={`pref-card ${
@@ -81,12 +106,18 @@ function Preferences() {
             }`}
             onClick={() => toggleSelect(category, item.id)}
           >
+
             <img src={item.img} alt={item.label} />
             <span>{item.label}</span>
+
           </div>
+
         ))}
+
       </div>
+
       <div className="pref-actions">
+
         <button
           className="skip-btn"
           onClick={() => navigate("/introduction")}
@@ -106,13 +137,16 @@ function Preferences() {
         {step === 3 && (
           <button
             className="continue-btn"
-            onClick={() => navigate("/introduction")}
+            onClick={finish}
           >
             Finish
           </button>
         )}
+
       </div>
+
       </div>
+
     </div>
   );
 }

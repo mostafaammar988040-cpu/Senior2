@@ -24,6 +24,7 @@ namespace Senior2.Api.Data
         public DbSet<UserPreference> UserPreferences { get; set; }
 
         public DbSet<TripPlan> TripPlans { get; set; }
+        public DbSet<TripPlanPlace> TripPlanPlaces { get; set; }
 
         public DbSet<JourneyEntry> JourneyEntries { get; set; }
 
@@ -33,7 +34,7 @@ namespace Senior2.Api.Data
         public DbSet<SmartItineraryRequest> SmartItineraryRequest { get; set; }
 
         public DbSet<SupportRequest> SupportRequests { get; set; }
-
+        public DbSet<PlaceReview> PlaceReviews { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

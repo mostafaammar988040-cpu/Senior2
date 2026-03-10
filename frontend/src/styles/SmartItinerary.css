@@ -59,3 +59,14 @@
   background: #220bbd;
   transform: scale(1.05);
 }
+.personal-title{
+margin-top:30px;
+}
+
+.saved-option{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:25px;
+font-weight:500;
+}

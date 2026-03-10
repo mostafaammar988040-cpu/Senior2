@@ -21,47 +21,137 @@ namespace Senior2.Api.Controllers
         // GENERATE TRIP
         // =========================
         [HttpPost]
-        public async Task<IActionResult> GenerateTrip(
-            [FromBody] SmartItineraryRequest request)
+        [HttpPost]
+        public async Task<IActionResult> GenerateTrip([FromBody] SmartItineraryRequest request)
         {
             var allPlaces = await _context.Places
                 .Include(p => p.ActivityType)
                 .ToListAsync();
 
-            var activities =
+            var activitiesRequested =
                 JsonSerializer.Deserialize<List<string>>(request.ActivitiesJson)
                 ?? new List<string>();
 
-            var places = allPlaces
+            // FILTER ACTIVITIES
+            var activities = allPlaces
                 .Where(p =>
                     p.CategoryId == 1 &&
                     p.ActivityType != null &&
-                    activities.Any(a =>
+                    activitiesRequested.Any(a =>
                         a.ToLower() == p.ActivityType.Name.ToLower()))
-                .Take(6)
                 .ToList();
 
-            // default status
+            // RESTAURANTS
+            var restaurants = allPlaces
+                .Where(p => p.CategoryId == 2)
+                .ToList();
+
+            // HOTELS / GUESTHOUSES
+            var hotels = allPlaces
+                .Where(p => p.CategoryId == 3)
+                .ToList();
+
+            // INCLUDE SAVED PLACES
+            if (request.IncludeSavedPlaces)
+            {
+                var savedPlaces = await _context.TripPlanPlaces
+                    .Include(p => p.Place)
+                    .ThenInclude(pl => pl.ActivityType)
+                    .Where(p => p.TripPlan.UserId == request.UserId)
+                    .Select(p => p.Place)
+                    .ToListAsync();
+
+                activities = activities
+                    .Concat(savedPlaces)
+                    .GroupBy(p => p.Id)
+                    .Select(g => g.First())
+                    .ToList();
+            }
+
+            // SELECT ONE HOTEL
+            var stay = hotels.FirstOrDefault();
+
+            // CALCULATE TRIP DAYS
+            var totalDays = (request.EndDate - request.StartDate).Days + 1;
+            if (totalDays <= 0) totalDays = 1;
+
+            // GROUP ACTIVITIES BY REGION
+            var groupedByRegion = activities
+                .GroupBy(p =>
+                {
+                    if (p.Location.ToLower().Contains("beirut")) return "Beirut";
+                    if (p.Location.ToLower().Contains("Tripoli")) return "North";
+                    if (p.Location.ToLower().Contains("Byblos")) return "Mount Lebanon";
+                    if (p.Location.ToLower().Contains("Baalbek")) return "Bekaa";
+                    return "Other";
+                })
+                .ToList();
+
+            var itinerary = new List<object>();
+
+            int restaurantIndex = 0;
+
+            for (int day = 1; day <= totalDays; day++)
+            {
+                var regionGroup = groupedByRegion
+                    .ElementAtOrDefault((day - 1) % groupedByRegion.Count);
+
+                List<object> dayActivities = new List<object>();
+
+                if (regionGroup != null)
+                {
+                    dayActivities = regionGroup
+                        .Take(2)
+                        .Select(p => (object)new
+                        {
+                            id = p.Id,
+                            name = p.Name,
+                            location = p.Location,
+                            imageUrl = p.ImageUrl,
+                            activityType = p.ActivityType?.Name
+                        })
+                        .ToList();
+                }
+
+                var restaurant = restaurants
+                    .Skip(restaurantIndex)
+                    .FirstOrDefault();
+
+                restaurantIndex++;
+
+                itinerary.Add(new
+                {
+                    day,
+                    region = regionGroup?.Key,
+                    stay = stay != null ? new
+                    {
+                        stay.Id,
+                        stay.Name,
+                        stay.Location,
+                        stay.ImageUrl
+                    } : null,
+                    activities = dayActivities,
+                    restaurant = restaurant != null ? new
+                    {
+                        restaurant.Id,
+                        restaurant.Name,
+                        restaurant.Location
+                    } : null
+                });
+            }
+
             request.Status = "Active";
+
+            request.ItineraryJson = JsonSerializer.Serialize(itinerary);
 
             _context.Set<SmartItineraryRequest>().Add(request);
 
             await _context.SaveChangesAsync();
 
-            var result = places.Select(p => new
-            {
-                p.Id,
-                p.Name,
-                p.Description,
-                p.Location,
-                p.Price,
-                p.ImageUrl,
-                ActivityType = p.ActivityType.Name
-            });
-
             return Ok(new
             {
-                recommendedPlaces = result
+                stay,
+                itinerary
             });
         }
 
@@ -105,7 +195,9 @@ namespace Senior2.Api.Controllers
                         trip.Transport,
                         trip.SpecialRequirements,
                         trip.Status,
-                        trip.CreatedAt
+                        trip.CreatedAt,
+                        trip.ItineraryJson
+
                     })
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();

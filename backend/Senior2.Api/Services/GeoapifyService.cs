@@ -16,10 +16,10 @@ namespace Senior2.Api.Services
             _http = http;
         }
 
-        public async Task<List<dynamic>> GetLebanonPlaces()
+        public async Task<List<dynamic>> GetLebanonPlaces(string category)
         {
             var url =
-                $"https://api.geoapify.com/v2/places?categories=tourism.sights&filter=circle:35.5018,33.8938,120000&limit=30&apiKey={_apiKey}";
+  $"https://api.geoapify.com/v2/places?categories={category}&filter=circle:35.5018,33.8938,120000&limit=30&apiKey={_apiKey}";
 
             var response = await _http.GetAsync(url);
 
