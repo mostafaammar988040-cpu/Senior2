@@ -2,6 +2,7 @@ import { IoSend } from "react-icons/io5";
 import "./AIAssistant.css";
 import { useState, useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
+import api from '../../services/api';
 
 function AIAssistant() {
   const [input, setInput] = useState("");
@@ -31,17 +32,9 @@ function AIAssistant() {
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
 
     try {
-      const response = await fetch("https://localhost:7090/api/Chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: userMessage.text
-        })
-      });
-
-      const data = await response.json();
+      const response = await api.post('/Chat', { message: userMessage.text });
+      const data = response.data;
+      
 
       // Replace "Thinking..." with real reply
       setMessages((prev) => {
