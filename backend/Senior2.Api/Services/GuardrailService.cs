@@ -1,28 +1,34 @@
 ﻿using System.Linq;
+
 namespace Senior2.Api.Services;
 
 public class GuardrailService
 {
     public bool IsObviouslyOutOfScope(string message)
-{
-    var lower = message.ToLower();
-
-    // Lebanon tourism keywords (expand as needed)
-    var lebanonKeywords = new[]
     {
-        "lebanon", "beirut", "byblos", "baalbek", "tyre", "sidon",
-        "cedars", "jeita", "batroun", "jbeil", "anjar", "koura",
-        "bekaa", "mount lebanon", "north lebanon", "south lebanon",
-        "restaurant", "hotel", "guesthouse", "ski", "beach", "historical",
-        "trip", "itinerary", "travel", "tour", "visit", "place",
-        "food", "cuisine", "wine", "festival", "event", "culture"
-    };
+        var lower = message.ToLower();
 
-    // If any keyword is present, it's in scope
-    if (lebanonKeywords.Any(keyword => lower.Contains(keyword)))
-        return false;   // within scope
+        var allowedKeywords = new[]
+        {
+            // Lebanon locations
+            "lebanon","beirut","byblos","jbeil","baalbek","baalbeck","tyre","sidon",
+            "batroun","anjar","jeita","cedars","bekaa","koura",
 
-    // Otherwise, reject
-    return true;
-}
+            // tourism keywords
+            "restaurant","hotel","guesthouse","cafe","coffee","bar",
+            "beach","ski","mountain","hiking","trail","waterfall",
+
+            // travel keywords
+            "trip","travel","visit","tour","place","where","recommend",
+
+            // history
+            "history","tell me about","what is","who built","when"
+        };
+
+        // If ANY allowed keyword exists → allow
+        if (allowedKeywords.Any(k => lower.Contains(k)))
+            return false;
+
+        return true;
+    }
 }

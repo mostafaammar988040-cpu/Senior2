@@ -6,15 +6,20 @@ public class IntentService
     {
         var lower = message.ToLower();
 
-        // Location intent
         if (lower.Contains("beach") ||
             lower.Contains("restaurant") ||
+            lower.Contains("food") ||
+            lower.Contains("eat") ||
+            lower.Contains("cafe") ||
+            lower.Contains("coffee") ||
+            lower.Contains("coffee shop") ||
             lower.Contains("hotel") ||
+            lower.Contains("guesthouse") ||
             lower.Contains("hospital") ||
-            lower.Contains("where"))
+            lower.Contains("where") ||
+            lower.Contains("recommend"))
             return "Location";
 
-        // Informational / History intent
         if (lower.Contains("history") ||
             lower.Contains("tell me about") ||
             lower.Contains("what is") ||
@@ -23,7 +28,6 @@ public class IntentService
             lower.Contains("about"))
             return "History";
 
-        // Default: treat unknown as informational
         return "History";
     }
 }

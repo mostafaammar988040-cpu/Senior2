@@ -99,8 +99,18 @@ public class ChatOrchestratorService
         // 5) Location intent
         if (intent == "Location")
         {
-            var osmResults = await _osmService.SearchPlaces(message, 5);
+            string searchQuery = message.ToLower();
 
+            if (searchQuery.Contains("restaurant"))
+                searchQuery = "restaurant beirut";
+
+            if (searchQuery.Contains("coffee") || searchQuery.Contains("cafe"))
+                searchQuery = "cafe beirut";
+
+            if (searchQuery.Contains("hotel"))
+                searchQuery = "hotel beirut";
+
+            var osmResults = await _osmService.SearchPlaces(searchQuery, 5);
             var places = osmResults.Select(p => new PlaceResult
             {
                 Name = p.GetType().GetProperty("name")?.GetValue(p)?.ToString() ?? "",

@@ -21,7 +21,7 @@ builder.Services.AddScoped<ChatOrchestratorService>();
 builder.Services.AddScoped<IntentService>();
 builder.Services.AddScoped<GuardrailService>();
 builder.Services.AddScoped<WikipediaService>();
-builder.Services.AddScoped<LLMService>();
+builder.Services.AddHttpClient<LLMService>(); 
 builder.Services.AddScoped<EmailService>(); // ADD THIS
 builder.Services.AddScoped<RecommendationService>();
 builder.Services.AddHttpClient<OpenStreetMapService>();
