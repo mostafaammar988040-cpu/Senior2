@@ -7,6 +7,16 @@ import api from '../../services/api';
 function AIAssistant() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
+  // Generate or retrieve a persistent session ID
+const [sessionId] = useState(() => {
+  let id = localStorage.getItem('chatSessionId');
+  if (!id) {
+    id = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('chatSessionId', id);
+  }
+  return id;
+});
+
   const bottomRef = useRef(null);
 
   const handleSend = async () => {
@@ -32,7 +42,10 @@ function AIAssistant() {
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
 
     try {
-      const response = await api.post('/Chat', { message: userMessage.text });
+      const response = await api.post('/Chat', { 
+  message: userMessage.text,
+  sessionId: sessionId 
+});
       const data = response.data;
       
 

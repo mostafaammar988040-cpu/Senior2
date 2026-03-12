@@ -97,6 +97,16 @@ public class WikipediaService
         }
 
         return null;
+
+        try
+{
+    // existing HTTP request
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($"Wikipedia request failed: {ex.Message}");
+    return null;
+}
     }
 
 

@@ -11,18 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICES
 // =======================
 
-// Controllers
 builder.Services.AddControllers();
-
-// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Custom services
 builder.Services.AddScoped<ChatOrchestratorService>();
 builder.Services.AddScoped<IntentService>();
 builder.Services.AddScoped<GuardrailService>();
 builder.Services.AddScoped<WikipediaService>();
-builder.Services.AddHttpClient<LLMService>(); 
-builder.Services.AddScoped<EmailService>(); // ADD THIS
+builder.Services.AddScoped<LLMService>();                // Fixed: was AddHttpClient
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<RecommendationService>();
 builder.Services.AddHttpClient<OpenStreetMapService>();
 builder.Services.AddHttpClient<GeoapifyService>(client =>
@@ -34,22 +33,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+builder.Services.AddScoped<PlaceSearchService>();
+builder.Services.AddScoped<ItineraryService>();
+builder.Services.AddSingleton<ConversationMemoryService>(); // New
 
 // =======================
-// CORS (IMPORTANT)
+// CORS
 // =======================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // your Vite port
+            policy.WithOrigins("http://localhost:5173")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
-
-
 
 // =======================
 // JWT AUTHENTICATION
@@ -77,6 +77,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
+
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
@@ -100,7 +101,6 @@ app.Use(async (context, next) =>
 });
 app.UseRouting();
 
-// 👉 CORS MUST BE HERE
 app.UseCors("AllowReact");
 
 app.UseAuthentication();

@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import Navigation from "../pages/Navigation";
 import "../styles/Homepage.css";
 
 import heroImg from "../assets/landscape.webp";
@@ -12,7 +11,6 @@ export default function Home() {
 
   return (
     <>
-      <Navigation />
 
      
 

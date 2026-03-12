@@ -21,8 +21,7 @@ public class ChatController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Message))
             return BadRequest("Message cannot be empty.");
 
-        var result = await _chatService.ProcessAsync(request.Message);
-
+        var result = await _chatService.ProcessAsync(request.Message, request.SessionId);
         return Ok(result);
     }
 }
