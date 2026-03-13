@@ -72,7 +72,8 @@ namespace Senior2.Api.Controllers
 
             if (user == null)
                 return Unauthorized("Invalid credentials");
-
+            if (user.IsBlocked)
+                return Unauthorized("Your account has been blocked by the administrator.");
             // Verify password
             bool passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 

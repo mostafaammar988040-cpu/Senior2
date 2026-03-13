@@ -35,14 +35,12 @@ export default function MyTrips() {
   const cancelTrip = async (tripId) => {
 
     const confirm = window.confirm("Are you sure you want to cancel this trip?");
-
     if (!confirm) return;
 
     try {
 
       await api.put(`/SmartItinerary/cancel/${tripId}`);
 
-      // update UI without refresh
       setTrips(prev =>
         prev.map(t =>
           t.id === tripId ? { ...t, status: "Cancelled" } : t
@@ -68,8 +66,10 @@ export default function MyTrips() {
   return (
     <section className="trips-page">
 
-      <h1>✈️ My Smart Trips</h1>
-      <p>Your AI generated travel history</p>
+     <div className="trips-header">
+  <h1>✈️ My Smart Trips</h1>
+  <p>Your AI generated travel history</p>
+</div>
 
       <div className="trips-grid">
 
@@ -79,33 +79,27 @@ export default function MyTrips() {
 
         {trips.map(t => (
 
-  <div
-    key={t.id}
-    className={`trip-card ${t.status === "Cancelled" ? "cancelled" : ""}`}
-    onClick={() => setSelectedTrip(t)}
-  >
+          <div
+            key={t.id}
+            className={`trip-card ${t.status === "Cancelled" ? "cancelled" : ""}`}
+            onClick={() => setSelectedTrip(t)}
+          >
 
-    <h3>{t.tripType}</h3>
+            <h3>{t.tripType}</h3>
 
-    {t.status === "Cancelled" && (
-      <div className="trip-overlay">
-        Cancelled
+            {t.status === "Cancelled" && (
+              <div className="trip-overlay">Cancelled</div>
+            )}
+
+            {t.status === "Completed" && (
+              <div className="trip-overlay completed">Completed</div>
+            )}
+
+          </div>
+
+        ))}
+
       </div>
-    )}
-
-    {t.status === "Completed" && (
-      <div className="trip-overlay completed">
-        Completed
-      </div>
-    )}
-
-  </div>
-
-))}
-      </div>
-
-
-      {/* MODAL */}
 
       {selectedTrip && (
 
@@ -119,86 +113,112 @@ export default function MyTrips() {
             onClick={(e) => e.stopPropagation()}
           >
 
-            <button
-              className="close-btn"
-              onClick={() => setSelectedTrip(null)}
-            >
-              ✕
-            </button>
+            {/* HEADER */}
 
-            <h2>{selectedTrip.tripType} Trip</h2>
+            <div className="trip-modal-header">
 
-            <p>
-              📅 {new Date(selectedTrip.startDate).toLocaleDateString()}
-              {" → "}
-              {new Date(selectedTrip.endDate).toLocaleDateString()}
-            </p>
+              <h2>{selectedTrip.tripType} Trip</h2>
 
-            <p>💰 Budget/day: ${selectedTrip.budgetPerDay}</p>
-
-            <p>👥 Travelers: {selectedTrip.travelers}</p>
-
-            <p>🚗 Transport: {selectedTrip.transport}</p>
-            {/* TRIP ITINERARY */}
-
-{selectedTrip.itineraryJson && (
-
-  <div className="trip-itinerary">
-
-    <h3>🗺️ Trip Itinerary</h3>
-
-    {JSON.parse(selectedTrip.itineraryJson).map(day => (
-
-  <div key={day.day} className="trip-day">
-
-    <h4>Day {day.day} — {day.region}</h4>
-
-    {/* ACTIVITIES */}
-    {day.activities?.map(place => (
-
-      <p key={place.id}>
-        • {place.name} — {place.location}
-      </p>
-
-    ))}
-
-    {/* RESTAURANT */}
-    {day.restaurant && (
-      <p>
-        🍽 Restaurant: {day.restaurant.name}
-      </p>
-    )}
-
-  </div>
-
-))}
-
-  </div>
-
-)}
-
-            <p>
-              Created:
-              {" "}
-              {new Date(selectedTrip.createdAt).toLocaleDateString()}
-            </p>
-
-            {/* STATUS */}
-
-            <p className="trip-status">
-              Status: {selectedTrip.status || "Active"}
-            </p>
-
-            {/* CANCEL BUTTON */}
-
-            {selectedTrip.status !== "Cancelled" && (
               <button
-                className="cancel-trip-btn"
-                onClick={() => cancelTrip(selectedTrip.id)}
+                className="close-btn"
+                onClick={() => setSelectedTrip(null)}
               >
-                Cancel Trip
+                ✕
               </button>
-            )}
+
+            </div>
+
+            {/* BODY */}
+
+            <div className="trip-modal-body">
+
+              <p>
+                📅 {new Date(selectedTrip.startDate).toLocaleDateString()}
+                {" → "}
+                {new Date(selectedTrip.endDate).toLocaleDateString()}
+              </p>
+
+              <p>💰 Budget/day: ${selectedTrip.budgetPerDay}</p>
+              <p>👥 Travelers: {selectedTrip.travelers}</p>
+              <p>🚗 Transport: {selectedTrip.transport}</p>
+
+              {/* ITINERARY TABLE */}
+
+              {selectedTrip.itineraryJson && (
+
+                <div className="trip-itinerary">
+
+                  <h3>🗺️ Trip Itinerary</h3>
+
+                  <table className="itinerary-table">
+
+                    <tbody>
+
+                      {JSON.parse(selectedTrip.itineraryJson).map(day => (
+
+                        <>
+                          <tr className="day-row">
+                            <td colSpan="2">
+                              Day {day.day} — {day.region}
+                            </td>
+                          </tr>
+
+                          {day.activities?.map(place => (
+
+                            <tr key={place.id}>
+                              <td className="time-col">Activity</td>
+                              <td>{place.name} — {place.location}</td>
+                            </tr>
+
+                          ))}
+
+                          {day.restaurant && (
+
+                            <tr>
+                              <td className="time-col">Restaurant</td>
+                              <td>{day.restaurant.name}</td>
+                            </tr>
+
+                          )}
+
+                        </>
+
+                      ))}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              )}
+
+              <p>
+                Created:
+                {" "}
+                {new Date(selectedTrip.createdAt).toLocaleDateString()}
+              </p>
+
+              <p className="trip-status">
+                Status: {selectedTrip.status || "Active"}
+              </p>
+
+            </div>
+
+            {/* FOOTER */}
+
+            <div className="trip-modal-footer">
+
+              {selectedTrip.status !== "Cancelled" && (
+                <button
+                  className="cancel-trip-btn"
+                  onClick={() => cancelTrip(selectedTrip.id)}
+                >
+                  Cancel Trip
+                </button>
+              )}
+
+            </div>
 
           </div>
 

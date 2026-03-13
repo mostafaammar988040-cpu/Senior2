@@ -15,7 +15,7 @@ public class Users
 
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
-
+    public bool IsBlocked { get; set; } = false;
     // 🔥 NEW (Profile Page)
     public string? ProfileImageUrl { get; set; }
     public string? Bio { get; set; }
