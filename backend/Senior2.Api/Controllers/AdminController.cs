@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
 using Senior2.Api.Models;
+using Senior2.Api.Services;
 
 namespace Senior2.Api.Controllers
 {
@@ -10,10 +11,15 @@ namespace Senior2.Api.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ReportService _reportService;
+        private readonly EmailService _emailService;
 
-        public AdminController(AppDbContext context)
+
+        public AdminController(AppDbContext context, ReportService reportService, EmailService emailService)
         {
             _context = context;
+            _reportService = reportService;
+            _emailService = emailService;
         }
 
         // GET: api/admin/users
@@ -125,5 +131,48 @@ namespace Senior2.Api.Controllers
                 ratings = ratings
             });
         }
+        [HttpGet("report/pdf")]
+        public async Task<IActionResult> GenerateReportPdf()
+        {
+            var users = await _context.Users.CountAsync();
+            var trips = await _context.Set<SmartItineraryRequest>().CountAsync();
+            var reviews = await _context.PlaceReviews.CountAsync();
+            var suggestions = await _context.Suggestions.CountAsync();
+
+            var pdfBytes = _reportService.GenerateReportPdf(
+                users,
+                trips,
+                reviews,
+                suggestions
+            );
+
+            return File(pdfBytes, "application/pdf", "platform-report.pdf");
+        }
+        [HttpPost("report/send-warnings")]
+        public async Task<IActionResult> SendWarningEmails()
+        {
+            var warnedUsers = await _context.Users
+                .Where(u => u.IsBlocked)
+                .ToListAsync();
+
+            foreach (var user in warnedUsers)
+            {
+                await _emailService.SendEmailAsync(
+                    user.Email,
+                    "Warning بشأن السلوك على المنصة",
+                    $@"
+            <h2>Hello {user.FirstName},</h2>
+            <p>Your account has been flagged for unethical behavior on the platform.</p>
+            <p>Please respect the platform rules to avoid permanent restriction.</p>
+            "
+                );
+            }
+
+            return Ok(new
+            {
+                message = $"Warning emails sent to {warnedUsers.Count} users."
+            });
+        }
+
     }
 }

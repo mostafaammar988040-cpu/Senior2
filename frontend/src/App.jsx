@@ -32,6 +32,9 @@ import AdminSuggestions from "./pages/AdminSuggestions";
 import AdminTrips from "./pages/AdminTrips";
 import Recommendations from "./pages/Recommendations";
 import Notifications from "./pages/Notifications";
+import AdminRoute from "./components/AdminRoute";
+import AdminReports from "./pages/AdminReports";
+
 function App() {
   return (
     <Routes>
@@ -42,12 +45,19 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Admin routes (already have AdminLayout) */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
+<Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminLayout />
+    </AdminRoute>
+  }
+>        <Route index element={<AdminDashboard />} />
         <Route path="reviews" element={<AdminReviews />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="suggestions" element={<AdminSuggestions />} />
         <Route path="trips" element={<AdminTrips />} />
+        <Route path="reports" element={<AdminReports />} />
       </Route>
 
       {/* Main app routes WITH navbar (using Layout) */}

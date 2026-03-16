@@ -32,8 +32,13 @@ function Login() {
       // update navbar instantly
       window.dispatchEvent(new Event("loginChange"));
 
-      navigate("/preferences");
-    } catch (error) {
+const user = res.data.user;
+
+if (user.role === "Admin") {
+  navigate("/admin");
+} else {
+  navigate("/preferences");
+}    } catch (error) {
       const message =
         error.response?.data || "Invalid email or password";
 
@@ -62,7 +67,7 @@ function Login() {
 
               <input
                 type="text"
-                placeholder="Email or Username"
+                placeholder="Email "
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
               />

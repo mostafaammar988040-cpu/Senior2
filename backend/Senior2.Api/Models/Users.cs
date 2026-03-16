@@ -15,8 +15,12 @@ public class Users
 
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
+
+    // NEW: Role property
+    public string Role { get; set; } = "User";   // default role
+
     public bool IsBlocked { get; set; } = false;
-    // 🔥 NEW (Profile Page)
+
     public string? ProfileImageUrl { get; set; }
     public string? Bio { get; set; }
 

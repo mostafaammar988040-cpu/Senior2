@@ -58,5 +58,43 @@ namespace Senior2.Api.Controllers
 
             return Ok(review);
         }
+        // Get all reviews (Admin)
+        [HttpGet]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            var reviews = await _context.PlaceReviews
+                .Include(r => r.User)
+                .Include(r => r.Place)
+                .OrderByDescending(r => r.CreatedAt)
+                .Select(r => new
+                {
+                    id = r.Id,
+                    user = r.User.FirstName + " " + r.User.LastName,
+                    place = r.Place.Name,
+                    rating = r.Rating,
+                    comment = r.Comment,
+                    createdAt = r.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(reviews);
+        }
+        // Delete review (Admin)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var review = await _context.PlaceReviews.FindAsync(id);
+
+            if (review == null)
+                return NotFound("Review not found");
+
+            _context.PlaceReviews.Remove(review);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Review deleted successfully" });
+        }
+
+
     }
 }

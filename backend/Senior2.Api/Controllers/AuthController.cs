@@ -19,32 +19,30 @@ namespace Senior2.Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
-
         private readonly EmailService _emailService;
 
-        public AuthController(AppDbContext context, IConfiguration config, EmailService emailService)
+        public AuthController(
+            AppDbContext context,
+            IConfiguration config,
+            EmailService emailService)
         {
             _context = context;
             _config = config;
             _emailService = emailService;
         }
 
-
-
         // =====================
-        // REGISTER (SIGN UP)
+        // REGISTER
         // =====================
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            // Check if email already exists
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (existingUser != null)
                 return BadRequest("Email already registered");
 
-            // Hash password
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var user = new Users
@@ -52,7 +50,8 @@ namespace Senior2.Api.Controllers
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                Role = "User" // default role
             };
 
             _context.Users.Add(user);
@@ -62,37 +61,47 @@ namespace Senior2.Api.Controllers
             {
                 message = "Account created successfully"
             });
-
         }
+
+        // =====================
+        // LOGIN
+        // =====================
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.EmailOrUsername);
+                .FirstOrDefaultAsync(u =>
+                    u.Email == dto.EmailOrUsername);
 
             if (user == null)
                 return Unauthorized("Invalid credentials");
+
             if (user.IsBlocked)
                 return Unauthorized("Your account has been blocked by the administrator.");
-            // Verify password
+
             bool passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
             if (!passwordValid)
                 return Unauthorized("Invalid credentials");
 
-            // Generate JWT
+            // ===== JWT CLAIMS =====
+
             var claims = new[]
             {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Name, user.FirstName)
-    };
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Role, user.Role) // ⭐ important
+            };
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config["Jwt:Key"])
             );
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var creds = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256
+            );
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
@@ -113,11 +122,15 @@ namespace Senior2.Api.Controllers
                     id = user.Id,
                     firstName = user.FirstName,
                     lastName = user.LastName,
-                    email = user.Email
+                    email = user.Email,
+                    role = user.Role
                 }
             });
         }
-        
+
+        // =====================
+        // FORGOT PASSWORD
+        // =====================
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
         {
@@ -137,19 +150,22 @@ namespace Senior2.Api.Controllers
             var resetLink = $"http://localhost:5173/reset-password?token={token}";
 
             var emailBody = $@"
-        <h2>Password Reset Request</h2>
-        <p>Hello {user.FirstName},</p>
-        <p>Click the button below to reset your password:</p>
-        <a href='{resetLink}' 
-           style='padding:10px 20px;
-                  background:#0dc052;
-                  color:white;
-                  text-decoration:none;
-                  border-radius:6px;'>
-           Reset Password
-        </a>
-        <p>This link expires in 30 minutes.</p>
-    ";
+                <h2>Password Reset Request</h2>
+                <p>Hello {user.FirstName},</p>
+                <p>Click the button below to reset your password:</p>
+
+                <a href='{resetLink}'
+                   style='padding:10px 20px;
+                          background:#0dc052;
+                          color:white;
+                          text-decoration:none;
+                          border-radius:6px;'>
+
+                   Reset Password
+                </a>
+
+                <p>This link expires in 30 minutes.</p>
+            ";
 
             await _emailService.SendEmailAsync(
                 user.Email,
@@ -160,6 +176,9 @@ namespace Senior2.Api.Controllers
             return Ok("Reset link sent to your email.");
         }
 
+        // =====================
+        // RESET PASSWORD
+        // =====================
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
         {
@@ -173,7 +192,8 @@ namespace Senior2.Api.Controllers
                 return BadRequest("Invalid or expired token");
             }
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.PasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
 
             user.PasswordResetToken = null;
             user.PasswordResetTokenExpiry = null;
@@ -182,6 +202,10 @@ namespace Senior2.Api.Controllers
 
             return Ok("Password reset successful");
         }
+
+        // =====================
+        // GOOGLE LOGIN
+        // =====================
         [HttpPost("google")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleDto dto)
         {
@@ -191,7 +215,10 @@ namespace Senior2.Api.Controllers
                     dto.IdToken,
                     new GoogleJsonWebSignature.ValidationSettings
                     {
-                        Audience = new List<string> { _config["Google:ClientId"] }
+                        Audience = new List<string>
+                        {
+                            _config["Google:ClientId"]
+                        }
                     });
 
                 var email = payload.Email;
@@ -207,27 +234,30 @@ namespace Senior2.Api.Controllers
                     {
                         Email = email,
                         FirstName = firstName,
-                        LastName = lastName
+                        LastName = lastName,
+                        Role = "User"
                     };
 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                 }
 
-                // ===== GENERATE JWT =====
-
                 var claims = new[]
                 {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, user.FirstName)
-        };
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
 
                 var key = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(_config["Jwt:Key"])
                 );
 
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var creds = new SigningCredentials(
+                    key,
+                    SecurityAlgorithms.HmacSha256
+                );
 
                 var token = new JwtSecurityToken(
                     issuer: _config["Jwt:Issuer"],
@@ -248,7 +278,8 @@ namespace Senior2.Api.Controllers
                         id = user.Id,
                         firstName = user.FirstName,
                         lastName = user.LastName,
-                        email = user.Email
+                        email = user.Email,
+                        role = user.Role
                     }
                 });
             }
@@ -258,6 +289,4 @@ namespace Senior2.Api.Controllers
             }
         }
     }
-
-
 }

@@ -86,13 +86,18 @@ namespace Senior2.Api.Controllers
                     return "Other";
                 })
                 .ToList();
-
             var itinerary = new List<object>();
 
             int restaurantIndex = 0;
 
+            if (groupedByRegion.Count == 0)
+            {
+                return BadRequest("No activities found matching the selected filters.");
+            }
+
             for (int day = 1; day <= totalDays; day++)
             {
+
                 var regionGroup = groupedByRegion
                     .ElementAtOrDefault((day - 1) % groupedByRegion.Count);
 

@@ -24,6 +24,8 @@ builder.Services.AddScoped<LLMService>();                // Fixed: was AddHttpCl
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<RecommendationService>();
 builder.Services.AddHttpClient<OpenStreetMapService>();
+builder.Services.AddScoped<ReportService>();
+
 builder.Services.AddHttpClient<GeoapifyService>(client =>
 {
     client.DefaultRequestHeaders.Add("User-Agent", "Senior2TourismApp/1.0");

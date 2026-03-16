@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Line, Doughnut } from "react-chartjs-2";
 import api from "../services/api";
 import "../styles/AdminDashboard.css";
-import { useNavigate } from "react-router-dom";
 
 import {
   Chart as ChartJS,
@@ -27,29 +26,22 @@ ChartJS.register(
   Filler
 );
 
-function AdminDashboard() {
+export default function AdminReports() {
 
-  const [metrics, setMetrics] = useState({
-    users: 0,
-    trips: 0,
-    reviews: 0,
-    flags: 0
-  });
+  const [report, setReport] = useState(null);
+  const [sending, setSending] = useState(false);
 
   const [visitsData, setVisitsData] = useState(null);
   const [ratingsData, setRatingsData] = useState(null);
 
-  const navigate = useNavigate();
-
-  /* ---------------- LOAD DASHBOARD ---------------- */
-
   useEffect(() => {
 
-    api.get("/admin/dashboard")
-      .then(res => {
-        setMetrics(res.data);
-      });
+    // Report numbers
+    api.get("/admin/report")
+      .then(res => setReport(res.data))
+      .catch(err => console.log(err));
 
+    // Charts
     api.get("/admin/dashboard-charts")
       .then(res => {
 
@@ -99,17 +91,33 @@ function AdminDashboard() {
 
   }, []);
 
-  /* ---------------- GENERATE REPORT + SEND WARNINGS ---------------- */
+  const sendWarnings = async () => {
+    try {
 
+      setSending(true);
+
+      const res = await api.post("/admin/report/send-warnings");
+
+      alert(res.data.message);
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Failed to send warning emails");
+
+    } finally {
+
+      setSending(false);
+
+    }
+  };
+
+  if (!report) return <p>Loading report...</p>;
 
   return (
     <div className="dashboard-container">
 
-      <h2 className="dashboard-title">
-        <span style={{ color: "#000000" }}>
-          Welcome Back Admin
-        </span>
-      </h2>
+      <h2>📊 Platform Report</h2>
 
       {/* Metrics */}
 
@@ -117,22 +125,22 @@ function AdminDashboard() {
 
         <div className="metric-card">
           <p>Total Users</p>
-          <h3>{metrics.users}</h3>
+          <h3>{report.users}</h3>
         </div>
 
         <div className="metric-card">
           <p>Total Trips</p>
-          <h3>{metrics.trips}</h3>
+          <h3>{report.trips}</h3>
         </div>
 
         <div className="metric-card">
           <p>Total Reviews</p>
-          <h3>{metrics.reviews}</h3>
+          <h3>{report.reviews}</h3>
         </div>
 
         <div className="metric-card">
-          <p>Support Requests</p>
-          <h3>{metrics.flags}</h3>
+          <p>Total Suggestions</p>
+          <h3>{report.suggestions}</h3>
         </div>
 
       </section>
@@ -142,6 +150,7 @@ function AdminDashboard() {
       <section className="charts-grid">
 
         <div className="chart-card">
+
           <h3>Trips Created (Last 7 Days)</h3>
 
           {visitsData ? (
@@ -153,6 +162,7 @@ function AdminDashboard() {
         </div>
 
         <div className="chart-card">
+
           <h3>Review Rating Distribution</h3>
 
           {ratingsData ? (
@@ -165,95 +175,20 @@ function AdminDashboard() {
 
       </section>
 
-      {/* Alerts + Actions */}
+      {/* Send warnings */}
 
-      <section className="bottom-grid">
+      <div style={{ marginTop: "40px" }}>
 
-        <div className="alert-card">
-          <h3>System Alerts</h3>
+        <button
+          className="dashboard-btn"
+          onClick={sendWarnings}
+          disabled={sending}
+        >
+          {sending ? "Sending..." : "Send Warning Emails"}
+        </button>
 
-          <ul>
-            <li>⚠ Monitor user support requests</li>
-            <li>🔥 Trip creation activity increasing</li>
-            <li>⭐ Review trends updated automatically</li>
-          </ul>
-        </div>
-
-    <div className="actions-card">
-  <h3>Quick Actions</h3>
-
-  <button
-    className="dashboard-btn"
-    onClick={() => navigate("/admin/reviews")}
-  >
-    Moderate Reviews
-  </button>
-
-  <button
-    className="dashboard-btn"
-    onClick={() => navigate("/admin/users")}
-  >
-    View Users
-  </button>
-
-  {/* Download PDF Report */}
-
-  <button
-    className="dashboard-btn"
-    onClick={async () => {
-      try {
-        const response = await api.get("/admin/report/pdf", {
-          responseType: "blob"
-        });
-
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-
-        link.href = url;
-        link.setAttribute("download", "platform-report.pdf");
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        window.URL.revokeObjectURL(url);
-
-      } catch (err) {
-        console.error(err);
-        alert("Failed to download report");
-      }
-    }}
-  >
-    Download PDF Report
-  </button>
-
-  {/* Send Warning Emails */}
-
-  <button
-    className="dashboard-btn"
-    onClick={async () => {
-      try {
-
-        const res = await api.post("/admin/report/send-warnings");
-
-        alert(res.data.message);
-
-      } catch (err) {
-        console.error(err);
-        alert("Failed to send warning emails");
-      }
-    }}
-  >
-    Send Warning Emails
-  </button>
-
-</div>
-
-
-      </section>
+      </div>
 
     </div>
   );
 }
-
-export default AdminDashboard;
