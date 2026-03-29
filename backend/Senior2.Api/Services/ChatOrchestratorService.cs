@@ -37,6 +37,36 @@ public class ChatOrchestratorService
 
     public async Task<ChatResponse> ProcessAsync(string message, string? sessionId = null)
     {
+        /*
+        PSEUDOCODE / PLAN (detailed):
+        1. Store the user message in conversation memory if sessionId provided.
+        2. Run a guardrail check; if out of scope return a canned reply and record it.
+        3. Search for relevant places and format them for prompts.
+        4. Handle simple follow-up keywords ("another", "more", "continue"):
+           - If there is a last topic, fetch Wikipedia info and format it with LLM.
+           - Otherwise return a fallback asking the user to specify a topic.
+        5. Detect intent using IntentService.
+           - If intent == "Itinerary":
+             a. Build values for the required parameters (`tripType`, `budget`, `travelerType`) with safe defaults.
+             b. Apply small, conservative heuristics to adjust those defaults based on keywords in the message.
+             c. Call `GenerateItineraryAsync(message, tripType, budget, travelerType)`.
+             d. Store and return the itinerary response.
+           - If intent == "History":
+             a. Query WikipediaService for the message/topic.
+             b. If found, set _lastTopic and format with LLM, otherwise ask LLM directly.
+           - If intent == "Location":
+             a. Map simple keywords to focused OSM search queries (restaurant, cafe, hotel).
+             b. Query OSM and map results to PlaceResult objects.
+             c. If no places found, fall back to LLM chat response.
+           - Default:
+             a. Get history if session exists and call LLM with message, placeContext, and history.
+             b. Store and return finalReply.
+        NOTES:
+        - The original compile error was due to calling GenerateItineraryAsync with only one argument while the method requires four.
+        - Fix: provide the missing arguments. Here we use conservative defaults and light heuristics derived from the user's message.
+        - This approach avoids modifying ItineraryService signatures and keeps the fix localized.
+        */
+
         // Store user message if session exists
         if (!string.IsNullOrEmpty(sessionId))
             _memoryService.AddMessage(sessionId, "user", message);
@@ -86,12 +116,37 @@ public class ChatOrchestratorService
         var intent = _intentService.DetectIntent(message);
 
         if (intent == "Itinerary")
-{
-    var itinerary = await _itineraryService.GenerateItineraryAsync(message);
-    if (!string.IsNullOrEmpty(sessionId))
-        _memoryService.AddMessage(sessionId, "assistant", itinerary);
-    return new ChatResponse { Reply = itinerary, Intent = "Itinerary" };
-}
+        {
+            // Provide required parameters for GenerateItineraryAsync(string userMessage, string tripType, int budget, string travelerType)
+            // Use conservative defaults and light heuristics based on keywords in the user's message.
+            string tripType = "leisure";
+            int budget = 200; // default approximate budget
+            string travelerType = "any";
+
+            var lowerMsg = message.ToLower();
+
+            // Heuristics for tripType
+            if (lowerMsg.Contains("business")) tripType = "business";
+            else if (lowerMsg.Contains("hiking") || lowerMsg.Contains("adventure") || lowerMsg.Contains("trek")) tripType = "adventure";
+            else if (lowerMsg.Contains("romantic") || lowerMsg.Contains("honeymoon")) tripType = "romantic";
+            else if (lowerMsg.Contains("cultural") || lowerMsg.Contains("history") || lowerMsg.Contains("museum")) tripType = "cultural";
+
+            // Heuristics for budget
+            if (lowerMsg.Contains("luxury") || lowerMsg.Contains("expensive")) budget = 1000;
+            else if (lowerMsg.Contains("cheap") || lowerMsg.Contains("budget") || lowerMsg.Contains("low cost")) budget = 100;
+            else if (lowerMsg.Contains("moderate") || lowerMsg.Contains("mid") || lowerMsg.Contains("mid-range")) budget = 300;
+
+            // Heuristics for travelerType
+            if (lowerMsg.Contains("family")) travelerType = "family";
+            else if (lowerMsg.Contains("solo")) travelerType = "solo";
+            else if (lowerMsg.Contains("couple")) travelerType = "couple";
+            else if (lowerMsg.Contains("friends")) travelerType = "group";
+
+            var itinerary = await _itineraryService.GenerateItineraryAsync(message, tripType, budget, travelerType);
+            if (!string.IsNullOrEmpty(sessionId))
+                _memoryService.AddMessage(sessionId, "assistant", itinerary);
+            return new ChatResponse { Reply = itinerary, Intent = "Itinerary" };
+        }
 
         // 4) History intent
         if (intent == "History")

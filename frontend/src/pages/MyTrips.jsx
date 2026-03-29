@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import "../styles/MyTrips.css";
-
+import React from "react";
 export default function MyTrips() {
 
   const [trips, setTrips] = useState([]);
@@ -154,36 +154,29 @@ export default function MyTrips() {
 
                     <tbody>
 
-                      {JSON.parse(selectedTrip.itineraryJson).map(day => (
+         {JSON.parse(selectedTrip.itineraryJson).map((day, dayIndex) => (
+  <React.Fragment key={dayIndex}>
+    <tr className="day-row">
+      <td colSpan="2">
+        Day {day.day} — {day.region}
+      </td>
+    </tr>
 
-                        <>
-                          <tr className="day-row">
-                            <td colSpan="2">
-                              Day {day.day} — {day.region}
-                            </td>
-                          </tr>
+    {day.activities?.map(place => (
+      <tr key={place.id}>
+        <td className="time-col">Activity</td>
+        <td>{place.name} — {place.location}</td>
+      </tr>
+    ))}
 
-                          {day.activities?.map(place => (
-
-                            <tr key={place.id}>
-                              <td className="time-col">Activity</td>
-                              <td>{place.name} — {place.location}</td>
-                            </tr>
-
-                          ))}
-
-                          {day.restaurant && (
-
-                            <tr>
-                              <td className="time-col">Restaurant</td>
-                              <td>{day.restaurant.name}</td>
-                            </tr>
-
-                          )}
-
-                        </>
-
-                      ))}
+    {day.restaurant && (
+      <tr key={`restaurant-${dayIndex}`}>
+        <td className="time-col">Restaurant</td>
+        <td>{day.restaurant.name}</td>
+      </tr>
+    )}
+  </React.Fragment>
+))}
 
                     </tbody>
 

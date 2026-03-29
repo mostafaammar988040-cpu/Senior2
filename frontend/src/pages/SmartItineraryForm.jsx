@@ -3,9 +3,8 @@ import api from "../services/api";
 import "../styles/SmartItinerary.css";
 
 export default function SmartItineraryForm() {
-
   const [budget, setBudget] = useState(110);
-  const [travelers, setTravelers] = useState("Solo");
+  const [travelers, setTravelers] = useState(1); // ✅ numeric default
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -23,14 +22,13 @@ export default function SmartItineraryForm() {
 
   const toggleActivity = (activity) => {
     if (activities.includes(activity)) {
-      setActivities(activities.filter(a => a !== activity));
+      setActivities(activities.filter((a) => a !== activity));
     } else {
       setActivities([...activities, activity]);
     }
   };
 
   const handleGenerate = async () => {
-
     if (!tripType) {
       alert("Please select a trip type");
       return;
@@ -42,22 +40,21 @@ export default function SmartItineraryForm() {
     }
 
     try {
-
       setLoading(true);
 
       const user = JSON.parse(localStorage.getItem("user"));
 
       const payload = {
         userId: user?.id || 1,
-        travelers,
-        startDate,
-        endDate,
-        budgetPerDay: budget,
+        travelers, // ✅ numeric
+        startDate: new Date(startDate).toISOString(), // ✅ ISO format
+        endDate: new Date(endDate).toISOString(),
+        budgetPerDay: Number(budget), // ✅ ensure numeric
         tripType,
         activitiesJson: JSON.stringify(activities),
         transport,
         specialRequirements,
-        includeSavedPlaces
+        includeSavedPlaces,
       };
 
       const res = await api.post("/smartitinerary", payload);
@@ -65,41 +62,36 @@ export default function SmartItineraryForm() {
       setGeneratedDays(res.data.itinerary || []);
 
       alert("Trip generated successfully!");
-
     } catch (err) {
       console.error(err);
       alert("Failed to generate trip");
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="form-container">
-
       <h2>📋 Basic Trip Details</h2>
 
       <label>Number of Travelers</label>
       <select
         value={travelers}
-        onChange={(e) => setTravelers(e.target.value)}
+        onChange={(e) => setTravelers(Number(e.target.value))}
       >
-        <option>Solo</option>
-        <option>Couple</option>
-        <option>Family</option>
-        <option>Friends</option>
+        <option value={1}>Solo</option>
+        <option value={2}>Couple</option>
+        <option value={4}>Family</option>
+        <option value={3}>Friends</option>
       </select>
 
       <label>Trip Duration</label>
-
       <div className="date-row">
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
-
         <input
           type="date"
           value={endDate}
@@ -108,23 +100,20 @@ export default function SmartItineraryForm() {
       </div>
 
       <h2>💰 Your Budget Per Day</h2>
-
       <div className="budget-card">
         <p>${budget} / day</p>
-
         <input
           type="range"
           min="20"
           max="500"
           value={budget}
-          onChange={(e) => setBudget(e.target.value)}
+          onChange={(e) => setBudget(Number(e.target.value))}
         />
       </div>
 
       <h2>✨ What Type of Trip Are You Looking For?</h2>
-
       <div className="options-row">
-        {["Relaxing", "Adventure", "Cultural", "Nightlife"].map(type => (
+        {["Relaxing", "Adventure", "Cultural", "Nightlife"].map((type) => (
           <button
             key={type}
             className={tripType === type ? "selected" : ""}
@@ -137,7 +126,6 @@ export default function SmartItineraryForm() {
       </div>
 
       <h2>🌍 What Activities Do You Prefer?</h2>
-
       <div className="options-row">
         {[
           "Beaches",
@@ -146,7 +134,7 @@ export default function SmartItineraryForm() {
           "Hiking",
           "Food Experience",
           "Museums",
-        ].map(act => (
+        ].map((act) => (
           <button
             key={act}
             className={activities.includes(act) ? "selected" : ""}
@@ -159,9 +147,8 @@ export default function SmartItineraryForm() {
       </div>
 
       <h2>🚗 Preferred Transportation</h2>
-
       <div className="options-row">
-        {["Car", "Taxi / Uber", "Public Transport", "Walking Only"].map(t => (
+        {["Car", "Taxi / Uber", "Public Transport", "Walking Only"].map((t) => (
           <button
             key={t}
             className={transport === t ? "selected" : ""}
@@ -174,7 +161,6 @@ export default function SmartItineraryForm() {
       </div>
 
       <h2>📝 Special Requirements</h2>
-
       <textarea
         placeholder="Any allergies, accessibility needs, kids, seniors, etc."
         value={specialRequirements}
@@ -183,11 +169,10 @@ export default function SmartItineraryForm() {
 
       <div className="estimated-box">
         <h3>📄 Estimated Trip Cost</h3>
-        <h1>${budget * 2}</h1>
+        <h1>${budget * travelers}</h1>
       </div>
 
       <h2 className="personal-title">⭐ Personal Options</h2>
-
       <label className="saved-option">
         <input
           type="checkbox"
@@ -208,45 +193,30 @@ export default function SmartItineraryForm() {
       {generatedDays.length > 0 && (
         <>
           <h2>🗺️ Your AI Trip Plan</h2>
-
-          {generatedDays.map(day => (
-
-  <div key={day.day} className="day-block">
-
-    <h3>Day {day.day} — {day.region}</h3>
-
-    <div className="cards-grid">
-
-      {day.activities?.map(place => (
-
-        <div key={place.id} className="card">
-
-          <img src={place.imageUrl} alt={place.name} />
-
-          <h4>{place.name}</h4>
-
-          <p>{place.location}</p>
-
-          <p>{place.activityType}</p>
-
-        </div>
-
-      ))}
-
-    </div>
-
-    {day.restaurant && (
-      <p className="day-restaurant">
-        🍽 Restaurant: {day.restaurant.name}
-      </p>
-    )}
-
-  </div>
-
-))}
+          {generatedDays.map((day) => (
+            <div key={day.day} className="day-block">
+              <h3>
+                Day {day.day} — {day.region}
+              </h3>
+              <div className="cards-grid">
+                {day.activities?.map((place) => (
+                  <div key={place.id} className="card">
+                    <img src={place.imageUrl} alt={place.name} />
+                    <h4>{place.name}</h4>
+                    <p>{place.location}</p>
+                    <p>{place.activityType}</p>
+                  </div>
+                ))}
+              </div>
+              {day.restaurant && (
+                <p className="day-restaurant">
+                  🍽 Restaurant: {day.restaurant.name}
+                </p>
+              )}
+            </div>
+          ))}
         </>
       )}
-
     </div>
   );
 }

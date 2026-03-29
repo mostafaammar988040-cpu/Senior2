@@ -336,3 +336,17 @@ transition:0.25s;
 background:#0000ff;
 transform:translateY(-2px);
 }
+.weather-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.weather-box img {
+  width: 28px;
+}

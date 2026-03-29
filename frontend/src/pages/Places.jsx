@@ -5,79 +5,111 @@ import "../styles/Places.css";
 
 export default function Places() {
 
-  const [places,setPlaces]=useState([]);
-  const [filtered,setFiltered]=useState([]);
+  const [places, setPlaces] = useState([]);
+  const [filtered, setFiltered] = useState([]);
 
-  const [selectedPlace,setSelectedPlace]=useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
-  const [reviews,setReviews]=useState([]);
-  const [rating,setRating]=useState(5);
-  const [comment,setComment]=useState("");
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
-  const [search,setSearch]=useState("");
-  const [cityFilter,setCityFilter]=useState("");
+  const [search, setSearch] = useState("");
+  const [cityFilter, setCityFilter] = useState("");
 
-  const [searchParams]=useSearchParams();
-  const navigate=useNavigate();
+  // ✅ WEATHER
+  const [weather, setWeather] = useState(null);
+  const [loadingWeather, setLoadingWeather] = useState(false);
 
-  const category=searchParams.get("category");
-  const activityType=searchParams.get("activityType");
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const user=JSON.parse(localStorage.getItem("user")||"null");
+  const category = searchParams.get("category");
+  const activityType = searchParams.get("activityType");
 
-  useEffect(()=>{
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    let url="/places?";
+  // ==========================
+  // FETCH WEATHER (FIXED)
+  // ==========================
+  useEffect(() => {
+    if (!selectedPlace) return;
 
-    if(category) url+=`category=${category}&`;
-    if(activityType) url+=`activityType=${activityType}`;
+    setWeather(null);
+    setLoadingWeather(true);
+
+    // ✅ FIX: always send full location
+    const city = selectedPlace.location + " Lebanon";
+
+    api.get(`/weather/${city}`)
+      .then(res => setWeather(res.data))
+      .catch(() => setWeather(null))
+      .finally(() => setLoadingWeather(false));
+
+  }, [selectedPlace]);
+
+  // ==========================
+  // FETCH PLACES
+  // ==========================
+  useEffect(() => {
+
+    let url = "/places?";
+
+    if (category) url += `category=${category}&`;
+    if (activityType) url += `activityType=${activityType}`;
 
     api.get(url)
-      .then(res=>{
+      .then(res => {
         setPlaces(res.data);
         setFiltered(res.data);
       });
 
-  },[category,activityType]);
+  }, [category, activityType]);
 
-  // SEARCH + FILTER
-  useEffect(()=>{
+  // ==========================
+  // SEARCH + FILTER (FIXED)
+  // ==========================
+  useEffect(() => {
 
-    let result=places;
+    let result = places;
 
-    if(search){
-      result=result.filter(p=>
+    if (search) {
+      result = result.filter(p =>
         p.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    if(cityFilter){
-      result=result.filter(p=>
+    if (cityFilter) {
+      result = result.filter(p =>
         p.location.toLowerCase().includes(cityFilter.toLowerCase())
       );
     }
 
     setFiltered(result);
 
-  },[search,cityFilter,places]);
+  }, [search, cityFilter, places]);
 
+  // ==========================
   // LOAD REVIEWS
-  const loadReviews=(placeId)=>{
+  // ==========================
+  const loadReviews = (placeId) => {
     api.get(`/reviews/${placeId}`)
-      .then(res=>setReviews(res.data));
+      .then(res => setReviews(res.data));
   };
 
+  // ==========================
   // ADD REVIEW
-  const submitReview=async()=>{
+  // ==========================
+  const submitReview = async () => {
 
-    if(!user){
+    if (!user) {
       alert("Login first");
       return;
     }
 
-    await api.post("/reviews",{
-      placeId:selectedPlace.id,
-      userId:user.id,
+    await api.post("/reviews", {
+      placeId: selectedPlace.id,
+      userId: user.id,
       rating,
       comment
     });
@@ -89,7 +121,7 @@ export default function Places() {
   return (
     <div className="places-page">
 
-      <button className="back-btn" onClick={()=>navigate(-1)}>← Back</button>
+      <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
 
       <div className="places-hero">
         <h1>{category ? category.toUpperCase() : "Explore Places"}</h1>
@@ -102,24 +134,24 @@ export default function Places() {
         <input
           placeholder="Search places..."
           value={search}
-          onChange={(e)=>setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
         <input
           placeholder="Filter by city"
           value={cityFilter}
-          onChange={(e)=>setCityFilter(e.target.value)}
+          onChange={(e) => setCityFilter(e.target.value)}
         />
 
       </div>
 
       <div className="places-grid">
 
-        {filtered.map(place=>(
+        {filtered.map(place => (
           <div
             key={place.id}
             className="place-card"
-            onClick={()=>{
+            onClick={() => {
               setSelectedPlace(place);
               loadReviews(place.id);
             }}
@@ -151,14 +183,13 @@ export default function Places() {
       </div>
 
       {/* MODAL */}
-
       {selectedPlace && (
 
-        <div className="place-modal-overlay" onClick={()=>setSelectedPlace(null)}>
+        <div className="place-modal-overlay" onClick={() => setSelectedPlace(null)}>
 
-          <div className="place-modal-card" onClick={(e)=>e.stopPropagation()}>
+          <div className="place-modal-card" onClick={(e) => e.stopPropagation()}>
 
-            <button className="close-btn" onClick={()=>setSelectedPlace(null)}>✕</button>
+            <button className="close-btn" onClick={() => setSelectedPlace(null)}>✕</button>
 
             <img
               className="modal-image"
@@ -171,12 +202,21 @@ export default function Places() {
               {selectedPlace.description}
             </p>
 
+            {/* ✅ LOCATION + WEATHER */}
             <div className="modal-meta">
               <p><strong>Location:</strong> {selectedPlace.location}</p>
+
+              {loadingWeather && <p>Loading weather...</p>}
+
+              {weather && (
+                <div className="weather-box">
+                  <img src={weather.icon} alt="weather" />
+                  <span>{weather.temp}°C — {weather.condition}</span>
+                </div>
+              )}
             </div>
 
             {/* ACTION BUTTONS */}
-
             <div className="modal-actions">
 
               <a
@@ -189,7 +229,7 @@ export default function Places() {
               </a>
 
               <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name+" booking Lebanon")}`}
+                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name + " booking Lebanon")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-btn"
@@ -198,38 +238,39 @@ export default function Places() {
               </a>
 
               <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name+" contact phone Lebanon")}`}
+                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name + " contact phone Lebanon")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-btn"
               >
                 Contact
               </a>
-<button
-  className="add-trip-btn"
-  onClick={async () => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+              <button
+                className="add-trip-btn"
+                onClick={async () => {
 
-    await api.post(
-      `/trips/add-place?userId=${user.id}&placeId=${selectedPlace.id}`
-    );
+                  const user = JSON.parse(localStorage.getItem("user"));
 
-    alert("Added to your trip!");
+                  await api.post(
+                    `/trips/add-place?userId=${user.id}&placeId=${selectedPlace.id}`
+                  );
 
-  }}
->
-Add to Trip
-</button>
+                  alert("Added to your trip!");
+
+                }}
+              >
+                Add to Trip
+              </button>
+
             </div>
 
             {/* REVIEWS */}
-
             <div className="reviews-section">
 
               <h3>Reviews</h3>
 
-              {reviews.map(r=>(
+              {reviews.map(r => (
                 <div key={r.id} className="review-card">
 
                   <div className="review-top">
@@ -243,12 +284,11 @@ Add to Trip
               ))}
 
               {/* ADD REVIEW */}
-
               <div className="review-form">
 
                 <select
                   value={rating}
-                  onChange={(e)=>setRating(Number(e.target.value))}
+                  onChange={(e) => setRating(Number(e.target.value))}
                 >
                   <option value="5">⭐⭐⭐⭐⭐</option>
                   <option value="4">⭐⭐⭐⭐</option>
@@ -260,7 +300,7 @@ Add to Trip
                 <textarea
                   placeholder="Write your review..."
                   value={comment}
-                  onChange={(e)=>setComment(e.target.value)}
+                  onChange={(e) => setComment(e.target.value)}
                 />
 
                 <button onClick={submitReview}>

@@ -11,5 +11,8 @@ namespace Senior2.Api.DTOS
         public string Content { get; set; } = string.Empty;
 
         public IFormFile? Media { get; set; }
+
+        // NEW: allow updating the shared flag
+        public bool IsShared { get; set; } = false;
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
 using Senior2.Api.Models;
+using Senior2.Api.Services; // <-- make sure to include this
 using System.Text.Json;
 
 namespace Senior2.Api.Controllers
@@ -11,16 +12,17 @@ namespace Senior2.Api.Controllers
     public class SmartItineraryController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly RecommendationService _recommendationService;
 
-        public SmartItineraryController(AppDbContext context)
+        public SmartItineraryController(AppDbContext context, RecommendationService recommendationService)
         {
             _context = context;
+            _recommendationService = recommendationService;
         }
 
         // =========================
         // GENERATE TRIP
         // =========================
-        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> GenerateTrip([FromBody] SmartItineraryRequest request)
         {
@@ -75,29 +77,42 @@ namespace Senior2.Api.Controllers
             var totalDays = (request.EndDate - request.StartDate).Days + 1;
             if (totalDays <= 0) totalDays = 1;
 
+            // Shuffle activities for variety
+            var random = new Random();
+            activities = activities.OrderBy(a => random.Next()).ToList();
+
             // GROUP ACTIVITIES BY REGION
             var groupedByRegion = activities
                 .GroupBy(p =>
                 {
                     if (p.Location.ToLower().Contains("beirut")) return "Beirut";
-                    if (p.Location.ToLower().Contains("Tripoli")) return "North";
-                    if (p.Location.ToLower().Contains("Byblos")) return "Mount Lebanon";
-                    if (p.Location.ToLower().Contains("Baalbek")) return "Bekaa";
+                    if (p.Location.ToLower().Contains("tripoli")) return "North";
+                    if (p.Location.ToLower().Contains("byblos")) return "Mount Lebanon";
+                    if (p.Location.ToLower().Contains("baalbek")) return "Bekaa";
                     return "Other";
                 })
                 .ToList();
-            var itinerary = new List<object>();
 
-            int restaurantIndex = 0;
+            var itinerary = new List<object>();
 
             if (groupedByRegion.Count == 0)
             {
-                return BadRequest("No activities found matching the selected filters.");
-            }
+                // Fallback: call AI directly
+                var aiSuggestions = await _recommendationService.GetItineraryRecommendation(
+                    "Lebanon",                // or request.TripType / region
+                    request.TripType,
+                    request.BudgetPerDay,
+                    request.Travelers.ToString()
+                );
 
+                return Ok(new
+                {
+                    stay = (object)null,
+                    itinerary = aiSuggestions
+                });
+            }
             for (int day = 1; day <= totalDays; day++)
             {
-
                 var regionGroup = groupedByRegion
                     .ElementAtOrDefault((day - 1) % groupedByRegion.Count);
 
@@ -105,7 +120,9 @@ namespace Senior2.Api.Controllers
 
                 if (regionGroup != null)
                 {
+                    // Rotate activities so each day gets different ones
                     dayActivities = regionGroup
+                        .Skip(((day - 1) * 2) % regionGroup.Count())
                         .Take(2)
                         .Select(p => (object)new
                         {
@@ -116,13 +133,33 @@ namespace Senior2.Api.Controllers
                             activityType = p.ActivityType?.Name
                         })
                         .ToList();
+
+                    if (!dayActivities.Any())
+                    {
+                        dayActivities = regionGroup
+                            .Take(2)
+                            .Select(p => (object)new
+                            {
+                                id = p.Id,
+                                name = p.Name,
+                                location = p.Location,
+                                imageUrl = p.ImageUrl,
+                                activityType = p.ActivityType?.Name
+                            })
+                            .ToList();
+                    }
                 }
 
-                var restaurant = restaurants
-                    .Skip(restaurantIndex)
-                    .FirstOrDefault();
+                // Cycle restaurants properly
+                var restaurant = restaurants.ElementAtOrDefault((day - 1) % restaurants.Count);
 
-                restaurantIndex++;
+                // 🔥 NEW: Call OpenAI for extra itinerary suggestions
+                var aiSuggestions = await _recommendationService.GetItineraryRecommendation(
+     regionGroup?.Key ?? "Lebanon",
+     request.TripType,
+     (int)request.BudgetPerDay,   // 👈 cast here
+     request.Travelers.ToString()
+ );
 
                 itinerary.Add(new
                 {
@@ -141,16 +178,15 @@ namespace Senior2.Api.Controllers
                         restaurant.Id,
                         restaurant.Name,
                         restaurant.Location
-                    } : null
+                    } : null,
+                    aiRecommendations = aiSuggestions // <-- merged AI suggestions
                 });
             }
 
             request.Status = "Active";
-
             request.ItineraryJson = JsonSerializer.Serialize(itinerary);
 
             _context.Set<SmartItineraryRequest>().Add(request);
-
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -166,7 +202,6 @@ namespace Senior2.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTrips()
         {
-            // load trips (entities) to update statuses
             var tripEntities = await _context.Set<SmartItineraryRequest>()
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
@@ -181,7 +216,6 @@ namespace Senior2.Api.Controllers
 
             await _context.SaveChangesAsync();
 
-            // return trips joined with users to get username
             var trips = await _context.Set<SmartItineraryRequest>()
                 .Join(_context.Users,
                     trip => trip.UserId,
@@ -202,13 +236,13 @@ namespace Senior2.Api.Controllers
                         trip.Status,
                         trip.CreatedAt,
                         trip.ItineraryJson
-
                     })
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
 
             return Ok(trips);
         }
+
         // =========================
         // DELETE TRIP
         // =========================
@@ -222,7 +256,6 @@ namespace Senior2.Api.Controllers
                 return NotFound("Trip not found");
 
             _context.Remove(trip);
-
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -247,7 +280,6 @@ namespace Senior2.Api.Controllers
                 return BadRequest("Completed trips cannot be cancelled");
 
             trip.Status = "Cancelled";
-
             await _context.SaveChangesAsync();
 
             return Ok(trip);

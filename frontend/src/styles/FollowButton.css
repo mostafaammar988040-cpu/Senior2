@@ -1,0 +1,20 @@
+.follow-btn {
+  background: #3498db;
+  color: white; /* FIXED */
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.follow-btn:hover {
+  background: #2980b9;
+}
+
+.follow-btn.following {
+  background: #2ecc71;
+}
+
+.follow-btn.following:hover {
+  background: #27ae60;
+}

@@ -36,7 +36,9 @@ namespace Senior2.Api.Data
         public DbSet<SupportRequest> SupportRequests { get; set; }
         public DbSet<PlaceReview> PlaceReviews { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Follow> Follows { get; set; }
         public object PlaceReview { get; internal set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

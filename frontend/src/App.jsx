@@ -34,7 +34,8 @@ import Recommendations from "./pages/Recommendations";
 import Notifications from "./pages/Notifications";
 import AdminRoute from "./components/AdminRoute";
 import AdminReports from "./pages/AdminReports";
-
+  import Feed from "./pages/Feed";
+import CreateJourney from "./pages/CreateJourney";
 function App() {
   return (
     <Routes>
@@ -81,7 +82,8 @@ function App() {
         <Route path="/profile/suggestions" element={<SuggestionPage />} />
         <Route path="/recommendations" element={<Recommendations />} />
         <Route path="/notifications" element={<Notifications />} />
-
+<Route path="/feed" element={<Feed />} />
+<Route path="/create-journey-entry" element={<CreateJourney />} />
         <Route
           path="/profile"
           element={

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Senior2.Api.Data;
 using Senior2.Api.Models;
 using Senior2.Api.DTOS;
+
 namespace Senior2.Api.Controllers
 {
     [ApiController]
@@ -36,9 +39,13 @@ namespace Senior2.Api.Controllers
         // POST: api/journey
         // ============================================
         [HttpPost]
+        [Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateJourney([FromForm] CreateJourneyRequest request)
         {
+            // ✅ GET USER ID FROM TOKEN
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             string? mediaUrl = null;
             string? mediaType = null;
 
@@ -69,12 +76,13 @@ namespace Senior2.Api.Controllers
 
             var entry = new JourneyEntry
             {
-                UserId = request.UserId,
+                UserId = userId, // ✅ FIXED
                 Title = request.Title,
                 Content = request.Content,
                 MediaUrl = mediaUrl,
                 MediaType = mediaType,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                IsShared = request.IsShared
             };
 
             _context.JourneyEntries.Add(entry);
@@ -87,6 +95,7 @@ namespace Senior2.Api.Controllers
         // PUT: api/journey/{id}
         // ============================================
         [HttpPut("{id}")]
+        [Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateJourney(
             int id,
@@ -98,16 +107,18 @@ namespace Senior2.Api.Controllers
             if (existing == null)
                 return NotFound("Journey not found");
 
-            if (existing.UserId != request.UserId)
+            // ✅ GET USER FROM TOKEN
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (existing.UserId != userId)
                 return Unauthorized("You cannot edit this journey");
 
             string? mediaUrl = existing.MediaUrl;
             string? mediaType = existing.MediaType;
 
-            // If new media uploaded → replace old
             if (request.Media != null)
             {
-                // Delete old file if exists
+                // delete old file
                 if (!string.IsNullOrEmpty(existing.MediaUrl))
                 {
                     var oldFilePath = Path.Combine(
@@ -145,6 +156,7 @@ namespace Senior2.Api.Controllers
             existing.Content = request.Content;
             existing.MediaUrl = mediaUrl;
             existing.MediaType = mediaType;
+            existing.IsShared = request.IsShared;
 
             await _context.SaveChangesAsync();
 

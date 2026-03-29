@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senior2.Api.Data;
 
@@ -11,9 +12,11 @@ using Senior2.Api.Data;
 namespace Senior2.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260328082144_FixUserRoleType")]
+    partial class FixUserRoleType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,25 +160,6 @@ namespace Senior2.Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Senior2.Api.Models.Follow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FollowedId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FollowerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Follows");
-                });
-
             modelBuilder.Entity("Senior2.Api.Models.JourneyEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -191,9 +175,6 @@ namespace Senior2.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsShared")
-                        .HasColumnType("bit");
-
                     b.Property<string>("MediaType")
                         .HasColumnType("nvarchar(max)");
 
@@ -208,8 +189,6 @@ namespace Senior2.Api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("JourneyEntries");
                 });
@@ -1095,17 +1074,6 @@ namespace Senior2.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Senior2.Api.Models.JourneyEntry", b =>
-                {
-                    b.HasOne("Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Senior2.Api.Models.Place", b =>

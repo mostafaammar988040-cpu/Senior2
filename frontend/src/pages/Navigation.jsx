@@ -110,6 +110,9 @@ export default function Navbar() {
         <Link to="/SmartItineraryintro" style={{ marginLeft: "25px" }}>Smart Itinerary</Link>
         <Link to="/taxis" style={{ marginLeft: "25px" }}>Taxi Services</Link>
         <Link to="/experiences" style={{ marginLeft: "25px" }}>Experiences</Link>
+        <Link to="/feed" style={{ marginLeft: "25px" }}>Feed</Link>
+        <Link to="/create-journey-entry" style={{ marginLeft: "25px" }}>Create Journey Entry</Link>
+        
 
         {isLoggedIn && (
           <Link to="/profile" style={{ marginLeft: "25px" }}>
