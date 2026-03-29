@@ -21,9 +21,9 @@ namespace Senior2.Api.Controllers
             _environment = environment;
         }
 
-        // ============================================
-        // GET: api/journey/{userId}
-        // ============================================
+        // ================================
+        // GET USER JOURNEYS
+        // ================================
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserJourneys(int userId)
         {
@@ -35,15 +35,14 @@ namespace Senior2.Api.Controllers
             return Ok(journeys);
         }
 
-        // ============================================
-        // POST: api/journey
-        // ============================================
+        // ================================
+        // CREATE JOURNEY
+        // ================================
         [HttpPost]
         [Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateJourney([FromForm] CreateJourneyRequest request)
         {
-            // ✅ GET USER ID FROM TOKEN
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             string? mediaUrl = null;
@@ -51,24 +50,23 @@ namespace Senior2.Api.Controllers
 
             if (request.Media != null)
             {
-                var uploadsFolder = Path.Combine(
-                    _environment.WebRootPath,
-                    "uploads/journeys");
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads/journeys");
 
                 if (!Directory.Exists(uploadsFolder))
                     Directory.CreateDirectory(uploadsFolder);
 
-                var uniqueFileName =
-                    Guid.NewGuid() + Path.GetExtension(request.Media.FileName);
-
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.Media.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await request.Media.CopyToAsync(stream);
                 }
 
-                mediaUrl = $"/uploads/journeys/{uniqueFileName}";
+                // 🔥 FIX: FULL URL
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                mediaUrl = $"{baseUrl}/uploads/journeys/{fileName}";
+
                 mediaType = request.Media.ContentType.StartsWith("video")
                     ? "video"
                     : "image";
@@ -76,13 +74,14 @@ namespace Senior2.Api.Controllers
 
             var entry = new JourneyEntry
             {
-                UserId = userId, // ✅ FIXED
+                UserId = userId,
                 Title = request.Title,
                 Content = request.Content,
                 MediaUrl = mediaUrl,
                 MediaType = mediaType,
                 CreatedAt = DateTime.UtcNow,
-                IsShared = request.IsShared
+                IsShared = request.IsShared,
+                Type = "journey"
             };
 
             _context.JourneyEntries.Add(entry);
@@ -91,23 +90,19 @@ namespace Senior2.Api.Controllers
             return Ok(entry);
         }
 
-        // ============================================
-        // PUT: api/journey/{id}
-        // ============================================
+        // ================================
+        // UPDATE JOURNEY
+        // ================================
         [HttpPut("{id}")]
         [Authorize]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdateJourney(
-            int id,
-            [FromForm] UpdateJourneyRequest request)
+        public async Task<IActionResult> UpdateJourney(int id, [FromForm] UpdateJourneyRequest request)
         {
-            var existing = await _context.JourneyEntries
-                .FirstOrDefaultAsync(j => j.Id == id);
+            var existing = await _context.JourneyEntries.FirstOrDefaultAsync(j => j.Id == id);
 
             if (existing == null)
                 return NotFound("Journey not found");
 
-            // ✅ GET USER FROM TOKEN
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (existing.UserId != userId)
@@ -121,32 +116,29 @@ namespace Senior2.Api.Controllers
                 // delete old file
                 if (!string.IsNullOrEmpty(existing.MediaUrl))
                 {
-                    var oldFilePath = Path.Combine(
-                        _environment.WebRootPath,
-                        existing.MediaUrl.TrimStart('/'));
+                    var oldPath = existing.MediaUrl.Replace($"{Request.Scheme}://{Request.Host}", "");
+                    var oldFilePath = Path.Combine(_environment.WebRootPath, oldPath.TrimStart('/'));
 
                     if (System.IO.File.Exists(oldFilePath))
                         System.IO.File.Delete(oldFilePath);
                 }
 
-                var uploadsFolder = Path.Combine(
-                    _environment.WebRootPath,
-                    "uploads/journeys");
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads/journeys");
 
                 if (!Directory.Exists(uploadsFolder))
                     Directory.CreateDirectory(uploadsFolder);
 
-                var uniqueFileName =
-                    Guid.NewGuid() + Path.GetExtension(request.Media.FileName);
-
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.Media.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await request.Media.CopyToAsync(stream);
                 }
 
-                mediaUrl = $"/uploads/journeys/{uniqueFileName}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                mediaUrl = $"{baseUrl}/uploads/journeys/{fileName}";
+
                 mediaType = request.Media.ContentType.StartsWith("video")
                     ? "video"
                     : "image";
@@ -157,10 +149,61 @@ namespace Senior2.Api.Controllers
             existing.MediaUrl = mediaUrl;
             existing.MediaType = mediaType;
             existing.IsShared = request.IsShared;
+            existing.Type = "journey";
 
             await _context.SaveChangesAsync();
 
             return Ok(existing);
+        }
+
+        // ================================
+        // CREATE STORY
+        // ================================
+        [HttpPost("story")]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateStory([FromForm] CreateStoryRequest request)
+        {
+            if (request.Media == null)
+                return BadRequest("Media is required");
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads/journeys");
+
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(request.Media.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await request.Media.CopyToAsync(stream);
+            }
+
+            // 🔥 FIX: FULL URL
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var mediaUrl = $"{baseUrl}/uploads/journeys/{fileName}";
+
+            var mediaType = request.Media.ContentType.StartsWith("video")
+                ? "video"
+                : "image";
+
+            var entry = new JourneyEntry
+            {
+                UserId = userId,
+                MediaUrl = mediaUrl,
+                MediaType = mediaType,
+                CreatedAt = DateTime.UtcNow,
+                Type = "story",
+                IsShared = true
+            };
+
+            _context.JourneyEntries.Add(entry);
+            await _context.SaveChangesAsync();
+
+            return Ok(entry);
         }
     }
 }

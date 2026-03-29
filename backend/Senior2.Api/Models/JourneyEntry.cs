@@ -23,6 +23,7 @@ namespace Senior2.Api.Models
 
         // Optional navigation property
         public Users? User { get; set; }
+        public string Type { get; set; } = "journey"; // or "story"
         public bool IsShared { get; set; } = false;
 
     }
