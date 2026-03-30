@@ -36,6 +36,7 @@ import AdminRoute from "./components/AdminRoute";
 import AdminReports from "./pages/AdminReports";
   import Feed from "./pages/Feed";
 import CreateJourney from "./pages/CreateJourney";
+import "./i18n";
 function App() {
   return (
     <Routes>

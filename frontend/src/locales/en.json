@@ -1,0 +1,25 @@
+{
+  "home": {
+    "heroTitle": "Explore Lebanon Like Never Before",
+    "heroText": "Colorful, modern, and intuitive plan trips with AI, explore hidden gems, find events, view interactive maps, and experience Lebanon’s beauty.",
+    "startJourney": "Start Your Journey",
+
+    "features": {
+      "itinerary": "Smart Itinerary",
+      "assistant": "AI Travel Assistant",
+      "map": "Interactive Map",
+      "events": "Live Events"
+    },
+
+    "topDestinations": "Top Destinations",
+    "baalbek": "Baalbek Temples",
+    "byblos": "Byblos Old Souks",
+    "cedars": "Cedars Forests",
+
+    "ctaTitle": "Ready to Explore Lebanon?",
+    "explore": "Explore",
+    "help": "Help",
+
+    "footer": "©️ 2026 AHLA BHAL TALLEH — A Colorful Way to Explore Lebanon"
+  }
+}

@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import "../styles/Homepage.css";
+import i18n from "i18next";
 
 export default function Navbar() {
 
@@ -94,113 +95,92 @@ export default function Navbar() {
 
   return (
 
-    <nav>
+   <nav className="navbar">
 
-      <h1>
-        <span style={{ color: "#d62828" }}>AHLA</span>{" "}
-        <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-        <span style={{ color: "#f9f7f7" }}>TALLEH</span>
-      </h1>
+  {/* LEFT → LOGO */}
+  <div className="nav-left">
+    <h1>
+      <span style={{ color: "#d62828" }}>AHLA</span>{" "}
+      <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
+      <span style={{ color: "#f9f7f7" }}>TALLEH</span>
+    </h1>
+  </div>
 
-      <div>
+  {/* CENTER → LINKS */}
+  <div className="nav-center">
+    <Link to="/">Home</Link>
+    <Link to="/events">Events</Link>
+    <Link to="/ai-assistant">AI Assistant</Link>
+    <Link to="/SmartItineraryintro">Smart Itinerary</Link>
+    <Link to="/taxis">Taxi Services</Link>
+    <Link to="/experiences">Experiences</Link>
+    <Link to="/feed">Feed</Link>
+  </div>
 
-        <Link to="/" style={{ marginLeft: "25px" }}>Home</Link>
-        <Link to="/events" style={{ marginLeft: "25px" }}>Events</Link>
-        <Link to="/ai-assistant" style={{ marginLeft: "25px" }}>AI Assistant</Link>
-        <Link to="/SmartItineraryintro" style={{ marginLeft: "25px" }}>Smart Itinerary</Link>
-        <Link to="/taxis" style={{ marginLeft: "25px" }}>Taxi Services</Link>
-        <Link to="/experiences" style={{ marginLeft: "25px" }}>Experiences</Link>
-        <Link to="/feed" style={{ marginLeft: "25px" }}>Feed</Link>
-        <Link to="/create-journey-entry" style={{ marginLeft: "25px" }}>Create Journey Entry</Link>
-        
+  {/* RIGHT → LANGUAGE + USER */}
+  <div className="nav-right">
 
-        {isLoggedIn && (
-          <Link to="/profile" style={{ marginLeft: "25px" }}>
-            Profile
-          </Link>
-        )}
+    {/* 🌐 Language */}
+  <div className="lang-container">
+  <span className="globe">🌐</span>
 
-        {isLoggedIn && (
-          <Link to="/recommendations" style={{ marginLeft: "25px" }}>
-            Recommendations
-          </Link>
-        )}
+  <select
+    onChange={(e) => i18n.changeLanguage(e.target.value)}
+    className="lang-select"
+  >
+    <option value="en">EN</option>
+    <option value="ar">العربية</option>
+    <option value="fr">FR</option>
+  </select>
+</div>
 
-        {/* 🔔 NOTIFICATIONS */}
+    {isLoggedIn && <Link to="/profile">Profile</Link>}
+    {isLoggedIn && <Link to="/recommendations">Recommendations</Link>}
 
-        {isLoggedIn && (
+    {/* 🔔 Notifications */}
+    {isLoggedIn && (
+      <div className="notification-wrapper">
+        <span
+          className="notification-bell"
+          onClick={() => setShowNotifications(!showNotifications)}
+        >
+          🔔
+        </span>
 
-          <div className="notification-wrapper">
-
-            <span
-              className="notification-bell"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              🔔
-            </span>
-
-            {unreadCount > 0 && (
-              <span className="notification-badge">
-                {unreadCount}
-              </span>
-            )}
-
-            {showNotifications && (
-
-              <div className="notification-dropdown">
-
-                <h4>Notifications</h4>
-
-                {notifications.length === 0 && (
-                  <p className="no-notifications">No notifications</p>
-                )}
-
-                {notifications.map(n => (
-
-                  <div
-                    key={n.id}
-                    className={`notification-item ${n.isRead ? "read" : ""}`}
-                    onClick={() => openNotification(n)}
-                  >
-
-                    <p>{n.message}</p>
-
-                    <small>
-                      {new Date(n.createdAt).toLocaleString()}
-                    </small>
-
-                  </div>
-
-                ))}
-
-              </div>
-
-            )}
-
-          </div>
-
-        )}
-
-        {/* LOGOUT */}
-
-        {isLoggedIn ? (
-          <span
-            onClick={handleLogout}
-            style={{
-              cursor: "pointer",
-              marginLeft: "25px",
-              fontWeight: "600"
-            }}
-          >
-            Logout
+        {unreadCount > 0 && (
+          <span className="notification-badge">
+            {unreadCount}
           </span>
-        ) : (
-          <Link to="/login" style={{ marginLeft: "25px" }}>
-            Login
-          </Link>
         )}
 
+        {showNotifications && (
+          <div className="notification-dropdown">
+            <h4>Notifications</h4>
+            {notifications.length === 0 && (
+              <p>No notifications</p>
+            )}
+            {notifications.map(n => (
+              <div key={n.id} onClick={() => openNotification(n)}>
+                <p>{n.message}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+    )}
+
+    {/* LOGIN / LOGOUT */}
+    {isLoggedIn ? (
+      <span onClick={handleLogout} className="logout">
+        Logout
+      </span>
+    ) : (
+      <Link to="/login">Login</Link>
+    )}
+
+  </div>
+
+
 
       {/* ==========================
          NOTIFICATION MODAL

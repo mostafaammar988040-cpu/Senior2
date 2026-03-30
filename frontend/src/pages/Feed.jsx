@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import FollowButton from "./FollowButton";
 import "../styles/Feed.css";
-
+import { useNavigate } from "react-router-dom";
 export default function Feed() {
   const [stories, setStories] = useState([]);
   const [journeys, setJourneys] = useState([]);
-
+const navigate = useNavigate();
   useEffect(() => {
     const fetchFeed = async () => {
       try {
@@ -46,7 +46,16 @@ export default function Feed() {
           ))}
         </div>
       </div>
+<div className="feed-header">
+  <h2>🌍 Inspiration Feed</h2>
 
+  <button 
+    className="add-btn"
+    onClick={() => navigate("/create-journey-entry")}
+  >
+    ➕ Upload Journey
+  </button>
+</div>
       {/* 🔥 JOURNEYS */}
       <div className="feed-section">
         {journeys.map((entry) => (

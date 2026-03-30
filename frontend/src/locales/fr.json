@@ -1,0 +1,25 @@
+{
+  "home": {
+    "heroTitle": "Explorez le Liban comme jamais auparavant",
+    "heroText": "Planifiez vos voyages avec l’IA, découvrez des trésors cachés, trouvez des événements et explorez des cartes interactives.",
+    "startJourney": "Commencer votre voyage",
+
+    "features": {
+      "itinerary": "Itinéraire intelligent",
+      "assistant": "Assistant IA",
+      "map": "Carte interactive",
+      "events": "Événements en direct"
+    },
+
+    "topDestinations": "Destinations populaires",
+    "baalbek": "Temples de Baalbek",
+    "byblos": "Souks de Byblos",
+    "cedars": "Forêts de cèdres",
+
+    "ctaTitle": "Prêt à explorer le Liban ?",
+    "explore": "Explorer",
+    "help": "Aide",
+
+    "footer": "©️ 2026 AHLA BI HA TTALLEH — Une façon unique d’explorer le Liban"
+  }
+}
