@@ -148,3 +148,4 @@ obj/
 
 # Rider / VS
 .idea/
+backend/Senior2.Api/appsettings.Development.json
