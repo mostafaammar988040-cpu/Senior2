@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Profile.css";
+import i18n from "i18next";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -45,6 +46,19 @@ export default function Profile() {
   return (
     <section className="profile-page">
 
+<div className="profile-section">
+  <h3>🌐 Language</h3>
+
+  <select
+    value={i18n.language}
+    onChange={(e) => i18n.changeLanguage(e.target.value)}
+    className="language-select"
+  >
+    <option value="en">English</option>
+    <option value="ar">العربية</option>
+    <option value="fr">Français</option>
+  </select>
+</div>
       {/* ===== HEADER ===== */}
       <header className="profile-header">
         <div className="profile-info">
@@ -80,10 +94,17 @@ export default function Profile() {
         </div>
 
         <div className="dashboard-card" onClick={() => navigate("/profile/preferences")}>
-          <span className="icon">❤️</span>
+          <span className="icon">⚙️</span>
           <h2>Preferences</h2>
           <p>Customize your travel experience.</p>
         </div>
+
+         <div className="dashboard-card" onClick={() => navigate("/profile/favorites")}>
+          <span className="icon">❤️</span>
+          <h2>Favorites</h2>
+          <p>View and manage your favorite destinations.</p>
+        </div>
+
 
         <div className="dashboard-card" onClick={() => navigate("/profile/suggestions")}>
           <span className="icon">💡</span>

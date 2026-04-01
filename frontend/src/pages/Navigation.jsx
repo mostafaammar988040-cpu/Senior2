@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import "../styles/Homepage.css";
-import i18n from "i18next";
 
 export default function Navbar() {
 
@@ -121,18 +120,6 @@ export default function Navbar() {
   <div className="nav-right">
 
     {/* 🌐 Language */}
-  <div className="lang-container">
-  <span className="globe">🌐</span>
-
-  <select
-    onChange={(e) => i18n.changeLanguage(e.target.value)}
-    className="lang-select"
-  >
-    <option value="en">EN</option>
-    <option value="ar">العربية</option>
-    <option value="fr">FR</option>
-  </select>
-</div>
 
     {isLoggedIn && <Link to="/profile">Profile</Link>}
     {isLoggedIn && <Link to="/recommendations">Recommendations</Link>}

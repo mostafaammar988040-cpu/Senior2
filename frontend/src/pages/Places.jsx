@@ -21,6 +21,9 @@ export default function Places() {
   const [weather, setWeather] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
 
+  // ❤️ FAVORITES
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -30,7 +33,7 @@ export default function Places() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   // ==========================
-  // FETCH WEATHER (FIXED)
+  // FETCH WEATHER
   // ==========================
   useEffect(() => {
     if (!selectedPlace) return;
@@ -38,7 +41,6 @@ export default function Places() {
     setWeather(null);
     setLoadingWeather(true);
 
-    // ✅ FIX: always send full location
     const city = selectedPlace.location + " Lebanon";
 
     api.get(`/weather/${city}`)
@@ -67,7 +69,7 @@ export default function Places() {
   }, [category, activityType]);
 
   // ==========================
-  // SEARCH + FILTER (FIXED)
+  // SEARCH + FILTER
   // ==========================
   useEffect(() => {
 
@@ -116,6 +118,44 @@ export default function Places() {
 
     setComment("");
     loadReviews(selectedPlace.id);
+  };
+
+  // ==========================
+  // CHECK IF FAVORITE
+  // ==========================
+  useEffect(() => {
+    if (!user || !selectedPlace) return;
+
+    api.get(`/favorites/${user.id}`)
+      .then(res => {
+        const exists = res.data.some(p => p.id === selectedPlace.id);
+        setIsFavorite(exists);
+      });
+
+  }, [selectedPlace]);
+
+  // ==========================
+  // TOGGLE FAVORITE
+  // ==========================
+  const handleFavorite = async () => {
+    if (!user) {
+      alert("Login first");
+      return;
+    }
+
+    try {
+
+      if (!isFavorite) {
+        await api.post(`/favorites/add?userId=${user.id}&placeId=${selectedPlace.id}`);
+        setIsFavorite(true);
+      } else {
+        await api.delete(`/favorites/remove?userId=${user.id}&placeId=${selectedPlace.id}`);
+        setIsFavorite(false);
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -202,7 +242,6 @@ export default function Places() {
               {selectedPlace.description}
             </p>
 
-            {/* ✅ LOCATION + WEATHER */}
             <div className="modal-meta">
               <p><strong>Location:</strong> {selectedPlace.location}</p>
 
@@ -263,6 +302,14 @@ export default function Places() {
                 Add to Trip
               </button>
 
+              {/* ❤️ FAVORITE BUTTON */}
+              <button
+                className="favorite-btn"
+                onClick={handleFavorite}
+              >
+                {isFavorite ? "💔 Remove Favorite" : "❤️ Add to Favorites"}
+              </button>
+
             </div>
 
             {/* REVIEWS */}
@@ -283,7 +330,6 @@ export default function Places() {
                 </div>
               ))}
 
-              {/* ADD REVIEW */}
               <div className="review-form">
 
                 <select

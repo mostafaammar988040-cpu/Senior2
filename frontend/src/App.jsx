@@ -36,6 +36,8 @@ import AdminRoute from "./components/AdminRoute";
 import AdminReports from "./pages/AdminReports";
   import Feed from "./pages/Feed";
 import CreateJourney from "./pages/CreateJourney";
+import ProfilePreference from "./components/profile/ProfilePreference";
+import ProfileFavorites from "./components/profile/ProfileFavorites";
 import "./i18n";
 function App() {
   return (
@@ -85,7 +87,9 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
 <Route path="/feed" element={<Feed />} />
 <Route path="/create-journey-entry" element={<CreateJourney />} />
-        <Route
+<Route path="/profile/preferences" element={<ProfilePreference />} />     
+<Route path="/profile/favorites" element={<ProfileFavorites />} />
+   <Route
           path="/profile"
           element={
             <PrivateRoute>

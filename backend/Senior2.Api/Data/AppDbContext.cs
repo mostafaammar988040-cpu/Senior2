@@ -37,6 +37,7 @@ namespace Senior2.Api.Data
         public DbSet<PlaceReview> PlaceReviews { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Follow> Follows { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
         public object PlaceReview { get; internal set; }
 
 
