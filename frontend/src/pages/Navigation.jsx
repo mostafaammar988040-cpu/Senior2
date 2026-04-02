@@ -106,15 +106,21 @@ export default function Navbar() {
   </div>
 
   {/* CENTER → LINKS */}
-  <div className="nav-center">
-    <Link to="/">Home</Link>
-    <Link to="/events">Events</Link>
-    <Link to="/ai-assistant">AI Assistant</Link>
-    <Link to="/SmartItineraryintro">Smart Itinerary</Link>
-    <Link to="/taxis">Taxi Services</Link>
-    <Link to="/experiences">Experiences</Link>
-    <Link to="/feed">Feed</Link>
-  </div>
+<div className="nav-center">
+
+  {isLoggedIn && (
+    <>
+      <Link to="/events">Events</Link>
+      <Link to="/ai-assistant">AI Assistant</Link>
+      <Link to="/SmartItineraryintro">Smart Itinerary</Link>
+      <Link to="/taxis">Taxi Services</Link>
+      <Link to="/experiences">Experiences</Link>
+      <Link to="/feed">Feed</Link>
+        <Link to="/">Home</Link>
+
+    </>
+  )}
+</div>
 
   {/* RIGHT → LANGUAGE + USER */}
   <div className="nav-right">

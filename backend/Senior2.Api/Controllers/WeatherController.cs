@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Senior2.Api.Services;
 
 namespace Senior2.Api.Controllers;

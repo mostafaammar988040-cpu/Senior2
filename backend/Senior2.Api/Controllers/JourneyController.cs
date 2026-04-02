@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Senior2.Api.Data;
 using Senior2.Api.Models;
 using Senior2.Api.DTOS;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {

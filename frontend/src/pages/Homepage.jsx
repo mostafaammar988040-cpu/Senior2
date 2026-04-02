@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Homepage.css";
 
 import heroImg from "../assets/landscape.webp";
@@ -8,6 +10,20 @@ import cedarsImg from "../assets/cedars.jpg";
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  // 🔥 Show popup only if NOT logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const seen = sessionStorage.getItem("seenPopup");
+
+    if (!token && !seen) {
+      setShowPopup(true);
+      sessionStorage.setItem("seenPopup", "true");
+    }
+  }, []);
 
   return (
     <>
@@ -71,6 +87,26 @@ export default function Home() {
       <footer>
         {t("home.footer")}
       </footer>
+
+      {/* 🔥 POPUP */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-box">
+            <h2>Welcome 👋</h2>
+            <p>You can access the rest of features after logging in 🔐</p>
+
+            <div className="popup-buttons">
+              <button onClick={() => navigate("/login")}>
+                Login
+              </button>
+
+              <button onClick={() => setShowPopup(false)}>
+                Continue as Guest
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

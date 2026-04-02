@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
+
     public class ActivityTypesController : ControllerBase
     {
         private readonly AppDbContext _context;

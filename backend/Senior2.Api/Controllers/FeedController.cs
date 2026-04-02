@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Senior2.Api.Data;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Senior2.Api.Controllers
 {
     [ApiController]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Senior2.Api.Models;
 using Senior2.Api.Services;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Senior2.Api.Controllers;
 
 [ApiController]

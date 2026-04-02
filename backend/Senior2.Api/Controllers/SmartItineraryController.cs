@@ -4,6 +4,7 @@ using Senior2.Api.Data;
 using Senior2.Api.Models;
 using Senior2.Api.Services; // <-- make sure to include this
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {

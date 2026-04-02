@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
 using Senior2.Api.DTOs;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {

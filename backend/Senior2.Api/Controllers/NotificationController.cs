@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
-
+using Microsoft.AspNetCore.Authorization;
 [ApiController]
 [Route("api/notifications")]
 public class NotificationController : ControllerBase

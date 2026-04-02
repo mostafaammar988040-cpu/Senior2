@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Senior2.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {

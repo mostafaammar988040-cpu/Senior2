@@ -2,6 +2,7 @@
 using Senior2.Api.Data;
 using Senior2.Api.Models;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {
