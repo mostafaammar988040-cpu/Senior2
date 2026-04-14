@@ -1,0 +1,52 @@
+.ad-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ad-popup {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: black;
+}
+
+.ad-popup img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.ad-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+}
+
+.skip-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  cursor: pointer;
+}
+
+.skip-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senior2.Api.Data;
 
@@ -11,9 +12,11 @@ using Senior2.Api.Data;
 namespace Senior2.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406104717_AddSupportIsReplied")]
+    partial class AddSupportIsReplied
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,56 +184,6 @@ namespace Senior2.Api.Migrations
                             Name = "Tennis",
                             Slug = "tennis"
                         });
-                });
-
-            modelBuilder.Entity("Senior2.Api.Models.Advertisement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AdminNote")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<DateTimeOffset>("EndDateUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Priority")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<DateTimeOffset>("StartDateUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("UpdatedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlaceId");
-
-                    b.ToTable("Advertisements");
                 });
 
             modelBuilder.Entity("Senior2.Api.Models.Follow", b =>
@@ -928,8 +881,6 @@ namespace Senior2.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("SmartItineraryRequest");
                 });
 
@@ -1201,17 +1152,6 @@ namespace Senior2.Api.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Senior2.Api.Models.Advertisement", b =>
-                {
-                    b.HasOne("Senior2.Api.Models.Place", "Place")
-                        .WithMany("Advertisements")
-                        .HasForeignKey("PlaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Place");
-                });
-
             modelBuilder.Entity("Senior2.Api.Models.JourneyEntry", b =>
                 {
                     b.HasOne("Users", "User")
@@ -1255,17 +1195,6 @@ namespace Senior2.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Place");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Senior2.Api.Models.SmartItineraryRequest", b =>
-                {
-                    b.HasOne("Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -1332,11 +1261,6 @@ namespace Senior2.Api.Migrations
             modelBuilder.Entity("Senior2.Api.Models.ActivityType", b =>
                 {
                     b.Navigation("Places");
-                });
-
-            modelBuilder.Entity("Senior2.Api.Models.Place", b =>
-                {
-                    b.Navigation("Advertisements");
                 });
 #pragma warning restore 612, 618
         }

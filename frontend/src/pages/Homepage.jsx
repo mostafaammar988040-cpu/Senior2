@@ -7,6 +7,7 @@ import heroImg from "../assets/landscape.webp";
 import baalbekImg from "../assets/baalbek.jpg";
 import byblosImg from "../assets/byblos.jpg";
 import cedarsImg from "../assets/cedars.jpg";
+import AdPopup from "../components/AdPopup";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -14,7 +15,6 @@ export default function Home() {
 
   const [showPopup, setShowPopup] = useState(false);
 
-  // 🔥 Show popup only if NOT logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     const seen = sessionStorage.getItem("seenPopup");
@@ -27,6 +27,8 @@ export default function Home() {
 
   return (
     <>
+      <AdPopup />
+
       {/* HERO */}
       <section className="hero">
         <img src={heroImg} className="hero-bg" alt="Hero Background" />
@@ -73,22 +75,20 @@ export default function Home() {
         <h2>{t("home.ctaTitle")}</h2>
 
         <div className="home-buttons">
-          <button onClick={() => window.location.href = "/explore"}>
+          <button onClick={() => (window.location.href = "/explore")}>
             {t("home.explore")}
           </button>
 
-          <button onClick={() => window.location.href = "/help"}>
+          <button onClick={() => (window.location.href = "/help")}>
             {t("home.help")}
           </button>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer>
-        {t("home.footer")}
-      </footer>
+      <footer>{t("home.footer")}</footer>
 
-      {/* 🔥 POPUP */}
+      {/* LOGIN POPUP */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-box">
@@ -96,9 +96,7 @@ export default function Home() {
             <p>You can access the rest of features after logging in 🔐</p>
 
             <div className="popup-buttons">
-              <button onClick={() => navigate("/login")}>
-                Login
-              </button>
+              <button onClick={() => navigate("/login")}>Login</button>
 
               <button onClick={() => setShowPopup(false)}>
                 Continue as Guest

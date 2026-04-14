@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../services/api";
-import "../styles/Homepage.css";
+import "../styles/navbar.css";
 
 export default function Navbar() {
 
@@ -92,121 +92,95 @@ export default function Navbar() {
 
   };
 
-  return (
+return (
+  <nav className="navbar">
 
-   <nav className="navbar">
-
-  {/* LEFT → LOGO */}
-  <div className="nav-left">
-    <h1>
-      <span style={{ color: "#d62828" }}>AHLA</span>{" "}
-      <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-      <span style={{ color: "#f9f7f7" }}>TALLEH</span>
+    {/* LOGO */}
+    <h1 className="logo">
+      <span className="red">AHLA</span>{" "}
+      <span className="green">BHAL</span>{" "}
+      <span className="white">TALLEH</span>
     </h1>
-  </div>
 
-  {/* CENTER → LINKS */}
-<div className="nav-center">
+    {/* ALL LINKS (ONE LINE 🔥) */}
+    <div className="nav-menu">
 
-  {isLoggedIn && (
-    <>
-      <Link to="/events">Events</Link>
-      <Link to="/ai-assistant">AI Assistant</Link>
-      <Link to="/SmartItineraryintro">Smart Itinerary</Link>
-      <Link to="/taxis">Taxi Services</Link>
-      <Link to="/experiences">Experiences</Link>
-      <Link to="/feed">Feed</Link>
-        <Link to="/">Home</Link>
+      {isLoggedIn && (
+        <>
+          <Link to="/events">Events</Link>
+          <Link to="/ai-assistant">AI Assistant</Link>
+          <Link to="/SmartItineraryintro">Smart Itinerary</Link>
+          <Link to="/taxis">Taxi Services</Link>
+          <Link to="/experiences">Experiences</Link>
+          <Link to="/feed">Feed</Link>
+          <Link to="/">Home</Link>
+        </>
+      )}
 
-    </>
-  )}
-</div>
+      {/* PUSH RIGHT ITEMS */}
 
-  {/* RIGHT → LANGUAGE + USER */}
-  <div className="nav-right">
+      {isLoggedIn && <Link to="/profile">Profile</Link>}
+      {isLoggedIn && <Link to="/recommendations">Recommendations</Link>}
 
-    {/* 🌐 Language */}
-
-    {isLoggedIn && <Link to="/profile">Profile</Link>}
-    {isLoggedIn && <Link to="/recommendations">Recommendations</Link>}
-
-    {/* 🔔 Notifications */}
-    {isLoggedIn && (
-      <div className="notification-wrapper">
-        <span
-          className="notification-bell"
-          onClick={() => setShowNotifications(!showNotifications)}
-        >
-          🔔
-        </span>
-
-        {unreadCount > 0 && (
-          <span className="notification-badge">
-            {unreadCount}
+      {/* 🔔 Notifications */}
+      {isLoggedIn && (
+        <div className="notification-wrapper">
+          <span
+            className="notification-bell"
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            🔔
           </span>
-        )}
 
-        {showNotifications && (
-          <div className="notification-dropdown">
-            <h4>Notifications</h4>
-            {notifications.length === 0 && (
-              <p>No notifications</p>
-            )}
-            {notifications.map(n => (
-              <div key={n.id} onClick={() => openNotification(n)}>
-                <p>{n.message}</p>
-              </div>
-            ))}
-          </div>
-        )}
+          {unreadCount > 0 && (
+            <span className="notification-badge">{unreadCount}</span>
+          )}
+
+          {showNotifications && (
+            <div className="notification-dropdown">
+              <h4>Notifications</h4>
+              {notifications.length === 0 && <p>No notifications</p>}
+
+              {notifications.map(n => (
+                <div key={n.id} onClick={() => openNotification(n)}>
+                  <p>{n.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isLoggedIn ? (
+        <span onClick={handleLogout} className="logout">Logout</span>
+      ) : (
+        <Link to="/login">Login</Link>
+      )}
+
+    </div>
+
+    {/* MODAL */}
+    {selectedNotification && (
+      <div className="notification-modal-overlay">
+        <div className="notification-modal">
+          <h3>Notification</h3>
+          <p>{selectedNotification.message}</p>
+          <small>
+            {new Date(selectedNotification.createdAt).toLocaleString()}
+          </small>
+          <button
+            className="close-modal"
+            onClick={() => setSelectedNotification(null)}
+          >
+            Close
+          </button>
+        </div>
       </div>
     )}
 
-    {/* LOGIN / LOGOUT */}
-    {isLoggedIn ? (
-      <span onClick={handleLogout} className="logout">
-        Logout
-      </span>
-    ) : (
-      <Link to="/login">Login</Link>
-    )}
-
-  </div>
+  </nav>
 
 
-
-      {/* ==========================
-         NOTIFICATION MODAL
-      ========================== */}
-
-      {selectedNotification && (
-
-        <div className="notification-modal-overlay">
-
-          <div className="notification-modal">
-
-            <h3>Notification</h3>
-
-            <p>{selectedNotification.message}</p>
-
-            <small>
-              {new Date(selectedNotification.createdAt).toLocaleString()}
-            </small>
-
-            <button
-              className="close-modal"
-              onClick={() => setSelectedNotification(null)}
-            >
-              Close
-            </button>
-
-          </div>
-
-        </div>
-
-      )}
-
-    </nav>
   );
 
 }

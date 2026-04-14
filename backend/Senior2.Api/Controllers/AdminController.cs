@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     [ApiController]
     [Route("api/admin")]
     public class AdminController : ControllerBase
@@ -174,6 +176,7 @@ namespace Senior2.Api.Controllers
                 message = $"Warning emails sent to {warnedUsers.Count} users."
             });
         }
+
 
     }
 }

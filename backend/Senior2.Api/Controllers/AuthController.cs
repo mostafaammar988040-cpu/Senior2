@@ -165,7 +165,7 @@ namespace Senior2.Api.Controllers
                    Reset Password
                 </a>
 
-                <p>This link expires in 30 minutes.</p>
+                <p>This link will expire in 30 minutes for security reasons. If you didn’t request a password reset, please ignore this email.</p>
             ";
 
             await _emailService.SendEmailAsync(

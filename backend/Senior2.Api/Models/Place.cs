@@ -15,5 +15,7 @@
 
         public int? ActivityTypeId { get; set; }
         public ActivityType? ActivityType { get; set; }
+        public ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
+
     }
 }

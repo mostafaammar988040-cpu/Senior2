@@ -38,6 +38,10 @@ import AdminReports from "./pages/AdminReports";
 import CreateJourney from "./pages/CreateJourney";
 import ProfilePreference from "./components/profile/ProfilePreference";
 import ProfileFavorites from "./components/profile/ProfileFavorites";
+import AdminPlaces from "./pages/AdminPlaces";
+import AdminPlacesList from "./pages/AdminPlacesList";
+import AdminSupport from "./pages/AdminSupport";
+import AdminAds from "./pages/AdminAds";
 import "./i18n";
 function App() {
   return (
@@ -62,6 +66,11 @@ function App() {
         <Route path="suggestions" element={<AdminSuggestions />} />
         <Route path="trips" element={<AdminTrips />} />
         <Route path="reports" element={<AdminReports />} />
+        <Route path="/admin/places" element={<AdminPlaces />} />
+        <Route path="/admin/manage-places" element={<AdminPlacesList />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
+          <Route path="/admin/ads" element={<AdminAds />} />
+
       </Route>
 
       {/* Main app routes WITH navbar (using Layout) */}

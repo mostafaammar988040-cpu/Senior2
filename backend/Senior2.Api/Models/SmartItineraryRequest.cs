@@ -9,6 +9,7 @@ namespace Senior2.Api.Models
 
         [Required]
         public int UserId { get; set; }
+        public Users? User { get; set; }
 
         // ✅ Travelers should be an int (number of people)
         [Range(1, 50, ErrorMessage = "Travelers must be between 1 and 50.")]

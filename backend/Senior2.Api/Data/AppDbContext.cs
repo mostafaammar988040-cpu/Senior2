@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Senior2.Api.Data.Configurations;
 using Senior2.Api.Models;
 
 namespace Senior2.Api.Data
@@ -38,12 +39,15 @@ namespace Senior2.Api.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
         public object PlaceReview { get; internal set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new AdvertisementConfiguration());
+
 
             // (YOUR EXISTING SEED DATA — KEEP EVERYTHING BELOW)
 

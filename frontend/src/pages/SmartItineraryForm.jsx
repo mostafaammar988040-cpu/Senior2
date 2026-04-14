@@ -9,9 +9,9 @@ export default function SmartItineraryForm() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const [tripType, setTripType] = useState(null);
+const [tripType, setTripType] = useState("Relaxing");
+const [transport, setTransport] = useState("Car");
   const [activities, setActivities] = useState([]);
-  const [transport, setTransport] = useState(null);
 
   const [specialRequirements, setSpecialRequirements] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,47 +28,62 @@ export default function SmartItineraryForm() {
     }
   };
 
-  const handleGenerate = async () => {
-    if (!tripType) {
-      alert("Please select a trip type");
-      return;
-    }
+const handleGenerate = async () => {
+  if (!tripType) {
+    alert("Please select a trip type");
+    return;
+  }
 
-    if (!startDate || !endDate) {
-      alert("Please select trip dates");
-      return;
-    }
+  if (!startDate || !endDate) {
+    alert("Please select trip dates");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-      const user = JSON.parse(localStorage.getItem("user"));
+  if (!user || !user.id) {
+    alert("User not logged in");
+    return;
+  }
 
-      const payload = {
-        userId: user?.id || 1,
-        travelers, // ✅ numeric
-        startDate: new Date(startDate).toISOString(), // ✅ ISO format
-        endDate: new Date(endDate).toISOString(),
-        budgetPerDay: Number(budget), // ✅ ensure numeric
-        tripType,
-        activitiesJson: JSON.stringify(activities),
-        transport,
-        specialRequirements,
-        includeSavedPlaces,
-      };
+  try {
+    setLoading(true);
 
-      const res = await api.post("/smartitinerary", payload);
+    const payload = {
+      userId: user.id, // ✅ FIXED
 
-      setGeneratedDays(res.data.itinerary || []);
+      travelers: Number(travelers),
 
-      alert("Trip generated successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to generate trip");
-    } finally {
-      setLoading(false);
-    }
-  };
+      startDate: startDate, // ✅ FIXED (no ISO needed)
+      endDate: endDate,
+
+      budgetPerDay: Number(budget),
+
+      tripType: tripType || "Relaxing", // ✅ NEVER null
+
+      activitiesJson: JSON.stringify(activities),
+
+      transport: transport || "Car", // ✅ NEVER null
+
+      specialRequirements: specialRequirements || "",
+
+      includeSavedPlaces: includeSavedPlaces ?? false
+    };
+
+    const res = await api.post("/smartitinerary", payload);
+
+    setGeneratedDays(res.data.itinerary || []);
+
+    alert("Trip generated successfully!");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to generate trip");
+  } finally {
+    setLoading(false);
+  }
+};
+
+      
 
   return (
     <div className="form-container">
