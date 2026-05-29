@@ -2,24 +2,32 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChromaGrid from "../components/ChromaGrid";
 import "../styles/Events.css";
+import { useTranslation } from "react-i18next";
 
 const Events = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
   const [selectedType, setSelectedType] = useState("All");
 
   const eventTypes = ["All", "Sport", "History", "Tech", "Music"];
 
   return (
     <div className="events-page">
+
       {/* Header */}
       <header className="events-header">
-        <h1 className="events-title">Upcoming Events in Lebanon</h1>
-        <button className="back-button" onClick={() => navigate("/")}>
-          Back to Home
+        <h1 className="events-title">{t("events.title")}</h1>
+
+        <button
+          className="back-button"
+          onClick={() => navigate("/")}
+        >
+          {t("events.back")}
         </button>
       </header>
 
-      {/* Event type filter */}
+      {/* Filter */}
       <div className="events-options">
         {eventTypes.map((type) => (
           <button
@@ -27,12 +35,12 @@ const Events = () => {
             className={`option-button ${selectedType === type ? "active" : ""}`}
             onClick={() => setSelectedType(type)}
           >
-            {type}
+            {t(`events.types.${type}`)}
           </button>
         ))}
       </div>
 
-      {/* Event grid */}
+      {/* Grid */}
       <main className="events-main">
         <ChromaGrid filterType={selectedType} />
       </main>

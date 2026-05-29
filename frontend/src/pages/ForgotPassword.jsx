@@ -1,8 +1,11 @@
 import { useState } from "react";
 import api from "../services/api";
 import "../styles/Auth.css";
+import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
+  const { t } = useTranslation();
+
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
@@ -11,24 +14,24 @@ export default function ForgotPassword() {
 
     await api.post("/auth/forgot-password", { email });
 
-    setMessage("If your email exists, a reset link has been sent.");
+    setMessage(t("forgot.success"));
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Forgot Password</h2>
+        <h2>{t("forgot.title")}</h2>
 
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t("forgot.email")}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
           <button type="submit">
-            Send Reset Link
+            {t("forgot.button")}
           </button>
         </form>
 

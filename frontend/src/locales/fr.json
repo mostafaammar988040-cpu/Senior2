@@ -1,0 +1,550 @@
+{
+  "navbar": {
+    "home": "Accueil",
+    "events": "Événements",
+    "taxi": "Services de taxi",
+    "feed": "Fil",
+    "experiences": "Expériences",
+    "recommendations": "Recommandations",
+    "itinerary": "Itinéraire intelligent",
+    "ai": "Assistant IA",
+    "logout": "Déconnexion",
+    "login": "Connexion"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification"
+  },
+  "adminSupport": {
+    "close": "Fermer"
+  }
+  ,
+  
+  "home": {
+    "heroTitle": "Explorez le Liban",
+    "heroText": "Découvrez la beauté, la culture et les trésors cachés du Liban",
+    "startJourney": "Commencer votre voyage",
+
+    "features": {
+      "itinerary": "Planification intelligente",
+      "assistant": "Assistant IA",
+      "map": "Carte interactive",
+      "events": "Événements en direct"
+    },
+
+    "topDestinations": "Destinations principales",
+    "baalbek": "Baalbek",
+    "byblos": "Byblos",
+    "cedars": "Cèdres",
+
+    "ctaTitle": "Commencez à explorer",
+    "explore": "Explorer",
+    "help": "Aide",
+    "footer": "© Explore Lebanon - Tous droits réservés"
+  },
+
+  "popup": {
+    "title": "Bienvenue 👋",
+    "text": "Vous pouvez accéder à toutes les fonctionnalités après connexion 🔐",
+    "login": "Connexion",
+    "guest": "Continuer en tant qu'invité"
+  }
+,
+
+  "login": {
+    "title": "Bienvenue au Liban",
+    "subtitle": "Découvrez la beauté du Moyen-Orient",
+    "email": "Email",
+    "password": "Mot de passe",
+    "button": "Connexion",
+    "signup": "Créer un compte",
+    "forgot": "Mot de passe oublié ?",
+    "fillFields": "Veuillez remplir tous les champs",
+    "invalid": "Email ou mot de passe invalide",
+    "googleError": "Échec de connexion Google"
+  },
+  
+  "signup": {
+    "title": "Créer un compte",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "button": "Créer un compte",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "fillFields": "Veuillez remplir tous les champs",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "success": "Compte créé avec succès !",
+    "error": "Une erreur s'est produite أثناء l'inscription"
+  },
+  
+  "forgot": {
+    "title": "Mot de passe oublié",
+    "email": "Entrez votre email",
+    "button": "Envoyer le lien de réinitialisation",
+    "success": "Si votre email existe, un lien de réinitialisation a été envoyé."
+  },
+    "activities": {
+    "title": "Découvrir les activités",
+    "subtitle": "Explorez des expériences passionnantes à travers le Liban"
+  },
+  "activityTypes": {
+  "title": "Choisissez un type d'activité",
+  "subtitle": "Sélectionnez le type d'expérience souhaité"
+},
+
+  "journey": {
+    "title": "✨ Partagez votre expérience",
+    "tabJourney": "Voyage",
+    "tabStory": "Story 🎥",
+    "titlePlaceholder": "Donnez un titre à votre voyage...",
+    "contentPlaceholder": "Décrivez votre expérience...",
+    "upload": "Cliquez ou glissez pour télécharger image/vidéo",
+    "format": "PNG, JPG, MP4",
+    "share": "Partager publiquement",
+    "shareDesc": "Visible pour les autres utilisateurs",
+    "postStory": "Publier la story",
+    "publish": "Publier le voyage",
+    "success": "Publication réussie !",
+    "error": "Échec de la publication"
+  }
+,
+
+  "feed": {
+    "stories": "Stories",
+    "title": "Fil d'inspiration",
+    "upload": "Publier un voyage",
+    "user": "Utilisateur"
+  },
+  
+  "events": {
+    "title": "Événements à venir au Liban",
+    "back": "Retour à l'accueil",
+    "types": {
+      "All": "Tous",
+      "Sport": "Sport",
+      "History": "Histoire",
+      "Tech": "Technologie",
+      "Music": "Musique"
+    }
+    
+  },
+  
+  "experiences": {
+    "title": "Expériences sélectionnées",
+    "subtitle": "Découvrez des moments inoubliables à travers le Liban"
+  },
+  
+  "explore": {
+    "back": "Retour à l'accueil",
+    "title": "Explorer le Liban",
+    "fullscreen": "Cliquez n'importe où pour plein écran ✨",
+    "galleryTitle": "Découvrez le beau Liban",
+
+    "images": {
+      "beirut": "Skyline de Beyrouth",
+      "mountains": "Villages de montagne",
+      "baalbek": "Ruines de Baalbek",
+      "coast": "Vues côtières",
+      "caves": "Grottes cachées",
+      "souks": "Vieux souks",
+      "trails": "Sentiers naturels",
+      "snow": "Montagnes enneigées",
+      "sunset": "Couchers de soleil",
+      "winter": "Liban en hiver",
+      "raouche": "Rocher de Raouché",
+      "hiking": "Randonnée au Liban"
+    }
+  },
+ 
+  "help": {
+    "back": "Retour",
+    "title": "Centre d'aide",
+    "subtitle": "Nous sommes là pour vous aider à explorer le Liban بسهولة.",
+
+    "cards": {
+      "contact": "Contacter le support",
+      "contactDesc": "Besoin d'aide ?",
+      "faq": "FAQ",
+      "faqDesc": "Réponses rapides aux questions fréquentes.",
+      "report": "Signaler un problème",
+      "reportDesc": "Vous avez trouvé un problème ?",
+      "ai": "Assistant IA",
+      "aiDesc": "Aide intelligente pour voyager."
+    },
+
+    "faqTitle": "Questions fréquentes",
+
+    "contactTitle": "Contacter le support",
+    "name": "Votre nom",
+    "email": "Votre email",
+    "subject": "Sujet",
+    "message": "Votre message...",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "success": "✔ Message envoyé avec succès !",
+    "error": "❌ Échec de l'envoi",
+    "emailText": "Ou contactez-nous directement :"
+  },
+  
+  "intro": {
+    "heroTitle": "Découvrez le Liban",
+    "heroText": "Un pays où histoire, culture et nature spectaculaire se rencontrent.",
+
+    "section1": {
+      "title": "Liban : une beauté intemporelle",
+      "text": "Situé sur la Méditerranée, le Liban mélange héritage ancien et modernité."
+    },
+
+    "section2": {
+      "title": "Héritage",
+      "text1": "Berceau des Phéniciens, pionniers du commerce et de l'alphabet.",
+      "text2": "Des villes comme Byblos et Baalbek conservent des trésors historiques."
+    },
+
+    "section3": {
+      "title": "Diversité culturelle",
+      "text": "Le Liban rassemble plusieurs cultures et religions en harmonie."
+    },
+
+    "section4": {
+      "title": "Une nature exceptionnelle",
+      "text": "Ski le matin, mer l'après-midi — tout en un seul pays."
+    },
+
+    "cta": "Commencer l'exploration"
+  }
+,
+
+  "profile": {
+    "loading": "Chargement...",
+    "language": "Langue",
+    "welcome": "Bon retour 👋",
+    "dashboard": "Mon",
+    "highlight": "Tableau",
+
+    "trips": "Voyages",
+    "journeys": "Expériences",
+    "reviews": "Avis",
+    "saved": "Enregistrés",
+    "badge": "✦ Membre Explorateur",
+
+    "myTrips": "Mes voyages",
+    "myTripsDesc": "Gérer vos voyages",
+
+    "myJourneys": "Mes expériences",
+    "myJourneysDesc": "Vos souvenirs",
+
+    "preferences": "Préférences",
+    "preferencesDesc": "Personnaliser",
+
+    "favorites": "Favoris",
+    "favoritesDesc": "Vos lieux",
+
+    "suggestion": "Suggestion",
+    "suggestionDesc": "Améliorer la plateforme",
+
+    "aiTitle": "Planifiez avec l'IA ✨",
+    "aiDesc": "Créez votre voyage parfait",
+    "start": "Commencer",
+
+    "passwordSuccess": "Mot de passe mis à jour",
+    "passwordError": "Échec de mise à jour"
+  },
+  
+  "taxi": {
+    "kicker": "Transport",
+    "title": "Services de taxi au Liban",
+    "subtitle": "Accès rapide aux moyens de contact.",
+    "tipLabel": "Conseil",
+    "tip": "Convenez du prix avant de commencer la course.",
+
+    "openApp": "Ouvrir l'application",
+    "whatsapp": "WhatsApp",
+    "call": "Appeler",
+    "phone": "Téléphone",
+
+    "whatsappMessage": "Bonjour ! J’ai besoin d’un taxi. Départ : ____ Destination : ____"
+  }
+,
+
+  "suggestion": {
+    "title": "💡 Améliorez le tourisme au Liban",
+    "subtitle": "Vos idées nous aident à améliorer la plateforme.",
+
+    "loginRequired": "Vous devez être connecté",
+    "fillForm": "Veuillez remplir le formulaire",
+    "error": "Échec de l'envoi",
+
+    "types": {
+      "place": { "title": "Proposer un lieu", "desc": "Restaurant, plage, randonnée" },
+      "feature": { "title": "Proposer une fonctionnalité", "desc": "Nouvelle idée" },
+      "bug": { "title": "Signaler un bug", "desc": "Quelque chose ne fonctionne pas" },
+      "general": { "title": "Idée générale", "desc": "Toute suggestion" }
+    },
+
+    "formTitle": "Partagez votre idée",
+    "titleInput": "Titre",
+    "descriptionInput": "Décrivez votre suggestion...",
+    "location": "Lieu (optionnel)",
+    "submit": "Envoyer",
+
+    "successTitle": "🎉 Merci !",
+    "successText": "Votre suggestion améliore la plateforme.",
+    "another": "Envoyer une autre suggestion"
+  }
+
+,
+
+  "smartIntro": {
+    "title": "Planifiez votre aventure au Liban",
+    "subtitle": "Laissez-nous créer un itinéraire personnalisé selon vos préférences.",
+    "start": "Commencer"
+  }
+,
+"itinerary": {
+  "basic": "📋 Détails du voyage",
+  "travelers": "Nombre de voyageurs",
+  "solo": "Solo",
+  "couple": "Couple",
+  "family": "Famille",
+  "friends": "Amis",
+
+  "duration": "Durée du voyage",
+  "budget": "💰 Budget par jour",
+  "day": "jour",
+
+  "tripType": "✨ Type de voyage",
+  "types": {
+    "Relaxing": "Relaxant",
+    "Adventure": "Aventure",
+    "Cultural": "Culturel",
+    "Nightlife": "Vie nocturne"
+  },
+
+  "activities": "🌍 Activités",
+  "activitiesList": {
+    "Beaches": "Plages",
+    "Mountains": "Montagnes",
+    "Historical Sites": "Sites historiques",
+    "Hiking": "Randonnée",
+    "Food Experience": "Expérience culinaire",
+    "Museums": "Musées"
+  },
+
+  "transport": "🚗 Transport",
+  "transportList": {
+    "Car": "Voiture",
+    "Taxi / Uber": "Taxi / Uber",
+    "Public Transport": "Transport public",
+    "Walking Only": "À pied uniquement"
+  },
+
+  "special": "📝 Besoins spécifiques",
+  "specialPlaceholder": "Allergies, enfants, accessibilité, etc.",
+
+  "estimate": "📄 Coût estimé",
+  "personal": "⭐ Options personnelles",
+  "saved": "Inclure les lieux enregistrés",
+
+  "generate": "Générer mon voyage",
+  "generating": "Génération...",
+
+  "result": "🗺️ Votre itinéraire",
+  "restaurant": "Restaurant",
+  "day": "Jour",
+
+  "success": "Voyage généré avec succès !",
+  "error": "Échec de génération",
+
+  "selectType": "Veuillez choisir un type de voyage",
+  "selectDates": "Veuillez choisir les dates",
+  "notLogged": "Utilisateur non connecté"
+}
+,
+
+  "reset": {
+    "title": "Réinitialiser le mot de passe",
+    "placeholder": "Nouveau mot de passe",
+    "button": "Réinitialiser",
+    "success": "Mot de passe mis à jour avec succès !",
+    "error": "Lien invalide ou expiré."
+  },
+  
+  "rec": {
+    "title": "Recommandé pour vous",
+    "loading": "Chargement des recommandations...",
+    "noRecommendations": "Aucune recommandation disponible",
+    "noPlaces": "Aucun lieu trouvé"
+  },
+  
+  "pref": {
+    "title1": "Quels lieux préférez-vous ?",
+    "title2": "Quelle nourriture aimez-vous ?",
+    "title3": "Quelles activités vous intéressent ?",
+
+    "skip": "Passer",
+    "continue": "Continuer",
+    "finish": "Terminer",
+
+    "interests": {
+      "cultural": "Culturel",
+      "historical": "Historique",
+      "nightlife": "Vie nocturne"
+    },
+
+    "food": {
+      "lebanese": "Libanais",
+      "seafood": "Fruits de mer",
+      "vegetarian": "Végétarien"
+    },
+
+    "activities": {
+      "beaches": "Plages",
+      "hiking": "Randonnée",
+      "skiing": "Ski"
+    }
+  }
+,
+"places": {
+  "title": "Explorer les lieux",
+  "subtitle": "Découvrez des destinations incroyables au Liban.",
+
+  "search": "Rechercher un lieu...",
+  "filter": "Filtrer par ville",
+  "back": "Retour",
+  "view": "Voir les détails",
+
+  "loadingWeather": "Chargement de la météo...",
+  "location": "Lieu",
+
+  "maps": "Ouvrir dans Google Maps",
+  "book": "Réserver",
+  "contact": "Contact",
+
+  "addTrip": "Ajouter au voyage",
+  "addedTrip": "Ajouté à votre voyage !",
+
+  "addFav": "Ajouter aux favoris",
+  "removeFav": "Retirer des favoris",
+
+  "reviews": "Avis",
+  "writeReview": "Écrivez votre avis...",
+  "submit": "Envoyer",
+
+  "login": "Veuillez vous connecter"
+}
+
+,
+"trips": {
+  "title": "Mes voyages intelligents",
+  "subtitle": "Votre historique de voyages générés par IA",
+
+  "loading": "Chargement des voyages...",
+  "noTrips": "Aucun voyage pour le moment",
+
+  "cancelled": "Annulé",
+  "completed": "Terminé",
+
+  "trip": "Voyage",
+  "budget": "Budget/jour",
+  "travelers": "Voyageurs",
+  "transport": "Transport",
+
+  "itinerary": "Itinéraire",
+  "day": "Jour",
+  "activity": "Activité",
+  "restaurant": "Restaurant",
+
+  "created": "Créé le",
+  "status": "Statut",
+  "active": "Actif",
+
+  "cancel": "Annuler le voyage",
+  "confirmCancel": "Voulez-vous vraiment annuler ce voyage ?",
+  "cancelError": "Échec de l'annulation"
+},
+"ai": {
+  "welcome": "Salut ! Prêt à explorer le Liban ? 😊",
+  "thinking": "Réflexion en cours...",
+  "error": "Une erreur est survenue, veuillez réessayer",
+  "subtitle": "Votre assistant intelligent pour le Liban",
+  "placeholder": "Demandez-moi des lieux, des voyages, de la nourriture..."
+},
+"favorites": {
+  "title": "Vos favoris ❤️",
+  "emptyTitle": "Aucun favori pour le moment 💔",
+  "emptyText": "Commencez à ajouter vos lieux préférés",
+  "remove": "Supprimer ❌"
+},
+"profilePref": {
+  "title": "Vos préférences",
+  "emptyTitle": "Aucune préférence pour le moment 😕",
+  "emptyText": "Définissez vos préférences pour obtenir de meilleures recommandations",
+
+  "interests": "Centres d'intérêt",
+  "food": "Nourriture",
+  "activities": "Activités"
+},
+"help": {
+  "title": "Centre d'aide",
+  "subtitle": "Nous sommes là pour vous aider à explorer le Liban facilement et en toute confiance.",
+  "back": "Retour à l'accueil",
+
+  "cards": {
+    "contact": "Support",
+    "contactText": "Besoin d'aide directe de notre équipe ?",
+    "faq": "FAQ",
+    "faqText": "Réponses rapides aux questions fréquentes.",
+    "report": "Signaler un problème",
+    "reportText": "Vous avez trouvé un problème ? Faites-le nous savoir.",
+    "ai": "Assistant IA",
+    "aiText": "Aide de voyage intelligente basée sur l'IA."
+  },
+
+  "faq": {
+    "title": "Questions fréquentes",
+
+    "q1": "Comment explorer les lieux au Liban ?",
+    "a1": "Allez à la page Explorer pour découvrir les destinations et expériences.",
+
+    "q2": "Comment fonctionne l'assistant IA ?",
+    "a2": "Il fournit des recommandations et conseils centrés sur le Liban.",
+
+    "q3": "Est-ce gratuit ?",
+    "a3": "Oui, l'utilisation est entièrement gratuite.",
+
+    "q4": "Comment les lieux sont-ils sélectionnés ?",
+    "a4": "Les lieux sont soigneusement sélectionnés.",
+
+    "q5": "Puis-je faire confiance aux informations ?",
+    "a5": "Nous mettons à jour les contenus régulièrement.",
+
+    "q6": "J'ai trouvé une erreur, que faire ?",
+    "a6": "Contactez-nous et nous corrigerons rapidement.",
+
+    "q7": "Pourquoi certains contenus sont lents ?",
+    "a7": "Cela dépend de votre connexion internet.",
+
+    "q8": "Puis-je suggérer des lieux ?",
+    "a8": "Oui, cette fonctionnalité arrive bientôt."
+  },
+
+  "contactTitle": "Contacter le support",
+  "name": "Votre nom",
+  "email": "Votre email",
+  "subject": "Sujet",
+  "message": "Votre message...",
+  "send": "Envoyer",
+  "sending": "Envoi...",
+  "success": "✔ Message envoyé avec succès !",
+  "error": "❌ Échec de l'envoi du message",
+  "direct": "Ou contactez-nous directement par email :"
+}
+
+
+
+
+
+}

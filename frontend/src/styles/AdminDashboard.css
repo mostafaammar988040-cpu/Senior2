@@ -131,3 +131,56 @@
 .admin-dashboard nav{
   background: linear-gradient(135deg,#131e35,#131e35);
 }
+/* Layout */
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #0b1426, #131e35);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+/* NAV FIX 🔥 */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Links */
+.nav a {
+  text-decoration: none;
+  color: #cbd5e1;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+/* Hover */
+.nav a:hover {
+  background: rgba(0, 191, 255, 0.1);
+  color: #00bfff;
+  transform: translateX(5px);
+}
+
+/* Active */
+.nav a.active {
+  background: linear-gradient(135deg, #00bfff, #0099cc);
+  color: white;
+  font-weight: bold;
+}

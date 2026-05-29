@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import "../styles/Auth.css";
 
 export default function ResetPassword() {
+  const { t } = useTranslation();
+
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
@@ -19,27 +22,27 @@ export default function ResetPassword() {
         newPassword: password,
       });
 
-      setMessage("Password updated successfully!");
+      setMessage(t("reset.success"));
     } catch {
-      setMessage("Invalid or expired link.");
+      setMessage(t("reset.error"));
     }
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Reset Password</h2>
+        <h2>{t("reset.title")}</h2>
 
         <form onSubmit={handleSubmit}>
           <input
             type="password"
-            placeholder="New Password"
+            placeholder={t("reset.placeholder")}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
 
           <button type="submit">
-            Reset Password
+            {t("reset.button")}
           </button>
         </form>
 

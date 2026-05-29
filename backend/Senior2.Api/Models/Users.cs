@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 public class Users
 {
@@ -16,7 +17,12 @@ public class Users
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
 
-    // 🔥 NEW (Profile Page)
+    // Role is nvarchar in DB, so keep it as string
+    public string Role { get; set; } = "User";   // default role
+
+    public bool IsBlocked { get; set; } = false;
+
+    // These columns are nullable in DB, so mark them nullable in C#
     public string? ProfileImageUrl { get; set; }
     public string? Bio { get; set; }
 

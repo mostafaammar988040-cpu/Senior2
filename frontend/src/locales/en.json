@@ -1,0 +1,500 @@
+{
+  "navbar": {
+    "home": "Home",
+    "events": "Events",
+    "taxi": "Taxi Services",
+    "feed": "Feed",
+    "experiences": "Experiences",
+    "recommendations": "Recommendations",
+    "itinerary": "Smart Itinerary",
+    "ai": "AI Assistant",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet"
+  },
+  "adminSupport": {
+    "close": "Close"
+  }
+  ,
+  "home": {
+    "heroTitle": "Explore Lebanon",
+    "heroText": "Discover the beauty, culture, and hidden gems of Lebanon",
+    "startJourney": "Start Your Journey",
+
+    "features": {
+      "itinerary": "Smart Itinerary Planning",
+      "assistant": "AI Travel Assistant",
+      "map": "Interactive Map",
+      "events": "Live Events"
+    },
+
+    "topDestinations": "Top Destinations",
+    "baalbek": "Baalbek",
+    "byblos": "Byblos",
+    "cedars": "Cedars",
+
+    "ctaTitle": "Start Exploring Today",
+    "explore": "Explore",
+    "help": "Get Help",
+    "footer": "© Explore Lebanon - All rights reserved"
+  },
+
+  "popup": {
+    "title": "Welcome 👋",
+    "text": "You can access all features after logging in 🔐",
+    "login": "Login",
+    "guest": "Continue as Guest"
+  }
+  ,
+  
+  "login": {
+    "title": "Welcome to Lebanon",
+    "subtitle": "Discover the beauty of the Middle East",
+    "email": "Email",
+    "password": "Password",
+    "button": "Login",
+    "signup": "Sign Up",
+    "forgot": "Forgot Password?",
+    "fillFields": "Please fill in all fields",
+    "invalid": "Invalid email or password",
+    "googleError": "Google login failed"
+  },
+  
+  "signup": {
+    "title": "Create Account",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "button": "Create Account",
+    "haveAccount": "Already have an account?",
+    "fillFields": "Please fill in all fields",
+    "passwordMismatch": "Passwords do not match",
+    "success": "Account created successfully!",
+    "error": "Something went wrong during signup"
+  }
+,
+
+  "forgot": {
+    "title": "Forgot Password",
+    "email": "Enter your email",
+    "button": "Send Reset Link",
+    "success": "If your email exists, a reset link has been sent."
+  }
+,
+  "activities": {
+    "title": "Discover Activities",
+    "subtitle": "Explore exciting experiences across Lebanon"
+  },
+  "activityTypes": {
+  "title": "Choose an Activity Type",
+  "subtitle": "Select what kind of experience you want"
+}
+,
+
+  "journey": {
+    "title": "✨ Share Your Experience",
+    "tabJourney": "Journey",
+    "tabStory": "Story 🎥",
+    "titlePlaceholder": "Title your journey...",
+    "contentPlaceholder": "Describe your experience...",
+    "upload": "Click or drag to upload image/video",
+    "format": "PNG, JPG, MP4",
+    "share": "Share publicly",
+    "shareDesc": "Visible to other users in the Feed",
+    "postStory": "Post Story",
+    "publish": "Publish Journey",
+    "success": "Posted successfully!",
+    "error": "Failed to post"
+  }
+,
+
+  "feed": {
+    "stories": "Stories",
+    "title": "Inspiration Feed",
+    "upload": "Upload Journey",
+    "user": "User"
+  },
+  
+  "events": {
+    "title": "Upcoming Events in Lebanon",
+    "back": "Back to Home",
+    "types": {
+      "All": "All",
+      "Sport": "Sport",
+      "History": "History",
+      "Tech": "Tech",
+      "Music": "Music"
+    },
+    
+  "experiences": {
+    "title": "Curated Experiences",
+    "subtitle": "Discover unforgettable moments across Lebanon"
+  }
+
+  },
+  
+  "explore": {
+    "back": "Back to Home",
+    "title": "Explore Lebanon",
+    "fullscreen": "Click anywhere to watch fullscreen ✨",
+    "galleryTitle": "Discover Beautiful Lebanon",
+
+    "images": {
+      "beirut": "Beirut Skyline",
+      "mountains": "Mountain Villages",
+      "baalbek": "Baalbek Ruins",
+      "coast": "Coastal Views",
+      "caves": "Hidden Caves",
+      "souks": "Old Souks",
+      "trails": "Nature Trails",
+      "snow": "Snow Mountains",
+      "sunset": "Sunset Peaks",
+      "winter": "Winter Lebanon",
+      "raouche": "Raouché Lebanon",
+      "hiking": "Hiking in Lebanon"
+    }
+  },
+  
+  "help": {
+    "back": "Back Home",
+    "title": "Help Center",
+    "subtitle": "We’re here to help you explore Lebanon smoothly and confidently.",
+
+    "cards": {
+      "contact": "Contact Support",
+      "contactDesc": "Need direct help from our team?",
+      "faq": "FAQ",
+      "faqDesc": "Quick answers to common questions.",
+      "report": "Report Issue",
+      "reportDesc": "Found a problem? Let us know.",
+      "ai": "AI Assistant",
+      "aiDesc": "Smart travel help powered by AI."
+    },
+
+    "faqTitle": "Frequently Asked Questions",
+
+    "contactTitle": "Contact Support",
+    "name": "Your Name",
+    "email": "Your Email",
+    "subject": "Subject",
+    "message": "Your Message...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "✔ Message sent successfully!",
+    "error": "❌ Failed to send message",
+    "emailText": "Or email us directly:"
+  },
+  
+  "intro": {
+    "heroTitle": "Discover Lebanon",
+    "heroText": "A land where history, culture, and breathtaking nature merge into one unforgettable journey.",
+
+    "section1": {
+      "title": "Lebanon: A Country of Timeless Beauty",
+      "text": "Lebanon rests along the Mediterranean Sea, offering a unique blend of ancient heritage and modern lifestyle. Known for its resilience, warmth, and hospitality."
+    },
+
+    "section2": {
+      "title": "Legacy",
+      "text1": "Home to the Phoenicians—masters of trade and navigation—Lebanon helped shape the first alphabet.",
+      "text2": "Cities like Byblos, Baalbek, Sidon, and Tyre preserve remarkable archaeological treasures."
+    },
+
+    "section3": {
+      "title": "Cultural Diversity",
+      "text": "Lebanon is home to multiple religious and cultural communities living side by side, creating a vibrant cultural mosaic."
+    },
+
+    "section4": {
+      "title": "Nature Like Nowhere Else",
+      "text": "Ski in the morning, swim in the afternoon. Beaches, mountains, forests, and waterfalls — all in one country."
+    },
+
+    "cta": "Start Exploring"
+  },
+  
+  "profile": {
+    "loading": "Loading Dashboard...",
+    "language": "Language",
+    "welcome": "Welcome back 👋",
+    "dashboard": "My",
+    "highlight": "Dashboard",
+
+    "trips": "Trips",
+    "journeys": "Journeys",
+    "reviews": "Reviews",
+    "saved": "Saved",
+    "badge": "✦ Explorer Member",
+
+    "myTrips": "My Trips",
+    "myTripsDesc": "View and manage your trips",
+
+    "myJourneys": "My Journeys",
+    "myJourneysDesc": "Track your memories",
+
+    "preferences": "Preferences",
+    "preferencesDesc": "Customize your experience",
+
+    "favorites": "Favorites",
+    "favoritesDesc": "Your saved places",
+
+    "suggestion": "Add Suggestion",
+    "suggestionDesc": "Improve the platform",
+
+    "aiTitle": "Plan your next adventure with AI ✨",
+    "aiDesc": "Let AI build your perfect trip",
+    "start": "Start Planning",
+
+    "passwordSuccess": "Password updated successfully",
+    "passwordError": "Failed to update password"
+  }
+,
+
+  "taxi": {
+    "kicker": "Transportation",
+    "title": "Taxi Services in Lebanon",
+    "subtitle": "Fast access to each service’s available contact method.",
+    "tipLabel": "Tip",
+    "tip": "Agree on the price before starting the ride.",
+
+    "openApp": "Open App",
+    "whatsapp": "WhatsApp",
+    "call": "Call",
+    "phone": "Phone",
+
+    "whatsappMessage": "Hello! I need a taxi. Pickup: ____ Destination: ____"
+  },
+  
+  "suggestion": {
+    "title": "💡 Help Improve Lebanon Travel",
+    "subtitle": "Your ideas help us discover new places and improve the platform.",
+
+    "loginRequired": "You must be logged in",
+    "fillForm": "Please complete the form",
+    "error": "Failed to send suggestion",
+
+    "types": {
+      "place": { "title": "Suggest a Place", "desc": "Restaurant, hike, beach, hidden gem" },
+      "feature": { "title": "Suggest Feature", "desc": "New idea for the platform" },
+      "bug": { "title": "Report Bug", "desc": "Something isn't working" },
+      "general": { "title": "General Idea", "desc": "Any suggestion to improve" }
+    },
+
+    "formTitle": "Share Your Idea",
+    "titleInput": "Suggestion title",
+    "descriptionInput": "Describe your suggestion...",
+    "location": "Location (optional)",
+    "submit": "Submit Suggestion",
+
+    "successTitle": "🎉 Thank you!",
+    "successText": "Your suggestion helps improve Lebanon travel.",
+    "another": "Send Another Suggestion"
+  }
+
+,
+
+  "smartIntro": {
+    "title": "Plan Your Lebanese Adventure",
+    "subtitle": "Let us create a smart, personalized itinerary based on your preferences.",
+    "start": "Start Planning"
+  }
+,
+"itinerary": {
+  "basic": "📋 Basic Trip Details",
+  "travelers": "Number of Travelers",
+  "solo": "Solo",
+  "couple": "Couple",
+  "family": "Family",
+  "friends": "Friends",
+
+  "duration": "Trip Duration",
+  "budget": "💰 Your Budget Per Day",
+  "day": "day",
+
+  "tripType": "✨ What Type of Trip?",
+  "types": {
+    "Relaxing": "Relaxing",
+    "Adventure": "Adventure",
+    "Cultural": "Cultural",
+    "Nightlife": "Nightlife"
+  },
+
+  "activities": "🌍 Activities",
+  "activitiesList": {
+    "Beaches": "Beaches",
+    "Mountains": "Mountains",
+    "Historical Sites": "Historical Sites",
+    "Hiking": "Hiking",
+    "Food Experience": "Food Experience",
+    "Museums": "Museums"
+  },
+
+  "transport": "🚗 Transportation",
+  "transportList": {
+    "Car": "Car",
+    "Taxi / Uber": "Taxi / Uber",
+    "Public Transport": "Public Transport",
+    "Walking Only": "Walking Only"
+  },
+
+  "special": "📝 Special Requirements",
+  "specialPlaceholder": "Allergies, kids, accessibility, etc.",
+
+  "estimate": "📄 Estimated Cost",
+  "personal": "⭐ Personal Options",
+  "saved": "Include saved places",
+
+  "generate": "Generate My Trip Plan",
+  "generating": "Generating...",
+
+  "result": "🗺️ Your AI Trip Plan",
+  "restaurant": "Restaurant",
+  "day": "Day",
+
+  "success": "Trip generated successfully!",
+  "error": "Failed to generate trip",
+
+  "selectType": "Please select a trip type",
+  "selectDates": "Please select dates",
+  "notLogged": "User not logged in"
+}
+,
+
+  "reset": {
+    "title": "Reset Password",
+    "placeholder": "New Password",
+    "button": "Reset Password",
+    "success": "Password updated successfully!",
+    "error": "Invalid or expired link."
+  },
+  
+  "rec": {
+    "title": "Recommended For You",
+    "loading": "Loading recommendations...",
+    "noRecommendations": "No recommendations available",
+    "noPlaces": "No places found"
+  },
+  
+  "pref": {
+    "title1": "What places do you like?",
+    "title2": "What food do you enjoy?",
+    "title3": "What activities excite you?",
+
+    "skip": "Skip",
+    "continue": "Continue",
+    "finish": "Finish",
+
+    "interests": {
+      "cultural": "Cultural",
+      "historical": "Historical",
+      "nightlife": "Nightlife"
+    },
+
+    "food": {
+      "lebanese": "Lebanese",
+      "seafood": "Seafood",
+      "vegetarian": "Vegetarian"
+    },
+
+    "activities": {
+      "beaches": "Beaches",
+      "hiking": "Hiking",
+      "skiing": "Skiing"
+    }
+  }
+,
+"places": {
+  "title": "Explore Places",
+  "subtitle": "Discover amazing destinations across Lebanon.",
+
+  "search": "Search places...",
+  "filter": "Filter by city",
+  "back": "Back",
+  "view": "View Details",
+
+  "loadingWeather": "Loading weather...",
+  "location": "Location",
+
+  "maps": "Open in Google Maps",
+  "book": "Book Externally",
+  "contact": "Contact",
+
+  "addTrip": "Add to Trip",
+  "addedTrip": "Added to your trip!",
+
+  "addFav": "Add to Favorites",
+  "removeFav": "Remove Favorite",
+
+  "reviews": "Reviews",
+  "writeReview": "Write your review...",
+  "submit": "Submit Review",
+
+  "login": "Login first"
+}
+,
+"trips": {
+  "title": "My Smart Trips",
+  "subtitle": "Your AI generated travel history",
+
+  "loading": "Loading trips...",
+  "noTrips": "No trips generated yet",
+
+  "cancelled": "Cancelled",
+  "completed": "Completed",
+
+  "trip": "Trip",
+  "budget": "Budget/day",
+  "travelers": "Travelers",
+  "transport": "Transport",
+
+  "itinerary": "Trip Itinerary",
+  "day": "Day",
+  "activity": "Activity",
+  "restaurant": "Restaurant",
+
+  "created": "Created:",
+  "status": "Status",
+  "active": "Active",
+
+  "cancel": "Cancel Trip",
+  "confirmCancel": "Are you sure you want to cancel this trip?",
+  "cancelError": "Failed to cancel trip"
+},
+"ai": {
+  "welcome": "Hi there! Ready to explore Lebanon? 😊",
+  "thinking": "Thinking...",
+  "error": "Something went wrong. Please try again.",
+  "subtitle": "Your smart Lebanon travel assistant",
+  "placeholder": "Ask me about places, trips, food..."
+}
+,
+"favorites": {
+  "title": "Your Favorites ❤️",
+  "emptyTitle": "No favorites yet 💔",
+  "emptyText": "Start adding places you love!",
+  "remove": "Remove ❌"
+},
+"profilePref": {
+  "title": "Your Preferences",
+  "emptyTitle": "No preferences yet 😕",
+  "emptyText": "Go set your preferences to get better recommendations!",
+
+  "interests": "Interests",
+  "food": "Food",
+  "activities": "Activities"
+}
+
+,
+
+
+  "experiences": {
+    "title": "Experiences",
+    "subtitle": "Explore Lebanon through culture, food, nature, and unforgettable places"
+  }
+}
+

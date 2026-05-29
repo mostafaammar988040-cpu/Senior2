@@ -1,0 +1,101 @@
+.feed-page {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* STORIES */
+.stories-section {
+  margin-bottom: 30px;
+}
+
+.stories-row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.story-bubble {
+  width: 80px;
+  height: 120px;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid #ff6b6b;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.story-bubble img,
+.story-bubble video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* POSTS */
+.feed-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.post-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  padding: 15px;
+}
+
+.post-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.post-card h4 {
+  margin: 5px 0;
+}
+
+.post-card p {
+  color: #555;
+}
+
+.post-card img,
+.post-card video {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* ACTIONS */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #777;
+}
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-btn {
+  background: linear-gradient(135deg, #ff7a18, #ff4b2b);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}

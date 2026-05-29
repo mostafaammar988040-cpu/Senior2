@@ -1,9 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Senior2.Api.Data;
 using Senior2.Api.Services;
 using System.Text;
+using Microsoft.OpenApi.Models;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,43 +17,78 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICES
 // =======================
 
-// Controllers
-builder.Services.AddControllers();
 
-// Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
+}); builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer YOUR_TOKEN"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+// Custom services
 builder.Services.AddScoped<ChatOrchestratorService>();
 builder.Services.AddScoped<IntentService>();
 builder.Services.AddScoped<GuardrailService>();
 builder.Services.AddScoped<WikipediaService>();
-builder.Services.AddScoped<OpenStreetMapService>();
-builder.Services.AddScoped<LLMService>();
-builder.Services.AddScoped<EmailService>(); // ADD THIS
-
-
-// Database
+builder.Services.AddScoped<LLMService>();                // Fixed: was AddHttpClient
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<RecommendationService>();
+builder.Services.AddHttpClient<OpenStreetMapService>();
+builder.Services.AddScoped<ReportService>();
+builder.Services.AddScoped<WeatherService>();
+builder.Services.AddHttpClient<GooglePlacesService>();
+builder.Services.AddHttpClient<GeoapifyService>(client =>
+{
+    client.DefaultRequestHeaders.Add("User-Agent", "Senior2TourismApp/1.0");
+});
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+builder.Services.AddScoped<PlaceSearchService>();
+builder.Services.AddScoped<ItineraryService>();
+builder.Services.AddSingleton<ConversationMemoryService>(); // New
 
 // =======================
-// CORS (IMPORTANT)
+// CORS
 // =======================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // your Vite port
+            policy.WithOrigins("http://localhost:5173")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials(); ;
         });
 });
-
-
 
 // =======================
 // JWT AUTHENTICATION
@@ -75,6 +116,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
+
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
@@ -98,7 +140,6 @@ app.Use(async (context, next) =>
 });
 app.UseRouting();
 
-// 👉 CORS MUST BE HERE
 app.UseCors("AllowReact");
 
 app.UseAuthentication();

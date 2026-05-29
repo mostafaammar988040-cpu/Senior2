@@ -1,31 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../services/api";
 import "../styles/AdminPages.css";
 
 function AdminReviews() {
 
   const [search, setSearch] = useState("");
+  const [reviews, setReviews] = useState([]);
 
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      user: "Maaya Haddad",
-      place: "Jeita Grotto",
-      rating: 5,
-      comment: "Amazing place!"
-    },
-    {
-      id: 2,
-      user: "Karim Nasser",
-      place: "Byblos",
-      rating: 3,
-      comment: "Too crowded"
+  // Load reviews from backend
+  useEffect(() => {
+
+    api.get("/reviews")
+      .then(res => {
+        setReviews(res.data);
+      })
+      .catch(err => {
+        console.error("Failed to load reviews", err);
+      });
+
+  }, []);
+
+  // Delete review
+  const deleteReview = async (id) => {
+
+    try {
+
+      await api.delete(`/reviews/${id}`);
+
+      setReviews(reviews.filter(r => r.id !== id));
+
+    } catch (err) {
+
+      console.error("Failed to delete review", err);
+
     }
-  ]);
 
-  const deleteReview = (id) => {
-    setReviews(reviews.filter(r => r.id !== id));
   };
 
+  // Filter search
   const filteredReviews = reviews.filter(r =>
     (r.user + r.place + r.comment)
       .toLowerCase()
@@ -35,8 +47,13 @@ function AdminReviews() {
   return (
     <div className="admin-page">
 
-      <h2>            <span style={{ color: " #000000"}}> Manage Reviews</span>{""} 
-</h2>
+      <h2>
+        <span style={{ color: "#000000" }}>
+          Manage Reviews
+        </span>
+      </h2>
+
+      {/* Search */}
 
       <input
         className="search-input"
@@ -44,6 +61,8 @@ function AdminReviews() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
+      {/* Reviews table */}
 
       <table className="admin-table">
 
@@ -58,22 +77,38 @@ function AdminReviews() {
         </thead>
 
         <tbody>
-          {filteredReviews.map(r => (
-            <tr key={r.id}>
-              <td>{r.user}</td>
-              <td>{r.place}</td>
-              <td>⭐ {r.rating}</td>
-              <td>{r.comment}</td>
-              <td>
-                <button
-                  className="danger-btn"
-                  onClick={() => deleteReview(r.id)}
-                >
-                  Delete
-                </button>
-              </td>
+
+          {filteredReviews.length === 0 ? (
+            <tr>
+              <td colSpan="5">No reviews found</td>
             </tr>
-          ))}
+          ) : (
+
+            filteredReviews.map(r => (
+
+              <tr key={r.id}>
+                <td>{r.user}</td>
+                <td>{r.place}</td>
+                <td>⭐ {r.rating}</td>
+                <td>{r.comment}</td>
+
+                <td>
+
+                  <button
+                    className="danger-btn"
+                    onClick={() => deleteReview(r.id)}
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))
+
+          )}
+
         </tbody>
 
       </table>

@@ -60,7 +60,6 @@ public class WikipediaService
 
         using var doc = JsonDocument.Parse(json);
 
-        // 1️⃣ Reject disambiguation pages
         if (doc.RootElement.TryGetProperty("type", out var type))
         {
             if (type.GetString() == "disambiguation")
@@ -69,12 +68,10 @@ public class WikipediaService
             }
         }
 
-        // 2️⃣ NEW STEP 3 — Validate it's related to Lebanon
-        if (doc.RootElement.TryGetProperty("description", out var description))
+       if (doc.RootElement.TryGetProperty("description", out var description))
         {
             var desc = description.GetString()?.ToLower();
 
-            // Validate Lebanon relevance (except when title itself is Lebanon)
             if (title.ToLower() != "lebanon")
             {
                 if (doc.RootElement.TryGetProperty("description", out var descElement))
@@ -90,13 +87,21 @@ public class WikipediaService
 
         }
 
-        // 3️⃣ Return summary
         if (doc.RootElement.TryGetProperty("extract", out var extract))
         {
             return extract.GetString();
         }
 
         return null;
+
+        try
+{
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($"Wikipedia request failed: {ex.Message}");
+    return null;
+}
     }
 
 
@@ -104,7 +109,6 @@ public class WikipediaService
     {
         var lower = question.ToLower();
 
-        // Split on "and"
         var parts = lower.Split(new[] { " and ", "," }, StringSplitOptions.RemoveEmptyEntries);
 
         var topics = new List<string>();

@@ -1,30 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
+import api from "../services/api";
 import "../styles/AdminPages.css";
 
 function AdminUsers() {
 
   const [search, setSearch] = useState("");
 
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Mostafa Ammar",
-      email: "mostafa@example.com",
-      blocked: false
-    },
-    {
-      id: 2,
-      name: "Rita Abou",
-      email: "rita@example.com",
-      blocked: true
-    }
-  ]);
+ const [users, setUsers] = useState([]);
+useEffect(() => {
 
-  const toggleBlock = (id) => {
+  api.get("/admin/users")
+    .then(res => {
+
+      const formatted = res.data.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        blocked: u.blocked
+      }));
+
+      setUsers(formatted);
+
+    })
+    .catch(err => {
+      console.error("Failed to load users", err);
+    });
+
+}, []);
+  const toggleBlock = async (id, blocked) => {
+
+  try {
+
+    if (blocked) {
+      await api.put(`/admin/unblock-user/${id}`);
+    } else {
+      await api.put(`/admin/block-user/${id}`);
+    }
+
     setUsers(users.map(u =>
       u.id === id ? { ...u, blocked: !u.blocked } : u
     ));
-  };
+
+  } catch (err) {
+    console.error(err);
+  }
+
+};
 
   const filteredUsers = users.filter(u =>
     (u.name + u.email)
@@ -64,7 +85,7 @@ function AdminUsers() {
               <td>
                 <button
                   className="danger-btn"
-                  onClick={() => toggleBlock(u.id)}
+onClick={() => toggleBlock(u.id, u.blocked)}
                 >
                   {u.blocked ? "Unblock" : "Block"}
                 </button>

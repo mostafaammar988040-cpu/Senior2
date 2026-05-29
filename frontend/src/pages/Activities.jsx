@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Activities.css";
+import { useTranslation } from "react-i18next";
 
 export default function Activities() {
+
+  const { t } = useTranslation();
 
   const [types, setTypes] = useState([]);
   const navigate = useNavigate();
@@ -18,8 +21,8 @@ export default function Activities() {
     <div className="activities-page">
 
       <div className="activities-hero">
-        <h1>Activities</h1>
-        <p>Choose your adventure type</p>
+        <h1>{t("activities.title")}</h1>
+        <p>{t("activities.subtitle")}</p>
       </div>
 
       <div className="activities-grid">
@@ -35,7 +38,7 @@ export default function Activities() {
             }}
           >
             <div className="overlay"></div>
-            <h2>{type.name}</h2>
+            <h2>{type.name}</h2> {/* dynamic from DB */}
           </div>
         ))}
       </div>
