@@ -148,3 +148,15 @@ obj/
 
 # Rider / VS
 .idea/
+
+# Appsettings / secrets
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.Production.json
+
+# Database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3

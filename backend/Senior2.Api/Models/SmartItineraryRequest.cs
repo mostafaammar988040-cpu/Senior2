@@ -1,27 +1,43 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-public class SmartItineraryRequest
+namespace Senior2.Api.Models
 {
-    public int Id { get; set; } // NEW (DB primary key)
+    public class SmartItineraryRequest
+    {
+        public int Id { get; set; }
 
-    public int UserId { get; set; }
+        [Required]
+        public int UserId { get; set; }
+        public Users? User { get; set; }
 
-    public string Travelers { get; set; } = string.Empty;
+        [Range(1, 50, ErrorMessage = "Travelers must be between 1 and 50.")]
+        public int Travelers { get; set; } = 1;
 
-    public DateTime StartDate { get; set; }
+        [Required]
+        public DateTime StartDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+        [Required]
+        public DateTime EndDate { get; set; }
 
-    public decimal BudgetPerDay { get; set; }
+        [Range(0, 10000, ErrorMessage = "Budget per day must be positive.")]
+        public decimal BudgetPerDay { get; set; }
 
-    public string TripType { get; set; } = string.Empty;
+        [Required]
+        public string TripType { get; set; } = string.Empty;
 
-    // store as JSON string (clean EF way)
-    public string ActivitiesJson { get; set; } = string.Empty;
+        public string ActivitiesJson { get; set; } = string.Empty;
 
-    public string Transport { get; set; } = string.Empty;
+        public string Transport { get; set; } = string.Empty;
 
-    public string SpecialRequirements { get; set; } = string.Empty;
+        public string SpecialRequirements { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public string Status { get; set; } = "Active";
+
+        public bool IncludeSavedPlaces { get; set; } = false;
+
+        public string? ItineraryJson { get; set; }
+    }
 }

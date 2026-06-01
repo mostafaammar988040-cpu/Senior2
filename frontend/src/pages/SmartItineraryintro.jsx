@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "../styles/SmartItineraryintro.css";
 
 const SmartItineraryintro = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -13,17 +15,15 @@ const SmartItineraryintro = () => {
 
       {/* Content */}
       <div className="hero-content">
-        <h1>Plan Your Lebanese Adventure</h1>
-        <p>
-          Let us create a smart, personalized itinerary based on your choices.
-        </p>
+        <h1>{t("smartIntro.title")}</h1>
+
+        <p>{t("smartIntro.subtitle")}</p>
 
         <button
           className="start-btn"
-         onClick={() => navigate("/SmartItinerary")}
-
+          onClick={() => navigate("/SmartItinerary")}
         >
-          Start Planning
+          {t("smartIntro.start")}
         </button>
       </div>
 

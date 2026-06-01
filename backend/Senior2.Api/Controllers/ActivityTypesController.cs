@@ -21,5 +21,15 @@ namespace Senior2.Api.Controllers
             var types = await _context.ActivityTypes.ToListAsync();
             return Ok(types);
         }
+
+        [HttpGet("by-category")]
+        public async Task<IActionResult> GetByCategory(int categoryId)
+        {
+            var types = await _context.ActivityTypes
+                .Where(a => a.CategoryId == categoryId)
+                .ToListAsync();
+
+            return Ok(types);
+        }
     }
 }

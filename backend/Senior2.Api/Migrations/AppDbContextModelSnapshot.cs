@@ -77,6 +77,32 @@ namespace Senior2.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Favorites");
+                });
+
             modelBuilder.Entity("Senior2.Api.Models.ActivityType", b =>
                 {
                     b.Property<int>("Id")
@@ -157,6 +183,78 @@ namespace Senior2.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Senior2.Api.Models.Advertisement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdminNote")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTimeOffset>("EndDateUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Priority")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTimeOffset>("StartDateUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("UpdatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("Advertisements");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Follow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FollowedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Follows");
+                });
+
             modelBuilder.Entity("Senior2.Api.Models.JourneyEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -172,6 +270,9 @@ namespace Senior2.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("bit");
+
                     b.Property<string>("MediaType")
                         .HasColumnType("nvarchar(max)");
 
@@ -182,12 +283,44 @@ namespace Senior2.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("JourneyEntries");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Senior2.Api.Models.Place", b =>
@@ -711,7 +844,40 @@ namespace Senior2.Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SmartItineraryRequest", b =>
+            modelBuilder.Entity("Senior2.Api.Models.PlaceReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PlaceReviews");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.SmartItineraryRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -732,6 +898,12 @@ namespace Senior2.Api.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IncludeSavedPlaces")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ItineraryJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SpecialRequirements")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -739,13 +911,16 @@ namespace Senior2.Api.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Transport")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Travelers")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Travelers")
+                        .HasColumnType("int");
 
                     b.Property<string>("TripType")
                         .IsRequired()
@@ -756,7 +931,74 @@ namespace Senior2.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("SmartItineraryRequest");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Suggestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Suggestions");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.TripPlanPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TripPlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("TripPlanId");
+
+                    b.ToTable("TripPlanPlaces");
                 });
 
             modelBuilder.Entity("SupportRequest", b =>
@@ -777,6 +1019,9 @@ namespace Senior2.Api.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsReplied")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -900,6 +1145,9 @@ namespace Senior2.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -917,9 +1165,32 @@ namespace Senior2.Api.Migrations
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Favorite", b =>
+                {
+                    b.HasOne("Senior2.Api.Models.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Senior2.Api.Models.ActivityType", b =>
@@ -931,6 +1202,27 @@ namespace Senior2.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Advertisement", b =>
+                {
+                    b.HasOne("Senior2.Api.Models.Place", "Place")
+                        .WithMany("Advertisements")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.JourneyEntry", b =>
+                {
+                    b.HasOne("Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Senior2.Api.Models.Place", b =>
@@ -948,6 +1240,66 @@ namespace Senior2.Api.Migrations
                     b.Navigation("ActivityType");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.PlaceReview", b =>
+                {
+                    b.HasOne("Senior2.Api.Models.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.SmartItineraryRequest", b =>
+                {
+                    b.HasOne("Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Suggestion", b =>
+                {
+                    b.HasOne("Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.TripPlanPlace", b =>
+                {
+                    b.HasOne("Senior2.Api.Models.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TripPlan", "TripPlan")
+                        .WithMany()
+                        .HasForeignKey("TripPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("TripPlan");
                 });
 
             modelBuilder.Entity("TripPlan", b =>
@@ -982,6 +1334,11 @@ namespace Senior2.Api.Migrations
             modelBuilder.Entity("Senior2.Api.Models.ActivityType", b =>
                 {
                     b.Navigation("Places");
+                });
+
+            modelBuilder.Entity("Senior2.Api.Models.Place", b =>
+                {
+                    b.Navigation("Advertisements");
                 });
 #pragma warning restore 612, 618
         }

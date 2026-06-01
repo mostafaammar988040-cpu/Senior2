@@ -1,0 +1,123 @@
+/* ===== CONTAINER ===== */
+.profile-pref-container {
+  min-height: 100vh;
+  padding: 80px 40px;
+
+  display: flex;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== WRAPPER ===== */
+.pref-wrapper {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ===== TITLE ===== */
+.pref-title {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 50px;
+  font-weight: 700;
+
+  background: linear-gradient(90deg, #6ea8ff, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== GRID ===== */
+.pref-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* ===== CARD ===== */
+.pref-card {
+  padding: 30px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+
+  color: white;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* HOVER EFFECT */
+.pref-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+
+/* ===== HEADER ===== */
+.pref-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.pref-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* BIG ICON */
+.pref-emoji {
+  font-size: 28px;
+}
+
+/* ===== TAGS ===== */
+.pref-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ===== TAG ===== */
+.pref-tag {
+  padding: 10px 16px;
+  border-radius: 25px;
+
+  background: rgba(255,255,255,0.15);
+  color: white;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  backdrop-filter: blur(10px);
+
+  transition: 0.25s;
+}
+
+.pref-tag:hover {
+  transform: scale(1.1);
+}
+
+/* ===== COLOR THEMES ===== */
+.pref-card.interest {
+  border-top: 3px solid #4facfe;
+}
+
+.pref-card.food {
+  border-top: 3px solid #ff9a3c;
+}
+
+.pref-card.activity {
+  border-top: 3px solid #00c896;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .pref-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -10,41 +10,38 @@ using Senior2.Api.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Senior2.Api.Controllers
 {
     [ApiController]
     [Route("api/auth")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
-
         private readonly EmailService _emailService;
 
-        public AuthController(AppDbContext context, IConfiguration config, EmailService emailService)
+        public AuthController(
+            AppDbContext context,
+            IConfiguration config,
+            EmailService emailService)
         {
             _context = context;
             _config = config;
             _emailService = emailService;
         }
 
-
-
-        // =====================
-        // REGISTER (SIGN UP)
-        // =====================
+        
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            // Check if email already exists
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (existingUser != null)
                 return BadRequest("Email already registered");
 
-            // Hash password
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var user = new Users
@@ -52,7 +49,8 @@ namespace Senior2.Api.Controllers
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                Role = "User" 
             };
 
             _context.Users.Add(user);
@@ -62,36 +60,44 @@ namespace Senior2.Api.Controllers
             {
                 message = "Account created successfully"
             });
-
         }
+
+      
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.EmailOrUsername);
+                .FirstOrDefaultAsync(u =>
+                    u.Email == dto.EmailOrUsername);
 
             if (user == null)
                 return Unauthorized("Invalid credentials");
 
-            // Verify password
+            if (user.IsBlocked)
+                return Unauthorized("Your account has been blocked by the administrator.");
+
             bool passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
             if (!passwordValid)
                 return Unauthorized("Invalid credentials");
 
-            // Generate JWT
+
             var claims = new[]
             {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Name, user.FirstName)
-    };
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Role, user.Role) 
+            };
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config["Jwt:Key"])
             );
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var creds = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256
+            );
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
@@ -112,27 +118,98 @@ namespace Senior2.Api.Controllers
                     id = user.Id,
                     firstName = user.FirstName,
                     lastName = user.LastName,
-                    email = user.Email
+                    email = user.Email,
+                    role = user.Role
                 }
             });
         }
+
+       
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user == null)
+                return Ok("If the email exists, a reset link has been sent.");
+
+            var token = Guid.NewGuid().ToString();
+
+            user.PasswordResetToken = token;
+            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
+
+            await _context.SaveChangesAsync();
+
+            var resetLink = $"http://localhost:5173/reset-password?token={token}";
+
+            var emailBody = $@"
+                <h2>Password Reset Request</h2>
+                <p>Hello {user.FirstName},</p>
+                <p>Click the button below to reset your password:</p>
+
+                <a href='{resetLink}'
+                   style='padding:10px 20px;
+                          background:#0dc052;
+                          color:white;
+                          text-decoration:none;
+                          border-radius:6px;'>
+
+                   Reset Password
+                </a>
+
+                <p>This link will expire in 30 minutes for security reasons. If you didn’t request a password reset, please ignore this email.</p>
+            ";
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Reset Your Password - Senior2",
+                emailBody
+            );
+
+            return Ok("Reset link sent to your email.");
+        }
+
+       
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u =>
+                    u.PasswordResetToken == dto.Token);
+
+            if (user == null ||
+                user.PasswordResetTokenExpiry < DateTime.UtcNow)
+            {
+                return BadRequest("Invalid or expired token");
+            }
+
+            user.PasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+
+            user.PasswordResetToken = null;
+            user.PasswordResetTokenExpiry = null;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Password reset successful");
+        }
+
+     
         [HttpPost("google")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleDto dto)
         {
-            if (string.IsNullOrEmpty(dto.IdToken))
-                return BadRequest("Google token is missing");
-
             try
             {
-                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
-                {
-                    Audience = new List<string>()
-            {
-                _config["Google:ClientId"]
-            }
-                };
-
-                var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken, validationSettings);
+                var payload = await GoogleJsonWebSignature.ValidateAsync(
+                    dto.IdToken,
+                    new GoogleJsonWebSignature.ValidationSettings
+                    {
+                        Audience = new List<string>
+                        {
+                            _config["Google:ClientId"]
+                        }
+                    });
 
                 var email = payload.Email;
                 var firstName = payload.GivenName ?? "Google";
@@ -145,28 +222,39 @@ namespace Senior2.Api.Controllers
                 {
                     user = new Users
                     {
+                        Email = email,
                         FirstName = firstName,
                         LastName = lastName,
-                        Email = email,
-                        PasswordHash = ""
+                        Role = "User"
                     };
 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                 }
 
+                if (user.IsBlocked)
+                {
+                    return StatusCode(403, new
+                    {
+                        message = "Your account has been blocked by the administrator."
+                    });
+                }
                 var claims = new[]
                 {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, user.FirstName)
-        };
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
 
                 var key = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(_config["Jwt:Key"])
                 );
 
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var creds = new SigningCredentials(
+                    key,
+                    SecurityAlgorithms.HmacSha256
+                );
 
                 var token = new JwtSecurityToken(
                     issuer: _config["Jwt:Issuer"],
@@ -187,7 +275,8 @@ namespace Senior2.Api.Controllers
                         id = user.Id,
                         firstName = user.FirstName,
                         lastName = user.LastName,
-                        email = user.Email
+                        email = user.Email,
+                        role = user.Role
                     }
                 });
             }
@@ -196,71 +285,5 @@ namespace Senior2.Api.Controllers
                 return Unauthorized($"Google token validation failed: {ex.Message}");
             }
         }
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
-
-            if (user == null)
-                return Ok("If the email exists, a reset link has been sent.");
-
-            var token = Guid.NewGuid().ToString();
-
-            user.PasswordResetToken = token;
-            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
-
-            await _context.SaveChangesAsync();
-
-            var resetLink = $"http://localhost:5173/reset-password?token={token}";
-
-            var emailBody = $@"
-        <h2>Password Reset Request</h2>
-        <p>Hello {user.FirstName},</p>
-        <p>Click the button below to reset your password:</p>
-        <a href='{resetLink}' 
-           style='padding:10px 20px;
-                  background:#0dc052;
-                  color:white;
-                  text-decoration:none;
-                  border-radius:6px;'>
-           Reset Password
-        </a>
-        <p>This link expires in 30 minutes.</p>
-    ";
-
-            await _emailService.SendEmailAsync(
-                user.Email,
-                "Reset Your Password - Senior2",
-                emailBody
-            );
-
-            return Ok("Reset link sent to your email.");
-        }
-
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u =>
-                    u.PasswordResetToken == dto.Token);
-
-            if (user == null ||
-                user.PasswordResetTokenExpiry < DateTime.UtcNow)
-            {
-                return BadRequest("Invalid or expired token");
-            }
-
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-
-            user.PasswordResetToken = null;
-            user.PasswordResetTokenExpiry = null;
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Password reset successful");
-        }
-
     }
-
 }

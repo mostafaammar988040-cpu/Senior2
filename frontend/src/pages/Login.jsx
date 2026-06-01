@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { GoogleLogin } from "@react-oauth/google";
-
 import "../styles/Login.css";
+import { useTranslation } from "react-i18next";
 
 function Login() {
+  const { t } = useTranslation();
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Login() {
     e.preventDefault();
 
     if (!emailOrUsername || !password) {
-      alert("Please fill in all fields");
+      alert(t("login.fillFields"));
       return;
     }
 
@@ -30,13 +31,18 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // 🔥 IMPORTANT (update navbar instantly)
       window.dispatchEvent(new Event("loginChange"));
 
-      navigate("/preferences");
+      const user = res.data.user;
+
+      if (user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/preferences");
+      }
     } catch (error) {
       const message =
-        error.response?.data || "Invalid email or password";
+        error.response?.data || t("login.invalid");
 
       alert(message);
     }
@@ -56,71 +62,97 @@ function Login() {
               <img src="/images/cedar.png" alt="Cedar Logo" />
             </div>
 
-            <h1>Welcome to Lebanon</h1>
-            <h4>Discover the beauty of the Middle East</h4>
+            <h1>{t("login.title")}</h1>
+            <h4>{t("login.subtitle")}</h4>
 
             <form onSubmit={handleLogin}>
 
               <input
                 type="text"
-                placeholder="Email or Username"
+                placeholder={t("login.email")}
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
               />
 
               <input
                 type="password"
-                placeholder="Password"
+                placeholder={t("login.password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
 
               <button type="submit" className="login-btn">
-                Login
+                {t("login.button")}
               </button>
 
               <div className="links">
                 <span onClick={() => navigate("/signup")}>
-                  Sign Up
+                  {t("login.signup")}
                 </span>
 
                 <span onClick={() => navigate("/forgot-password")}>
-                  Forgot Password?
+                  {t("login.forgot")}
                 </span>
               </div>
 
-              {/* ===== GOOGLE LOGIN ===== */}
-              <div
-                style={{
-                  marginTop: "20px",
-                  display: "flex",
-                  justifyContent: "center"
-                }}
-              >
-                <GoogleLogin
-                  onSuccess={async (credentialResponse) => {
-                    try {
-                     const res = await api.post("/auth/google", {
-  idToken: credentialResponse.credential
-});
-                      localStorage.setItem("token", res.data.token);
-                      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-                      // 🔥 IMPORTANT
-                      window.dispatchEvent(new Event("loginChange"));
-
-                      navigate("/preferences");
-                    } catch {
-                      alert("Google login failed");
-                    }
-                  }}
-                  onError={() => {
-                    alert("Google Login Failed");
-                  }}
-                />
-              </div>
-
             </form>
+
+            {/* GOOGLE LOGIN */}
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            >
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  try {
+                    const idToken = credentialResponse.credential;
+
+                    const res = await api.post("/auth/google", {
+                      idToken: idToken
+                    });
+
+                    localStorage.setItem("token", res.data.token);
+                    localStorage.setItem("user", JSON.stringify(res.data.user));
+
+                    window.dispatchEvent(new Event("loginChange"));
+
+                    navigate("/preferences");
+
+                  } catch (err) {
+  console.error("Google login error:", err);
+
+  if (err.response?.status === 403) {
+    alert(
+      err.response.data?.message ||
+      "Your account has been blocked by the administrator."
+    );
+    return;
+  }
+
+  if (err.response?.status === 401) {
+    if (typeof err.response.data === "string") {
+      alert(err.response.data);
+      return;
+    }
+
+    if (err.response.data?.message) {
+      alert(err.response.data.message);
+      return;
+    }
+  }
+
+  alert(t("login.googleError"));
+}
+                }}
+                onError={() => {
+                  alert(t("login.googleError"));
+                }}
+              />
+            </div>
+
           </div>
 
         </div>

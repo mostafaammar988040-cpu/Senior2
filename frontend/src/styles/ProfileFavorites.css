@@ -1,0 +1,44 @@
+.profile-fav-container {
+  padding: 30px;
+  color: white;
+}
+
+.profile-fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.profile-fav-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+}
+
+.profile-fav-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.profile-fav-content {
+  padding: 10px;
+}
+
+.remove-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #ff4b2b;
+  color: white;
+  cursor: pointer;
+}
+
+.profile-fav-empty {
+  text-align: center;
+  padding: 40px;
+  color: white;
+}

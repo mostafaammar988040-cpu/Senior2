@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
+using Senior2.Api.DTOs;
 using Senior2.Api.Models;
 using Senior2.Api.Services;
 
@@ -36,12 +39,44 @@ namespace Senior2.Api.Controllers
             ";
 
             await _emailService.SendEmailAsync(
-                "AhlaBhalTalleh@gmail.com",
+                "ahlabhaltalleh451@gmail.com",
                 request.Subject,
                 body
             );
 
             return Ok(new { message = "Support request sent successfully" });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllSupportRequests()
+        {
+            var requests = await _context.Set<SupportRequest>()
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+
+            return Ok(requests);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("reply")]
+        public async Task<IActionResult> ReplyToSupport(int id, [FromBody] ReplyDto dto)
+        {
+            var request = await _context.Set<SupportRequest>().FindAsync(id);
+
+            if (request == null)
+                return NotFound();
+
+            await _emailService.SendEmailAsync(
+                request.Email,
+                "Reply to your support request",
+                dto.Message
+            );
+
+            request.IsReplied = true;
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

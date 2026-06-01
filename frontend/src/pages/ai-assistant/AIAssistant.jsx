@@ -2,67 +2,79 @@ import { IoSend } from "react-icons/io5";
 import "./AIAssistant.css";
 import { useState, useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
+import api from "../../services/api";
+import { useTranslation } from "react-i18next";
 
 function AIAssistant() {
+  const { t } = useTranslation(); 
+
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
+
+  const [messages, setMessages] = useState([
+    {
+      sender: "ai",
+      text: t("ai.welcome"), 
+    },
+  ]);
+
+  const [sessionId] = useState(() => {
+    let id = localStorage.getItem("chatSessionId");
+    if (!id) {
+      id =
+        "session_" +
+        Date.now() +
+        "_" +
+        Math.random().toString(36).substr(2, 9);
+      localStorage.setItem("chatSessionId", id);
+    }
+    return id;
+  });
+
   const bottomRef = useRef(null);
 
   const handleSend = async () => {
-    if (!input.trim()) {
-      alert("Please ask a question");
-      return;
-    }
+    if (!input.trim()) return;
 
     const userMessage = {
       sender: "user",
-      text: input
+      text: input,
     };
-
 
     setInput("");
 
-    // Add temporary thinking message
     const thinkingMessage = {
       sender: "ai",
-      text: "Thinking..."
+      text: t("ai.thinking"), 
     };
 
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
 
     try {
-      const response = await fetch("https://localhost:7090/api/Chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: userMessage.text
-        })
+      const response = await api.post("/Chat", {
+        message: userMessage.text,
+        sessionId: sessionId,
       });
 
-      const data = await response.json();
-
-      // Replace "Thinking..." with real reply
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated.pop(); // remove Thinking...
-        updated.push({
-          sender: "ai",
-          text: data.reply
-        });
-        return updated;
-      });
-
-    } catch (error) {
-      console.error("Error sending message:", error);
+      const data = response.data;
 
       setMessages((prev) => {
         const updated = [...prev];
         updated.pop();
         updated.push({
           sender: "ai",
-          text: "Something went wrong. Please try again."
+          text: data.reply,
+        });
+        return updated;
+      });
+    } catch (err) {
+      console.error(err);
+
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated.pop();
+        updated.push({
+          sender: "ai",
+          text: t("ai.error"), 
         });
         return updated;
       });
@@ -70,28 +82,32 @@ function AIAssistant() {
   };
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   return (
     <div className="chat">
       <div className="chat-wrapper">
 
+       
         <div className="chat-header">
           <div className="logo">
-            <img src="/images/cedar.png" alt="Cedar Icon" />
+            <img src="/images/cedar.png" alt="Cedar" />
             <h1>
               <span style={{ color: "#d62828" }}>AHLA</span>{" "}
               <span style={{ color: "#0dc052" }}>BHAL</span>{" "}
-              <span style={{ color: "#000000" }}>TALLEH</span>
+              <span style={{ color: "#000" }}>TALLEH</span>
             </h1>
           </div>
 
-          <h2 className="ai-subtitle">
-            🤖 Your Lebanon AI Travel Assistant
-          </h2>
+          <div className="ai-subtitle">
+            🤖 {t("ai.subtitle")} 
+          </div>
         </div>
 
+  
         <div className="chat-messages">
           {messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
@@ -103,7 +119,7 @@ function AIAssistant() {
           <div className="input-card">
             <input
               type="text"
-              placeholder="Ask about Lebanon..."
+              placeholder={t("ai.placeholder")} 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
@@ -112,6 +128,7 @@ function AIAssistant() {
                 }
               }}
             />
+
             <button onClick={handleSend}>
               <IoSend size={18} />
             </button>

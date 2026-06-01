@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { GlobalMediaProvider } from "./context/GlobalMediaContext";
+
+import Layout from "./components/Layout";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -9,12 +12,9 @@ import AdminUsers from "./pages/AdminUsers";
 import Preferences from "./pages/Preferences";
 import Introduction from "./pages/Introduction";
 import TaxiServices from "./pages/TaxiServices";
-
-
 import AIAssistant from "./pages/ai-assistant/AIAssistant";
 import Events from "./pages/Events";
 import SmartItineraryintro from "./pages/SmartItineraryintro";
-
 import SmartItineraryForm from "./pages/SmartItineraryForm";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -28,49 +28,91 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import MyTrips from "./pages/MyTrips";
 import Journey from "./pages/Journey";
+import JourneyEditor from "./pages/JourneyEditor";
+import SuggestionPage from "./pages/SuggestionPage";
+import AdminSuggestions from "./pages/AdminSuggestions";
+import AdminTrips from "./pages/AdminTrips";
+import Recommendations from "./pages/Recommendations";
+import Notifications from "./pages/Notifications";
+import AdminRoute from "./components/AdminRoute";
+import AdminReports from "./pages/AdminReports";
+import Feed from "./pages/Feed";
+import CreateJourney from "./pages/CreateJourney";
+import ProfilePreference from "./components/profile/ProfilePreference";
+import ProfileFavorites from "./components/profile/ProfileFavorites";
+import AdminPlaces from "./pages/AdminPlaces";
+import AdminPlacesList from "./pages/AdminPlacesList";
+import AdminSupport from "./pages/AdminSupport";
+import AdminAds from "./pages/AdminAds";
+
+import "./i18n";
+import "./styles/GlobalMediaPlayer.css";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Homepage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+    <GlobalMediaProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="reviews" element={<AdminReviews />} />
-        <Route path="users" element={<AdminUsers />} />
-      </Route>
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="suggestions" element={<AdminSuggestions />} />
+          <Route path="trips" element={<AdminTrips />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="places" element={<AdminPlaces />} />
+          <Route path="manage-places" element={<AdminPlacesList />} />
+          <Route path="support" element={<AdminSupport />} />
+          <Route path="ads" element={<AdminAds />} />
+        </Route>
 
-      <Route path="/preferences" element={<Preferences />} />
-      <Route path="/introduction" element={<Introduction />} />
-      <Route path="/taxis" element={<TaxiServices />} />
-      <Route path="/preferences" element={<Preferences />} />
-      <Route path="/introduction" element={<Introduction />} />
-      <Route path="/ai-assistant" element={<AIAssistant/>}/>
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/experiences" element={<Experiences />} />
-      <Route path="/explore" element={<Explore />} />
-      <Route path="/activities" element={<Activities />} />
-      <Route path="events" element={<Events />} />
-      <Route path="/SmartItineraryintro" element={<SmartItineraryintro />} />
-      <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
-      <Route path="/help" element={<Help />} />
-      <Route path="/places" element={<Places />} />
-      <Route path="/my-trips" element={<MyTrips />} />
-            <Route path="/profile/journeys" element={<Journey />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/preferences" element={<Preferences />} />
+          <Route path="/introduction" element={<Introduction />} />
+          <Route path="/taxis" element={<TaxiServices />} />
+          <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/experiences" element={<Experiences />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/SmartItineraryintro" element={<SmartItineraryintro />} />
+          <Route path="/SmartItinerary" element={<SmartItineraryForm />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/places" element={<Places />} />
+          <Route path="/my-trips" element={<MyTrips />} />
+          <Route path="/profile/journeys" element={<Journey />} />
+          <Route path="/profile/journey/new" element={<JourneyEditor />} />
+          <Route path="/profile/suggestions" element={<SuggestionPage />} />
+          <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/create-journey-entry" element={<CreateJourney />} />
+          <Route path="/profile/preferences" element={<ProfilePreference />} />
+          <Route path="/profile/favorites" element={<ProfileFavorites />} />
 
-      <Route
-  path="/profile"
-  element={
-    <PrivateRoute>
-      <Profile />
-    </PrivateRoute>
-  }
-/>
-    </Routes>
-
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </GlobalMediaProvider>
   );
 }
 

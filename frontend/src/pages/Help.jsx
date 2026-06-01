@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; // 👈 IMPORTANT
+import { useTranslation } from "react-i18next"; // ✅ ADD
+import api from "../services/api";
 import "../styles/Help.css";
 
 export default function Help() {
+
+  const { t } = useTranslation(); // ✅ ADD
   const navigate = useNavigate();
 
   const [openIndex, setOpenIndex] = useState(null);
 
-  /* ===== SUPPORT FORM STATES ===== */
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -19,55 +21,46 @@ export default function Help() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
+  // ✅ TRANSLATED FAQ
   const faqs = [
     {
-      question: "How do I explore places in Lebanon?",
-      answer:
-        "Go to the Explore page to discover destinations, landscapes, and curated experiences across Lebanon.",
+      question: t("help.faq.q1"),
+      answer: t("help.faq.a1"),
     },
     {
-      question: "How does the AI Assistant work?",
-      answer:
-        "Our AI assistant gives recommendations and travel guidance focused only on Lebanon.",
+      question: t("help.faq.q2"),
+      answer: t("help.faq.a2"),
     },
     {
-      question: "Is AHLA BHAL TALLEH free to use?",
-      answer:
-        "Yes — browsing, discovering places, and using the AI assistant are completely free.",
+      question: t("help.faq.q3"),
+      answer: t("help.faq.a3"),
     },
     {
-      question: "How are places selected?",
-      answer:
-        "Locations are carefully curated to highlight authentic experiences, nature, and culture.",
+      question: t("help.faq.q4"),
+      answer: t("help.faq.a4"),
     },
     {
-      question: "Can I trust the information shown?",
-      answer:
-        "We continuously review and improve content to help travelers plan safely.",
+      question: t("help.faq.q5"),
+      answer: t("help.faq.a5"),
     },
     {
-      question: "I found incorrect information — what should I do?",
-      answer:
-        "Contact us directly via email and we’ll review and update it quickly.",
+      question: t("help.faq.q6"),
+      answer: t("help.faq.a6"),
     },
     {
-      question: "Why may some media load slowly?",
-      answer:
-        "Large visuals may depend on internet speed. Give it a moment or refresh.",
+      question: t("help.faq.q7"),
+      answer: t("help.faq.a7"),
     },
     {
-      question: "Can I suggest new places?",
-      answer:
-        "Yes — soon you’ll be able to suggest ideas from your profile and send them directly to us.",
+      question: t("help.faq.q8"),
+      answer: t("help.faq.a8"),
     },
   ];
 
-  /* ===== HANDLE FORM INPUT ===== */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  /* ===== SEND SUPPORT ===== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,7 +70,7 @@ export default function Help() {
 
       await api.post("/support", form);
 
-      setSuccess("✔ Message sent successfully!");
+      setSuccess(t("help.success"));
       setForm({
         name: "",
         email: "",
@@ -86,7 +79,7 @@ export default function Help() {
       });
 
     } catch (err) {
-      setSuccess("❌ Failed to send message");
+      setSuccess(t("help.error"));
       console.error(err);
     } finally {
       setLoading(false);
@@ -96,43 +89,46 @@ export default function Help() {
   return (
     <div className="help-page">
 
-      {/* BACK BUTTON */}
+      {/* BACK */}
       <button className="back-btn" onClick={() => navigate("/")}>
-        ← Back Home
+        ← {t("help.back")}
       </button>
 
       {/* HERO */}
       <section className="help-hero">
-        <h1>Help Center</h1>
-        <p>We’re here to help you explore Lebanon smoothly and confidently.</p>
+        <h1>{t("help.title")}</h1>
+        <p>{t("help.subtitle")}</p>
       </section>
 
-      {/* FLOATING CARDS */}
+      {/* CARDS */}
       <section className="help-cards">
+
         <div className="help-card">
-          <h3>📩 Contact Support</h3>
-          <p>Need direct help from our team?</p>
+          <h3>📩 {t("help.cards.contact")}</h3>
+          <p>{t("help.cards.contactText")}</p>
         </div>
 
         <div className="help-card">
-          <h3>❓ FAQ</h3>
-          <p>Quick answers to common questions.</p>
+          <h3>❓ {t("help.cards.faq")}</h3>
+          <p>{t("help.cards.faqText")}</p>
         </div>
 
         <div className="help-card">
-          <h3>⚠️ Report Issue</h3>
-          <p>Found a problem? Let us know.</p>
+          <h3>⚠️ {t("help.cards.report")}</h3>
+          <p>{t("help.cards.reportText")}</p>
         </div>
 
         <div className="help-card">
-          <h3>🤖 AI Assistant</h3>
-          <p>Smart travel help powered by AI.</p>
+          <h3>🤖 {t("help.cards.ai")}</h3>
+          <p>{t("help.cards.aiText")}</p>
         </div>
+
       </section>
 
       {/* FAQ */}
       <section className="faq-section">
-        <h2>Frequently Asked Questions</h2>
+
+        <h2>{t("help.faq.title")}</h2>
 
         {faqs.map((faq, index) => (
           <div
@@ -152,16 +148,19 @@ export default function Help() {
             )}
           </div>
         ))}
+
       </section>
 
-      {/* ===== CONTACT FORM ===== */}
+      {/* FORM */}
       <section className="contact-section">
-        <h2>Contact Support</h2>
+
+        <h2>{t("help.contactTitle")}</h2>
 
         <form className="support-form" onSubmit={handleSubmit}>
+
           <input
             name="name"
-            placeholder="Your Name"
+            placeholder={t("help.name")}
             value={form.name}
             onChange={handleChange}
             required
@@ -169,7 +168,7 @@ export default function Help() {
 
           <input
             name="email"
-            placeholder="Your Email"
+            placeholder={t("help.email")}
             value={form.email}
             onChange={handleChange}
             required
@@ -177,7 +176,7 @@ export default function Help() {
 
           <input
             name="subject"
-            placeholder="Subject"
+            placeholder={t("help.subject")}
             value={form.subject}
             onChange={handleChange}
             required
@@ -185,22 +184,24 @@ export default function Help() {
 
           <textarea
             name="message"
-            placeholder="Your Message..."
+            placeholder={t("help.message")}
             value={form.message}
             onChange={handleChange}
             required
           />
 
           <button type="submit" disabled={loading}>
-            {loading ? "Sending..." : "Send Message"}
+            {loading ? t("help.sending") : t("help.send")}
           </button>
+
         </form>
 
         {success && <p className="success-msg">{success}</p>}
 
         <p className="reply-time">
-          Or email us directly: <b>AhlaBhalTalleh@gmail.com</b>
+          {t("help.direct")} <b>ahlabhaltalleh451@gmail.com</b>
         </p>
+
       </section>
 
     </div>
