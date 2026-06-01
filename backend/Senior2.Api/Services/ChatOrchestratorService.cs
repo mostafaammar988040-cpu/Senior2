@@ -113,38 +113,7 @@ public class ChatOrchestratorService
         {
             enhancedMessage = $"Suggest places in Lebanon for this request: {message}. If the exact location is unclear, suggest nearby options in Lebanon.";
         }
-        else if (intent == "Itinerary")
-        {
-            enhancedMessage = $@"
-Create a {3}-day travel itinerary in Batroun, Lebanon.
-
-FORMAT STRICTLY like this:
-
-Day 1:
-- Morning: [activity]
-- Afternoon: [activity]
-- Evening: [activity]
-
-Day 2:
-- Morning: ...
-- Afternoon: ...
-- Evening: ...
-
-Day 3:
-- Morning: ...
-- Afternoon: ...
-- Evening: ...
-
-Rules:
-- Use bullet points only
-- Keep each line short and clear
-- Mention REAL places in Lebanon
-- No long paragraphs
-- No extra explanations outside the structure
-
-User request: {message}
-";
-        }
+      
 
         if (intent == "Itinerary")
         {
@@ -166,14 +135,11 @@ User request: {message}
             else if (lower.Contains("couple")) travelerType = "couple";
             else if (lower.Contains("friends")) travelerType = "group";
 
-            var (destination, days) = await _llmService.ExtractItineraryParams(message);
-
-            destination ??= "Lebanon";
-            days ??= 3;
-
-            var itinerary = await _llmService.GetChatResponseAsync(
-     enhancedMessage,
-     placeContext
+            var itinerary = await _itineraryService.GenerateItineraryAsync(
+     message,
+     tripType,
+     budget,
+     travelerType
  );
             if (!string.IsNullOrEmpty(sessionId))
                 _memoryService.AddMessage(sessionId, "assistant", itinerary);

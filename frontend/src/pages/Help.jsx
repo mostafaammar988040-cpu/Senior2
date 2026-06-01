@@ -199,7 +199,7 @@ export default function Help() {
         {success && <p className="success-msg">{success}</p>}
 
         <p className="reply-time">
-          {t("help.direct")} <b>AhlaBhalTalleh@gmail.com</b>
+          {t("help.direct")} <b>ahlabhaltalleh451@gmail.com</b>
         </p>
 
       </section>

@@ -1,7 +1,11 @@
 /* ===============================
    RESET
 =============================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 /* ===============================
    LAYOUT
@@ -112,6 +116,83 @@
 }
 
 /* ===============================
+   FOLLOW STATS
+=============================== */
+.follow-stats {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 18px 0;
+  width: 100%;
+}
+
+.follow-stat {
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 90px;
+  transition: 0.25s ease;
+}
+
+.follow-stat:hover {
+  background: #c8322b;
+  transform: translateY(-2px);
+}
+
+.follow-stat strong {
+  display: block;
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.follow-stat span {
+  font-size: 13px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+/* ===============================
+   PROFILE ACTION BUTTONS
+=============================== */
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 18px 0 22px;
+}
+
+.profile-btn {
+  width: 100%;
+  border: none;
+  background: #d62828;
+  color: white;
+  padding: 11px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.profile-btn:hover {
+  background: #b91f1f;
+  transform: translateY(-2px);
+}
+
+.profile-btn.outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: white;
+}
+
+.profile-btn.outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ===============================
    MAIN
 =============================== */
 .db-main {
@@ -140,6 +221,22 @@
 }
 
 /* ===============================
+   LANGUAGE SELECTOR
+=============================== */
+.language-select {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: #f5f7ff;
+  cursor: pointer;
+}
+
+.profile-section {
+  margin-bottom: 25px;
+}
+
+/* ===============================
    CARDS
 =============================== */
 .db-cards {
@@ -151,7 +248,7 @@
 
 .db-card {
   background: white;
-  border: 0.5px solid rgba(0,0,0,0.08);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   border-radius: 20px;
   padding: 28px 24px;
   cursor: pointer;
@@ -161,7 +258,7 @@
 }
 
 .db-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -170,11 +267,25 @@
   border-radius: 20px 20px 0 0;
 }
 
-.db-card.trips::before    { background: #d62828; }
-.db-card.journeys::before { background: #0dc052; }
-.db-card.prefs::before    { background: #d62828; }
-.db-card.suggest::before  { background: #0dc052; }
-.db-card.favorites::before { background: #d62828; }
+.db-card.trips::before {
+  background: #d62828;
+}
+
+.db-card.journeys::before {
+  background: #0dc052;
+}
+
+.db-card.prefs::before {
+  background: #d62828;
+}
+
+.db-card.suggest::before {
+  background: #0dc052;
+}
+
+.db-card.favorites::before {
+  background: #d62828;
+}
 
 .db-card:hover {
   transform: translateY(-5px);
@@ -192,11 +303,25 @@
   margin-bottom: 16px;
 }
 
-.trips .db-card-icon    { background: #fdecea; }
-.journeys .db-card-icon { background: #e6f9ef; }
-.prefs .db-card-icon    { background: #fdecea; }
-.suggest .db-card-icon  { background: #e6f9ef; }
-.favorites .db-card-icon { background: #fdecea; }
+.trips .db-card-icon {
+  background: #fdecea;
+}
+
+.journeys .db-card-icon {
+  background: #e6f9ef;
+}
+
+.prefs .db-card-icon {
+  background: #fdecea;
+}
+
+.suggest .db-card-icon {
+  background: #e6f9ef;
+}
+
+.favorites .db-card-icon {
+  background: #fdecea;
+}
 
 .db-card-title {
   font-size: 1.05rem;
@@ -242,7 +367,7 @@
 }
 
 /* ===============================
-   MODALS (YOUR FEATURE)
+   MODALS
 =============================== */
 .modal {
   position: fixed;
@@ -250,11 +375,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  padding: 20px;
 }
 
 .modal-content {
@@ -265,6 +391,11 @@
   max-width: 500px;
 }
 
+.modal-content h2 {
+  margin-bottom: 22px;
+  color: #1a1a1a;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -272,19 +403,158 @@
 }
 
 /* ===============================
-   LANGUAGE SELECTOR (YOUR FEATURE)
+   FOLLOW MODAL TABLE
 =============================== */
-.language-select {
-  margin-top: 10px;
-  padding: 10px 15px;
-  border-radius: 10px;
+.follow-modal-content {
+  max-width: 760px;
+  max-height: 82vh;
+  overflow: hidden;
+}
+
+.follow-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.follow-modal-header h2 {
+  margin-bottom: 0;
+}
+
+.follow-modal-close {
   border: none;
-  background: #f5f7ff;
+  background: #d62828;
+  color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.follow-modal-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.follow-modal-tabs button {
+  border: none;
+  background: #eef1f5;
+  color: #222;
+  padding: 10px 16px;
+  border-radius: 22px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.profile-section {
-  margin-bottom: 25px;
+.follow-modal-tabs button.active {
+  background: #0f2027;
+  color: white;
+}
+
+.follow-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.follow-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.follow-table thead {
+  background: #0f2027;
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.follow-table th,
+.follow-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+}
+
+.follow-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.follow-user-cell img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.empty-follow-list {
+  color: #555;
+  font-size: 15px;
+  padding: 20px 0;
+}
+
+/* ===============================
+   PROFILE MODAL FORM
+=============================== */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-form input,
+.profile-form textarea {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+}
+
+.profile-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
+  border-color: #0dc052;
+}
+
+.save-btn {
+  border: none;
+  background: #0dc052;
+  color: white;
+  padding: 11px 20px;
+  border-radius: 25px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  border: none;
+  background: #eee;
+  color: #333;
+  padding: 11px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #0aaa49;
+}
+
+.cancel-btn:hover {
+  background: #ddd;
 }
 
 /* ===============================
@@ -315,5 +585,16 @@
   .db-banner {
     flex-direction: column;
     text-align: center;
+    gap: 20px;
+  }
+
+  .follow-modal-content {
+    max-width: 95vw;
+  }
+
+  .follow-table th,
+  .follow-table td {
+    padding: 12px 10px;
+    font-size: 13px;
   }
 }

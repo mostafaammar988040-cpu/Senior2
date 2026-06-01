@@ -21,9 +21,16 @@ public sealed class AdvertisementController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<AdvertisementDto>> Create([FromBody] CreateAdvertisementDto request, CancellationToken cancellationToken)
+    [Authorize]
+    [HttpPost]
+    [Authorize]
+    [HttpPost]
+    public async Task<ActionResult<AdvertisementDto>> Create(
+    [FromForm] CreateAdvertisementDto request,
+    CancellationToken cancellationToken)
     {
-        if (request is null) return BadRequest("Request body is required.");
+        if (request is null)
+            return BadRequest("Request body is required.");
 
         if (request.EndDateUtc <= request.StartDateUtc)
         {
@@ -31,29 +38,57 @@ public sealed class AdvertisementController : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var placeExists = await _context.Places
-            .AsNoTracking()
-            .AnyAsync(p => p.Id == request.PlaceId, cancellationToken);
+        if (request.ImageFile == null || request.ImageFile.Length == 0)
+        {
+            return BadRequest("Advertisement image is required.");
+        }
 
-        if (!placeExists) return NotFound($"Place with id {request.PlaceId} was not found.");
+        string? imageUrl = null;
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(request.ImageFile.FileName).ToLower();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            return BadRequest("Only JPG, JPEG, PNG, and WEBP images are allowed.");
+        }
+
+        var uploadsFolder = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot",
+            "uploads",
+            "ads"
+        );
+
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        var fileName = $"{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await request.ImageFile.CopyToAsync(stream, cancellationToken);
+        }
+
+        imageUrl = $"/uploads/ads/{fileName}";
 
         var ad = new Advertisement
         {
-            PlaceId = request.PlaceId,
+            PlaceId = null,
             StartDateUtc = request.StartDateUtc,
             EndDateUtc = request.EndDateUtc,
             Priority = request.Priority,
             AdminNote = request.AdminNote,
+            ImageUrl = imageUrl,
             Status = AdvertisementStatus.Pending,
             CreatedAtUtc = DateTimeOffset.UtcNow
         };
 
         _context.Advertisements.Add(ad);
         await _context.SaveChangesAsync(cancellationToken);
-
-        ad = await _context.Advertisements
-            .Include(a => a.Place)
-            .FirstAsync(a => a.Id == ad.Id, cancellationToken);
 
         return Created($"/api/advertisement/{ad.Id}", MapToDto(ad));
     }
@@ -173,9 +208,17 @@ public sealed class AdvertisementController : ControllerBase
         return new AdvertisementDto
         {
             Id = ad.Id,
-            PlaceId = ad.PlaceId,
-            PlaceName = ad.Place?.Name ?? string.Empty,
-            ImageUrl = ad.Place?.ImageUrl ?? string.Empty, 
+
+            PlaceId = ad.PlaceId ?? 0,
+
+            PlaceName = ad.Place?.Name
+                        ?? ad.AdminNote
+                        ?? "Custom Advertisement",
+
+            ImageUrl = !string.IsNullOrWhiteSpace(ad.ImageUrl)
+                ? ad.ImageUrl
+                : ad.Place?.ImageUrl ?? string.Empty,
+
             StartDateUtc = ad.StartDateUtc,
             EndDateUtc = ad.EndDateUtc,
             Priority = ad.Priority,

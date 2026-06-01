@@ -39,13 +39,14 @@ namespace Senior2.Api.Controllers
             ";
 
             await _emailService.SendEmailAsync(
-                "AhlaBhalTalleh@gmail.com",
+                "ahlabhaltalleh451@gmail.com",
                 request.Subject,
                 body
             );
 
             return Ok(new { message = "Support request sent successfully" });
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllSupportRequests()
@@ -56,6 +57,7 @@ namespace Senior2.Api.Controllers
 
             return Ok(requests);
         }
+
         [Authorize(Roles = "Admin")]
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyToSupport(int id, [FromBody] ReplyDto dto)

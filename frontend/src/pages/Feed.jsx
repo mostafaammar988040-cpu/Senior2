@@ -56,7 +56,7 @@ export default function Feed() {
       <div className="feed-header">
         <h2>🌍 {t("feed.title")}</h2>
 
-        <button 
+        <button
           className="add-btn"
           onClick={() => navigate("/create-journey-entry")}
         >
@@ -70,7 +70,9 @@ export default function Feed() {
           <div key={entry.id} className="post-card">
 
             <div className="post-header">
-              <span>{t("feed.user")} {entry.userId}</span>
+              <span>
+                {entry.userFirstName} {entry.userLastName}
+              </span>
             </div>
 
             <h4>{entry.title}</h4>
@@ -85,7 +87,11 @@ export default function Feed() {
             )}
 
             <div className="post-actions">
-              <FollowButton followedId={entry.userId} />
+              <FollowButton
+                followedId={entry.userId}
+                initialIsFollowing={entry.isFollowing}
+              />
+
               <span>{new Date(entry.createdAt).toLocaleString()}</span>
             </div>
 

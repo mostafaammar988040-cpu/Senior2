@@ -18,7 +18,6 @@ namespace Senior2.Api.Controllers
             _context = context;
         }
 
-        // Get reviews for place
         [HttpGet("{placeId}")]
         public async Task<IActionResult> GetReviews(int placeId)
         {
@@ -39,7 +38,7 @@ namespace Senior2.Api.Controllers
             return Ok(reviews);
         }
 
-        // Add review
+
         [HttpPost]
         public async Task<IActionResult> AddReview([FromBody] AddReviewDto dto)
         {
@@ -59,7 +58,7 @@ namespace Senior2.Api.Controllers
 
             return Ok(review);
         }
-        // Get all reviews (Admin)
+
         [HttpGet]
         public async Task<IActionResult> GetAllReviews()
         {
@@ -80,7 +79,7 @@ namespace Senior2.Api.Controllers
 
             return Ok(reviews);
         }
-        // Delete review (Admin)
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {

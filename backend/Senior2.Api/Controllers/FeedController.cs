@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Senior2.Api.Data;
-using Microsoft.AspNetCore.Authorization;
+
 namespace Senior2.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // 🔐 protect all endpoints
+    [Authorize]
     public class FeedController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -18,10 +18,6 @@ namespace Senior2.Api.Controllers
             _context = context;
         }
 
-        // ============================================
-        // GET: api/feed
-        // 👉 All shared content (stories + journeys)
-        // ============================================
         [HttpGet]
         public async Task<IActionResult> GetFeed()
         {
@@ -29,16 +25,36 @@ namespace Senior2.Api.Controllers
 
             var feed = await _context.JourneyEntries
                 .Where(j => j.IsShared && j.UserId != userId)
+                .Join(
+                    _context.Users,
+                    journey => journey.UserId,
+                    user => user.Id,
+                    (journey, user) => new
+                    {
+                        journey.Id,
+                        journey.UserId,
+                        journey.Title,
+                        journey.Content,
+                        journey.MediaUrl,
+                        journey.MediaType,
+                        journey.CreatedAt,
+                        journey.IsShared,
+                        journey.Type,
+
+                        userFirstName = user.FirstName,
+                        userLastName = user.LastName,
+
+                        isFollowing = _context.Follows.Any(f =>
+                            f.FollowerId == userId &&
+                            f.FollowedId == journey.UserId)
+                    }
+                )
                 .OrderByDescending(j => j.CreatedAt)
                 .ToListAsync();
 
             return Ok(feed);
         }
 
-        // ============================================
-        // GET: api/feed/stories
-        // 👉 Only stories (video/image quick posts)
-        // ============================================
         [HttpGet("stories")]
         public async Task<IActionResult> GetStories()
         {
@@ -49,16 +65,36 @@ namespace Senior2.Api.Controllers
                     j.IsShared &&
                     j.Type == "story" &&
                     j.UserId != userId)
+                .Join(
+                    _context.Users,
+                    story => story.UserId,
+                    user => user.Id,
+                    (story, user) => new
+                    {
+                        story.Id,
+                        story.UserId,
+                        story.Title,
+                        story.Content,
+                        story.MediaUrl,
+                        story.MediaType,
+                        story.CreatedAt,
+                        story.IsShared,
+                        story.Type,
+
+                        userFirstName = user.FirstName,
+                        userLastName = user.LastName,
+
+                        isFollowing = _context.Follows.Any(f =>
+                            f.FollowerId == userId &&
+                            f.FollowedId == story.UserId)
+                    }
+                )
                 .OrderByDescending(j => j.CreatedAt)
                 .ToListAsync();
 
             return Ok(stories);
         }
 
-        // ============================================
-        // GET: api/feed/journeys
-        // 👉 Only journeys (long posts)
-        // ============================================
         [HttpGet("journeys")]
         public async Task<IActionResult> GetJourneys()
         {
@@ -69,15 +105,36 @@ namespace Senior2.Api.Controllers
                     j.IsShared &&
                     j.Type == "journey" &&
                     j.UserId != userId)
+                .Join(
+                    _context.Users,
+                    journey => journey.UserId,
+                    user => user.Id,
+                    (journey, user) => new
+                    {
+                        journey.Id,
+                        journey.UserId,
+                        journey.Title,
+                        journey.Content,
+                        journey.MediaUrl,
+                        journey.MediaType,
+                        journey.CreatedAt,
+                        journey.IsShared,
+                        journey.Type,
+
+                        userFirstName = user.FirstName,
+                        userLastName = user.LastName,
+
+                        isFollowing = _context.Follows.Any(f =>
+                            f.FollowerId == userId &&
+                            f.FollowedId == journey.UserId)
+                    }
+                )
                 .OrderByDescending(j => j.CreatedAt)
                 .ToListAsync();
 
             return Ok(journeys);
         }
 
-        // ============================================
-        // 🔒 Helper: Get logged-in user ID safely
-        // ============================================
         private int GetUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

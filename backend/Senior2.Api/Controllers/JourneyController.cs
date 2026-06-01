@@ -5,7 +5,6 @@ using System.Security.Claims;
 using Senior2.Api.Data;
 using Senior2.Api.Models;
 using Senior2.Api.DTOS;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Senior2.Api.Controllers
 {
@@ -22,9 +21,7 @@ namespace Senior2.Api.Controllers
             _environment = environment;
         }
 
-        // ================================
-        // GET USER JOURNEYS
-        // ================================
+        
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserJourneys(int userId)
         {
@@ -36,9 +33,7 @@ namespace Senior2.Api.Controllers
             return Ok(journeys);
         }
 
-        // ================================
-        // CREATE JOURNEY
-        // ================================
+        
         [HttpPost]
         [Authorize]
         [Consumes("multipart/form-data")]
@@ -64,7 +59,6 @@ namespace Senior2.Api.Controllers
                     await request.Media.CopyToAsync(stream);
                 }
 
-                // 🔥 FIX: FULL URL
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
                 mediaUrl = $"{baseUrl}/uploads/journeys/{fileName}";
 
@@ -87,13 +81,21 @@ namespace Senior2.Api.Controllers
 
             _context.JourneyEntries.Add(entry);
             await _context.SaveChangesAsync();
+            if (entry.IsShared)
+            {
+                var creator = await _context.Users.FindAsync(userId);
+                var creatorName = creator == null
+                    ? "Someone"
+                    : $"{creator.FirstName} {creator.LastName}";
+
+                await NotifyFollowersAsync(userId, creatorName, "journey");
+                await _context.SaveChangesAsync();
+            }
 
             return Ok(entry);
         }
 
-        // ================================
-        // UPDATE JOURNEY
-        // ================================
+       
         [HttpPut("{id}")]
         [Authorize]
         [Consumes("multipart/form-data")]
@@ -114,7 +116,6 @@ namespace Senior2.Api.Controllers
 
             if (request.Media != null)
             {
-                // delete old file
                 if (!string.IsNullOrEmpty(existing.MediaUrl))
                 {
                     var oldPath = existing.MediaUrl.Replace($"{Request.Scheme}://{Request.Host}", "");
@@ -157,9 +158,7 @@ namespace Senior2.Api.Controllers
             return Ok(existing);
         }
 
-        // ================================
-        // CREATE STORY
-        // ================================
+       
         [HttpPost("story")]
         [Authorize]
         [Consumes("multipart/form-data")]
@@ -183,7 +182,6 @@ namespace Senior2.Api.Controllers
                 await request.Media.CopyToAsync(stream);
             }
 
-            // 🔥 FIX: FULL URL
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var mediaUrl = $"{baseUrl}/uploads/journeys/{fileName}";
 
@@ -203,8 +201,34 @@ namespace Senior2.Api.Controllers
 
             _context.JourneyEntries.Add(entry);
             await _context.SaveChangesAsync();
+            var creator = await _context.Users.FindAsync(userId);
+            var creatorName = creator == null
+                ? "Someone"
+                : $"{creator.FirstName} {creator.LastName}";
+
+            await NotifyFollowersAsync(userId, creatorName, "story");
+            await _context.SaveChangesAsync();
 
             return Ok(entry);
         }
+        private async Task NotifyFollowersAsync(int creatorId, string creatorName, string entryType)
+        {
+            var followerIds = await _context.Follows
+                .Where(f => f.FollowedId == creatorId)
+                .Select(f => f.FollowerId)
+                .ToListAsync();
+
+            foreach (var followerId in followerIds)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = followerId,
+                    Message = $"{creatorName} shared a new {entryType}.",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
     }
+
 }

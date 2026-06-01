@@ -6,7 +6,7 @@
     "feed": "Feed",
     "experiences": "Experiences",
     "recommendations": "Recommendations",
-    "itinerary": "Smart Itinerary",
+    "itinerary": "Trip Generator",
     "ai": "AI Assistant",
     "logout": "Logout",
     "login": "Login"
@@ -496,5 +496,52 @@
     "title": "Experiences",
     "subtitle": "Explore Lebanon through culture, food, nature, and unforgettable places"
   }
+  ,"help": {
+  "back": "Back Home",
+  "title": "How can we help you?",
+  "subtitle": "Find answers, contact support, or report an issue.",
+
+  "cards": {
+    "contact": "Contact Support",
+    "contactText": "Send us your questions and our team will help you.",
+    "faq": "FAQ",
+    "faqText": "Find quick answers to common questions.",
+    "report": "Report Issue",
+    "reportText": "Tell us about any problem you faced while using the platform.",
+    "ai": "AI Assistant",
+    "aiText": "Use our AI assistant to get travel help and recommendations."
+  },
+
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": "How can I create a smart itinerary?",
+    "a1": "Go to the Smart Itinerary page, enter your trip details, and the system will generate a plan for you.",
+    "q2": "Can I use the platform without logging in?",
+    "a2": "Yes, you can explore some features as a guest, but some features require login.",
+    "q3": "How can I contact support?",
+    "a3": "You can fill out the contact form on this page and send your message.",
+    "q4": "Can I save my favorite places?",
+    "a4": "Yes, logged-in users can save places to their favorites.",
+    "q5": "Does the platform support multiple languages?",
+    "a5": "Yes, the platform supports English, Arabic, and French.",
+    "q6": "Can I report a problem?",
+    "a6": "Yes, you can report any issue using the support form.",
+    "q7": "How does the AI assistant help me?",
+    "a7": "The AI assistant helps you discover places, plan trips, and get tourism suggestions in Lebanon.",
+    "q8": "Are the recommendations personalized?",
+    "a8": "Yes, recommendations can be based on your preferences, interests, and selected activities."
+  },
+
+  "contactTitle": "Contact Us",
+  "name": "Your Name",
+  "email": "Your Email",
+  "subject": "Subject",
+  "message": "Message",
+  "send": "Send Message",
+  "sending": "Sending...",
+  "success": "Your message has been sent successfully.",
+  "error": "Something went wrong. Please try again.",
+  "direct": "You can also contact us directly at"
+}
 }
 

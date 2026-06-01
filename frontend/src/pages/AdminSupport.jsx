@@ -1,115 +1,129 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import "../styles/AdminSupport.css";
+import "../styles/AdminSuggestions.css";
 
-function AdminSupport() {
-  const [messages, setMessages] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [reply, setReply] = useState("");
+export default function AdminSuggestions() {
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(null);
 
   useEffect(() => {
-    fetchMessages();
+    const fetchSuggestions = async () => {
+      try {
+        const res = await api.get("/suggestion");
+
+        if (Array.isArray(res.data)) {
+          setSuggestions(res.data);
+        } else if (res.data && Array.isArray(res.data.$values)) {
+          setSuggestions(res.data.$values);
+        } else {
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSuggestions();
   }, []);
 
-  const fetchMessages = async () => {
-    const res = await api.get("/support");
-    setMessages(res.data);
-  };
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
 
-  const sendReply = async () => {
-    try {
-await api.post(`/support/reply?id=${selected.id}`, {
-  message: reply
-});
-      // 🔥 update UI instantly
-      setMessages(prev =>
-        prev.map(r =>
-          r.id === selected.id ? { ...r, isReplied: true } : r
-        )
-      );
-
-      setReply("");
-      setSelected(null);
-
-      alert("Reply sent ✅");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to send reply ❌");
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
     }
+
+    return `https://localhost:7090${imageUrl}`;
   };
 
   return (
-    <div className="admin-support-page">
+    <div className="admin-suggestions">
+      <h1>User Suggestions</h1>
 
-      <h1 className="title">📩 Users Support</h1>
+      {loading && <p>Loading suggestions...</p>}
 
-      <div className="support-table">
+      {!loading && suggestions.length === 0 && (
+        <p>No suggestions found.</p>
+      )}
 
-        {/* HEADER */}
-        <div className="table-header">
-          <span>Name</span>
-          <span>Email</span>
-          <span>Subject</span>
-          <span>Date</span>
-        </div>
-
-        {/* ROWS */}
-        {messages.map(msg => (
+      <div className="suggestions-grid">
+        {suggestions.map((s) => (
           <div
-            key={msg.id}
-            className={`table-row ${msg.isReplied ? "replied" : ""}`}
-            onClick={() => setSelected(msg)}
+            key={s.id}
+            className="suggestion-card"
+            onClick={() => setSelectedSuggestion(s)}
           >
-            <span>{msg.name}</span>
-            <span>{msg.email}</span>
+            <h3>{s.title}</h3>
 
-            <span>
-              {msg.subject}
-              {msg.isReplied && (
-                <span className="status-badge">Replied</span>
-              )}
-            </span>
+            <div className="suggestion-meta">
+              <span>👤 {s.userName}</span>
 
-            <span>
-              {new Date(msg.createdAt).toLocaleDateString()}
-            </span>
-          </div>
-        ))}
-
-      </div>
-
-      {/* MODAL */}
-      {selected && (
-        <div className="modal">
-          <div className="modal-box">
-
-            <h2>{selected.subject}</h2>
-
-            <p><b>Name:</b> {selected.name}</p>
-            <p><b>Email:</b> {selected.email}</p>
-            <p><b>Category:</b> {selected.category}</p>
-
-            <div className="message-box">
-              {selected.message}
+              <span>
+                📅 {new Date(s.createdAt).toLocaleDateString()}
+              </span>
             </div>
 
-            {/* 🔥 REPLY INPUT */}
-            <textarea
-              placeholder="Write your reply..."
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              className="reply-box"
-            />
+            <p className="suggestion-type">{s.type}</p>
+          </div>
+        ))}
+      </div>
 
-            <button onClick={sendReply}>Send Reply</button>
-            <button onClick={() => setSelected(null)}>Close</button>
+      {selectedSuggestion && (
+        <div
+          className="suggestion-modal-overlay"
+          onClick={() => setSelectedSuggestion(null)}
+        >
+          <div
+            className="suggestion-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>{selectedSuggestion.title}</h2>
 
+            <p className="modal-user">
+              👤 {selectedSuggestion.userName}
+            </p>
+
+            {selectedSuggestion.userEmail && (
+              <p>
+                <strong>Email:</strong> {selectedSuggestion.userEmail}
+              </p>
+            )}
+
+            <p>
+              <strong>Type:</strong> {selectedSuggestion.type}
+            </p>
+
+            <p>
+              <strong>Description:</strong> {selectedSuggestion.description}
+            </p>
+
+            {selectedSuggestion.location && (
+              <p>
+                <strong>Location:</strong> {selectedSuggestion.location}
+              </p>
+            )}
+
+            {selectedSuggestion.imageUrl && (
+              <img
+                src={getImageUrl(selectedSuggestion.imageUrl)}
+                alt="suggestion"
+                className="modal-image"
+              />
+            )}
+
+            <button
+              className="close-modal"
+              onClick={() => setSelectedSuggestion(null)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
-
     </div>
   );
 }
-
-export default AdminSupport;

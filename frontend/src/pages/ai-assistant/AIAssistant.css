@@ -16,7 +16,7 @@
 }
 
 /* =====================
-   CHAT CONTAINER (FIXED)
+   CHAT CONTAINER
 ===================== */
 
 .chat-wrapper {
@@ -24,7 +24,6 @@
   max-width: 950px;
   height: 85vh;
 
-  /* ✅ LIGHT GLASS (not too transparent) */
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
 
@@ -73,7 +72,7 @@
 }
 
 /* =====================
-   MESSAGES (FIXED)
+   MESSAGES
 ===================== */
 
 .chat-messages {
@@ -85,7 +84,6 @@
   flex-direction: column;
   gap: 12px;
 
-  /* ❌ REMOVE DARK BACKGROUND */
   background: transparent;
 }
 
@@ -97,24 +95,37 @@
 .ai-message {
   padding: 12px 18px;
   border-radius: 20px;
-  max-width: 65%;
+
   font-size: 14px;
+  line-height: 1.6;
+
+  /* ✅ Important: preserves itinerary line breaks */
+  white-space: pre-line;
+
+  /* ✅ Prevents very long text from breaking layout */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-/* USER */
+/* USER MESSAGE */
 
 .user-message {
   align-self: flex-end;
+
+  max-width: 65%;
+
   background: linear-gradient(135deg, #e10600, #8c0000);
   color: white;
 }
 
-/* AI */
+/* AI MESSAGE */
 
 .ai-message {
   align-self: flex-start;
 
-  /* ✅ CLEAN WHITE BUBBLE */
+  /* ✅ Wider because AI answers can be long */
+  max-width: 80%;
+
   background: white;
   color: #333;
 
@@ -133,7 +144,6 @@
   display: flex;
   align-items: center;
 
-  /* ✅ SOLID CLEAN INPUT */
   background: white;
   border-radius: 40px;
   padding: 8px 15px;
@@ -153,9 +163,11 @@
 .input-card button {
   background: linear-gradient(135deg, #e10600, #8c0000);
   border: none;
+
   width: 42px;
   height: 42px;
   border-radius: 50%;
+
   color: white;
   cursor: pointer;
 
@@ -168,4 +180,59 @@
 
 .input-card button:hover {
   transform: scale(1.1);
+}
+
+/* =====================
+   SCROLLBAR
+===================== */
+
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.25);
+  border-radius: 20px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.35);
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+
+@media (max-width: 768px) {
+  .chat-wrapper {
+    width: 95%;
+    height: 90vh;
+    border-radius: 20px;
+  }
+
+  .chat-header {
+    padding: 15px 18px;
+  }
+
+  .logo h1 {
+    font-size: 1rem;
+  }
+
+  .ai-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .user-message,
+  .ai-message {
+    max-width: 85%;
+    font-size: 13px;
+  }
+
+  .chat-messages {
+    padding: 15px;
+  }
 }

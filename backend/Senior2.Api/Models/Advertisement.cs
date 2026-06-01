@@ -1,16 +1,14 @@
 ﻿namespace Senior2.Api.Models
 {
-    // Domain/Entities/Advertisement.cs
     using System.ComponentModel.DataAnnotations;
-   
 
     [DateRange(nameof(StartDateUtc), nameof(EndDateUtc))]
     public class Advertisement
     {
         public int Id { get; set; }
 
-        [Required]
-        public int PlaceId { get; set; }
+        // Place is now optional because the ad can be created using only an uploaded image
+        public int? PlaceId { get; set; }
 
         [Required]
         public DateTimeOffset StartDateUtc { get; set; }
@@ -27,6 +25,8 @@
         [StringLength(300)]
         public string? AdminNote { get; set; }
 
+        public string? ImageUrl { get; set; }
+
         public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
         public DateTimeOffset? UpdatedAtUtc { get; set; }
@@ -34,7 +34,7 @@
         [Timestamp]
         public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 
-        public Place Place { get; set; } = null!;
+        // Nullable because custom ads may not be linked to a place
+        public Place? Place { get; set; }
     }
-
 }

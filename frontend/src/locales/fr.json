@@ -6,7 +6,7 @@
     "feed": "Fil",
     "experiences": "Expériences",
     "recommendations": "Recommandations",
-    "itinerary": "Itinéraire intelligent",
+    "itinerary": "Générateur de voyages",
     "ai": "Assistant IA",
     "logout": "Déconnexion",
     "login": "Connexion"
@@ -541,6 +541,53 @@
   "success": "✔ Message envoyé avec succès !",
   "error": "❌ Échec de l'envoi du message",
   "direct": "Ou contactez-nous directement par email :"
+},
+"help": {
+  "back": "Retour à l'accueil",
+  "title": "Comment pouvons-nous vous aider ?",
+  "subtitle": "Trouvez des réponses, contactez le support ou signalez un problème.",
+
+  "cards": {
+    "contact": "Contacter le support",
+    "contactText": "Envoyez-nous vos questions et notre équipe vous aidera.",
+    "faq": "FAQ",
+    "faqText": "Trouvez des réponses rapides aux questions fréquentes.",
+    "report": "Signaler un problème",
+    "reportText": "Informez-nous de tout problème rencontré sur la plateforme.",
+    "ai": "Assistant IA",
+    "aiText": "Utilisez notre assistant IA pour obtenir de l'aide et des recommandations."
+  },
+
+  "faq": {
+    "title": "Questions fréquentes",
+    "q1": "Comment créer un itinéraire intelligent ?",
+    "a1": "Allez à la page Smart Itinerary, entrez les détails de votre voyage, et le système générera un plan.",
+    "q2": "Puis-je utiliser la plateforme sans me connecter ?",
+    "a2": "Oui, vous pouvez explorer certaines fonctionnalités en tant qu'invité, mais d'autres nécessitent une connexion.",
+    "q3": "Comment contacter le support ?",
+    "a3": "Vous pouvez remplir le formulaire de contact sur cette page.",
+    "q4": "Puis-je enregistrer mes lieux favoris ?",
+    "a4": "Oui, les utilisateurs connectés peuvent enregistrer des lieux dans leurs favoris.",
+    "q5": "La plateforme prend-elle en charge plusieurs langues ?",
+    "a5": "Oui, la plateforme prend en charge l'anglais, l'arabe et le français.",
+    "q6": "Puis-je signaler un problème ?",
+    "a6": "Oui, vous pouvez signaler un problème via le formulaire de support.",
+    "q7": "Comment l'assistant IA peut-il m'aider ?",
+    "a7": "L'assistant IA vous aide à découvrir des lieux, planifier des voyages et obtenir des suggestions touristiques au Liban.",
+    "q8": "Les recommandations sont-elles personnalisées ?",
+    "a8": "Oui, les recommandations peuvent être basées sur vos préférences, intérêts et activités choisies."
+  },
+
+  "contactTitle": "Contactez-nous",
+  "name": "Votre nom",
+  "email": "Votre email",
+  "subject": "Sujet",
+  "message": "Message",
+  "send": "Envoyer",
+  "sending": "Envoi...",
+  "success": "Votre message a été envoyé avec succès.",
+  "error": "Une erreur s'est produite. Veuillez réessayer.",
+  "direct": "Vous pouvez aussi nous contacter directement à"
 }
 
 

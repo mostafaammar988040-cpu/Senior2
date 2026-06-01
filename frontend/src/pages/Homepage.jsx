@@ -109,14 +109,17 @@ export default function Home() {
                     <h3>{title}</h3>
                     <p>{description}</p>
 
-                    <button
-                      onClick={() => {
-                        if (place.id || ad.placeId) {
-                          navigate(`/places/${place.id || ad.placeId}`);
-                        }
-                      }}
-                    >
-                    </button>
+                   <button
+  onClick={() => {
+    const searchQuery = `${title} Lebanon`;
+    window.open(
+      `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
+      "_blank"
+    );
+  }}
+>
+  Discover Now
+</button>
                   </div>
                 </div>
               );

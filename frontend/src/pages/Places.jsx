@@ -5,7 +5,6 @@ import api from "../services/api";
 import "../styles/Places.css";
 
 export default function Places() {
-
   const { t } = useTranslation();
 
   const [places, setPlaces] = useState([]);
@@ -38,56 +37,55 @@ export default function Places() {
     setWeather(null);
     setLoadingWeather(true);
 
-    const city = selectedPlace.location + " Lebanon";
+    const location = selectedPlace.location || selectedPlace.name || "Beirut";
 
-    api.get(`/weather/${city}`)
-      .then(res => setWeather(res.data))
-      .catch(() => setWeather(null))
-      .finally(() => setLoadingWeather(false));
-
+    api
+      .get(`/weather/${encodeURIComponent(location)}`)
+      .then((res) => {
+        console.log("Weather response:", res.data);
+        setWeather(res.data);
+      })
+      .catch((err) => {
+        console.error("Weather error:", err);
+        setWeather(null);
+      })
+      .finally(() => {
+        setLoadingWeather(false);
+      });
   }, [selectedPlace]);
 
-  // FETCH PLACES
   useEffect(() => {
-
     let url = "/places?";
 
     if (category) url += `category=${category}&`;
     if (activityType) url += `activityType=${activityType}`;
 
-    api.get(url)
-      .then(res => {
-        setPlaces(res.data);
-        setFiltered(res.data);
-      });
-
+    api.get(url).then((res) => {
+      setPlaces(res.data);
+      setFiltered(res.data);
+    });
   }, [category, activityType]);
 
-  // SEARCH + FILTER
   useEffect(() => {
-
     let result = places;
 
     if (search) {
-      result = result.filter(p =>
+      result = result.filter((p) =>
         p.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (cityFilter) {
-      result = result.filter(p =>
+      result = result.filter((p) =>
         p.location.toLowerCase().includes(cityFilter.toLowerCase())
       );
     }
 
     setFiltered(result);
-
   }, [search, cityFilter, places]);
 
-  // REVIEWS
   const loadReviews = (placeId) => {
-    api.get(`/reviews/${placeId}`)
-      .then(res => setReviews(res.data));
+    api.get(`/reviews/${placeId}`).then((res) => setReviews(res.data));
   };
 
   const submitReview = async () => {
@@ -100,24 +98,21 @@ export default function Places() {
       placeId: selectedPlace.id,
       userId: user.id,
       rating,
-      comment
+      comment,
     });
 
     setComment("");
     loadReviews(selectedPlace.id);
   };
 
-  // FAVORITES
   useEffect(() => {
     if (!user || !selectedPlace) return;
 
-    api.get(`/favorites/${user.id}`)
-      .then(res => {
-        const exists = res.data.some(p => p.id === selectedPlace.id);
-        setIsFavorite(exists);
-      });
-
-  }, [selectedPlace]);
+    api.get(`/favorites/${user.id}`).then((res) => {
+      const exists = res.data.some((p) => p.id === selectedPlace.id);
+      setIsFavorite(exists);
+    });
+  }, [selectedPlace, user]);
 
   const handleFavorite = async () => {
     if (!user) {
@@ -127,10 +122,14 @@ export default function Places() {
 
     try {
       if (!isFavorite) {
-        await api.post(`/favorites/add?userId=${user.id}&placeId=${selectedPlace.id}`);
+        await api.post(
+          `/favorites/add?userId=${user.id}&placeId=${selectedPlace.id}`
+        );
         setIsFavorite(true);
       } else {
-        await api.delete(`/favorites/remove?userId=${user.id}&placeId=${selectedPlace.id}`);
+        await api.delete(
+          `/favorites/remove?userId=${user.id}&placeId=${selectedPlace.id}`
+        );
         setIsFavorite(false);
       }
     } catch (err) {
@@ -140,7 +139,6 @@ export default function Places() {
 
   return (
     <div className="places-page">
-
       <button className="back-btn" onClick={() => navigate(-1)}>
         ← {t("places.back")}
       </button>
@@ -150,9 +148,7 @@ export default function Places() {
         <p>{t("places.subtitle")}</p>
       </div>
 
-      {/* SEARCH */}
       <div className="places-controls">
-
         <input
           placeholder={t("places.search")}
           value={search}
@@ -164,13 +160,10 @@ export default function Places() {
           value={cityFilter}
           onChange={(e) => setCityFilter(e.target.value)}
         />
-
       </div>
 
-      {/* GRID */}
       <div className="places-grid">
-
-        {filtered.map(place => (
+        {filtered.map((place) => (
           <div
             key={place.id}
             className="place-card"
@@ -179,9 +172,7 @@ export default function Places() {
               loadReviews(place.id);
             }}
           >
-
             <div className="place-image-wrapper">
-
               <img
                 src={`${import.meta.env.VITE_API_BASE_URL}${place.imageUrl}`}
                 alt={place.name}
@@ -192,31 +183,36 @@ export default function Places() {
                   {t("places.view")}
                 </button>
               </div>
-
             </div>
 
             <div className="place-content">
               <h3>{place.name}</h3>
               <p>{place.location}</p>
             </div>
-
           </div>
         ))}
-
       </div>
 
-      {/* MODAL */}
       {selectedPlace && (
-
-        <div className="place-modal-overlay" onClick={() => setSelectedPlace(null)}>
-
-          <div className="place-modal-card" onClick={(e) => e.stopPropagation()}>
-
-            <button className="close-btn" onClick={() => setSelectedPlace(null)}>✕</button>
+        <div
+          className="place-modal-overlay"
+          onClick={() => setSelectedPlace(null)}
+        >
+          <div
+            className="place-modal-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close-btn"
+              onClick={() => setSelectedPlace(null)}
+            >
+              ✕
+            </button>
 
             <img
               className="modal-image"
               src={`${import.meta.env.VITE_API_BASE_URL}${selectedPlace.imageUrl}`}
+              alt={selectedPlace.name}
             />
 
             <h2>{selectedPlace.name}</h2>
@@ -226,23 +222,44 @@ export default function Places() {
             </p>
 
             <div className="modal-meta">
-              <p><strong>{t("places.location")}:</strong> {selectedPlace.location}</p>
+              <p>
+                <strong>{t("places.location")}:</strong>{" "}
+                {selectedPlace.location}
+              </p>
 
               {loadingWeather && <p>{t("places.loadingWeather")}</p>}
 
-              {weather && (
+              {weather?.success === true && (
                 <div className="weather-box">
-                  <img src={weather.icon} alt="weather" />
-                  <span>{weather.temp}°C — {weather.condition}</span>
+                  {weather.icon && (
+                    <img
+                      src={weather.icon}
+                      alt={weather.condition || "weather"}
+                    />
+                  )}
+
+                  <span>
+                    {Math.round(weather.temp)}°C — {weather.condition}
+                  </span>
+
+                  <small className="weather-credit">
+                    Weather data by AccuWeather
+                  </small>
                 </div>
+              )}
+
+              {weather?.success === false && (
+                <p className="weather-error">
+                  Weather unavailable for this location.
+                </p>
               )}
             </div>
 
-            {/* ACTIONS */}
             <div className="modal-actions">
-
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPlace.location)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  selectedPlace.location
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="maps-btn"
@@ -251,7 +268,9 @@ export default function Places() {
               </a>
 
               <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name + " booking Lebanon")}`}
+                href={`https://www.google.com/search?q=${encodeURIComponent(
+                  selectedPlace.name + " booking Lebanon"
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-btn"
@@ -260,7 +279,9 @@ export default function Places() {
               </a>
 
               <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(selectedPlace.name + " contact phone Lebanon")}`}
+                href={`https://www.google.com/search?q=${encodeURIComponent(
+                  selectedPlace.name + " contact phone Lebanon"
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-btn"
@@ -271,51 +292,43 @@ export default function Places() {
               <button
                 className="add-trip-btn"
                 onClick={async () => {
-
                   const user = JSON.parse(localStorage.getItem("user"));
+
+                  if (!user) {
+                    alert(t("places.login"));
+                    return;
+                  }
 
                   await api.post(
                     `/trips/add-place?userId=${user.id}&placeId=${selectedPlace.id}`
                   );
 
                   alert(t("places.addedTrip"));
-
                 }}
               >
                 {t("places.addTrip")}
               </button>
 
-              <button
-                className="favorite-btn"
-                onClick={handleFavorite}
-              >
-                {isFavorite
-                  ? t("places.removeFav")
-                  : t("places.addFav")}
+              <button className="favorite-btn" onClick={handleFavorite}>
+                {isFavorite ? t("places.removeFav") : t("places.addFav")}
               </button>
-
             </div>
 
-            {/* REVIEWS */}
             <div className="reviews-section">
-
               <h3>{t("places.reviews")}</h3>
 
-              {reviews.map(r => (
+              {reviews.map((r) => (
                 <div key={r.id} className="review-card">
-
                   <div className="review-top">
                     <strong>{r.user}</strong>
                     <span>{"⭐".repeat(r.rating)}</span>
                   </div>
 
                   <p>{r.comment}</p>
-
                 </div>
               ))}
 
               <div className="review-form">
-
                 <select
                   value={rating}
                   onChange={(e) => setRating(Number(e.target.value))}
@@ -336,17 +349,11 @@ export default function Places() {
                 <button onClick={submitReview}>
                   {t("places.submit")}
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }

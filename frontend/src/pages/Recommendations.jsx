@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import "../styles/Recommendations.css";
@@ -9,7 +8,6 @@ export default function Recommendations() {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     api.get("/recommendations")
@@ -17,6 +15,21 @@ export default function Recommendations() {
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
+
+  const openInGoogleMaps = (place) => {
+    const location = place.location || place.city || "Lebanon";
+
+    let query = "";
+
+    if (place.lat && place.lng) {
+      query = `${place.lat},${place.lng}`;
+    } else {
+      query = `${place.name} ${location}`;
+    }
+
+const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    window.open(googleUrl, "_blank", "noopener,noreferrer");
+  };
 
   if (loading) {
     return (
@@ -48,13 +61,11 @@ export default function Recommendations() {
                 <div
                   key={i}
                   className="rec-card"
-                  onClick={() =>
-                    navigate("/place-details", { state: place })
-                  }
+                  onClick={() => openInGoogleMaps(place)}
                 >
                   <img
-                    src={place.imageUrl}
-                    alt={place.name}
+                    src={place.imageUrl || "/images/default-place.jpg"}
+                    alt={place.name || "Recommended place"}
                     loading="lazy"
                     onError={(e) => {
                       e.target.src = "/images/default-place.jpg";
@@ -63,7 +74,11 @@ export default function Recommendations() {
 
                   <div className="rec-info">
                     <h3>{place.name}</h3>
-                    <p>{place.city}</p>
+                    <p>{place.location || place.city || "Lebanon"}</p>
+
+                    {place.rating && (
+                      <span className="rec-rating">⭐ {place.rating}</span>
+                    )}
                   </div>
                 </div>
               ))

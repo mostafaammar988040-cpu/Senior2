@@ -7,6 +7,7 @@ namespace Senior2.Api.Controllers
 {
     [ApiController]
     [Route("api/recommendations")]
+    [Authorize]
     public class RecommendationController : ControllerBase
     {
         private readonly RecommendationService _service;
@@ -17,10 +18,14 @@ namespace Senior2.Api.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
         public async Task<IActionResult> GetRecommendations()
         {
-            int userId = 1; // temporary test
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+                return Unauthorized("User ID not found in token");
+
+            int userId = int.Parse(userIdClaim.Value);
 
             var recommendations = await _service.GetRecommendations(userId);
 

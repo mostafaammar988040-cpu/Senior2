@@ -122,9 +122,30 @@ function Login() {
                     navigate("/preferences");
 
                   } catch (err) {
-                    console.error(err);
-                    alert(t("login.googleError"));
-                  }
+  console.error("Google login error:", err);
+
+  if (err.response?.status === 403) {
+    alert(
+      err.response.data?.message ||
+      "Your account has been blocked by the administrator."
+    );
+    return;
+  }
+
+  if (err.response?.status === 401) {
+    if (typeof err.response.data === "string") {
+      alert(err.response.data);
+      return;
+    }
+
+    if (err.response.data?.message) {
+      alert(err.response.data.message);
+      return;
+    }
+  }
+
+  alert(t("login.googleError"));
+}
                 }}
                 onError={() => {
                   alert(t("login.googleError"));

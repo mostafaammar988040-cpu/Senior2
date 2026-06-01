@@ -1,19 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../services/api";
 import "../styles/navbar.css";
 import { FaUserCircle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
-
-  const { t, i18n } = useTranslation(); // 🔥 added i18n for language switch
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
+
+  const firstNotificationLoad = useRef(true);
+  const previousUnreadCount = useRef(0);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -40,34 +42,67 @@ export default function Navbar() {
   // LOAD NOTIFICATIONS
   // ==========================
   useEffect(() => {
+    if (!isLoggedIn) {
+      setNotifications([]);
+      return;
+    }
 
-    if (!isLoggedIn) return;
+    const fetchNotifications = async () => {
+      try {
+        const res = await api.get("/notifications/me");
 
-    const user = JSON.parse(localStorage.getItem("user"));
+        const data = res.data;
+        setNotifications(data);
 
-    api.get(`/notifications/${user.id}`)
-      .then(res => setNotifications(res.data));
+        const unreadCount = data.filter(n => !n.isRead).length;
 
+        if (firstNotificationLoad.current) {
+          previousUnreadCount.current = unreadCount;
+          firstNotificationLoad.current = false;
+          return;
+        }
+
+        // sound optional: works only if you add public/sounds/notification.mp3
+        if (unreadCount > previousUnreadCount.current) {
+          const audio = new Audio("/sounds/notification.mp3");
+          audio.play().catch(() => {
+            console.log("Notification sound blocked until user interacts with page.");
+          });
+        }
+
+        previousUnreadCount.current = unreadCount;
+      } catch (err) {
+        console.error("Navbar notifications error:", err);
+      }
+    };
+
+    fetchNotifications();
+
+    const interval = setInterval(fetchNotifications, 10000);
+
+    return () => clearInterval(interval);
   }, [isLoggedIn]);
 
   // ==========================
   // READ NOTIFICATION
   // ==========================
   const openNotification = async (notification) => {
-
     setSelectedNotification(notification);
 
     if (!notification.isRead) {
+      try {
+        await api.put(`/notifications/read/${notification.id}`);
 
-      await api.put(`/notifications/read/${notification.id}`);
-
-      setNotifications(prev =>
-        prev.map(n =>
-          n.id === notification.id
-            ? { ...n, isRead: true }
-            : n
-        )
-      );
+        setNotifications(prev =>
+          prev.map(n =>
+            n.id === notification.id
+              ? { ...n, isRead: true }
+              : n
+          )
+        );
+      } catch (err) {
+        console.error("Read notification error:", err);
+      }
     }
   };
 
@@ -77,7 +112,6 @@ export default function Navbar() {
   // LOGOUT
   // ==========================
   const handleLogout = () => {
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
@@ -87,7 +121,7 @@ export default function Navbar() {
   };
 
   // ==========================
-  // LANGUAGE SWITCH (🔥 NEW)
+  // LANGUAGE SWITCH
   // ==========================
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -119,7 +153,7 @@ export default function Navbar() {
           </>
         )}
 
-        {/* 🔔 Notifications */}
+        {/* NOTIFICATIONS */}
         {isLoggedIn && (
           <div className="notification-wrapper">
             <span
@@ -142,8 +176,13 @@ export default function Navbar() {
                 )}
 
                 {notifications.map(n => (
-                  <div key={n.id} onClick={() => openNotification(n)}>
+                  <div
+                    key={n.id}
+                    className={`notification-dropdown-item ${n.isRead ? "read" : "unread"}`}
+                    onClick={() => openNotification(n)}
+                  >
                     <p>{n.message}</p>
+                    <small>{new Date(n.createdAt).toLocaleString()}</small>
                   </div>
                 ))}
               </div>
@@ -172,8 +211,6 @@ export default function Navbar() {
             )}
           </Link>
         )}
-
-      
 
       </div>
 

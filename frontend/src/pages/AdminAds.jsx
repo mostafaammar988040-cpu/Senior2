@@ -20,7 +20,6 @@ const mapStatus = (status) => {
 };
 
 const initialCreateForm = {
-  placeId: "",
   startDateUtc: "",
   endDateUtc: "",
   priority: "",
@@ -29,7 +28,6 @@ const initialCreateForm = {
 
 const AdminAds = () => {
   const [ads, setAds] = useState([]);
-  const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState({});
@@ -39,6 +37,9 @@ const AdminAds = () => {
   const [createError, setCreateError] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
   const token = localStorage.getItem("token");
 
   const authHeaders = token
@@ -46,6 +47,16 @@ const AdminAds = () => {
         Authorization: `Bearer ${token}`,
       }
     : {};
+
+  const getFullImageUrl = (imageUrl) => {
+    if (!imageUrl) return "https://via.placeholder.com/400x250";
+
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
+    }
+
+    return `https://localhost:7090${imageUrl}`;
+  };
 
   const fetchAds = async () => {
     try {
@@ -72,30 +83,9 @@ const AdminAds = () => {
     }
   };
 
-  const fetchPlaces = async () => {
-    try {
-      const { data } = await axios.get(`${API_BASE}/places`, {
-        headers: authHeaders,
-      });
-
-      console.log("Places response:", data);
-
-      if (Array.isArray(data)) {
-        setPlaces(data);
-      } else if (data && Array.isArray(data.$values)) {
-        setPlaces(data.$values);
-      } else {
-        setPlaces([]);
-      }
-    } catch (err) {
-      console.log("Failed to load places:", err);
-      setPlaces([]);
-    }
-  };
-
   useEffect(() => {
     fetchAds();
-    fetchPlaces();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sortedAds = useMemo(() => {
@@ -131,25 +121,53 @@ const AdminAds = () => {
     setCreateForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      setImageFile(null);
+      setImagePreview("");
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      setCreateError("Please upload an image file only");
+      return;
+    }
+
+    setCreateError("");
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
   const openCreateModal = () => {
     setCreateError("");
     setCreateForm(initialCreateForm);
+    setImageFile(null);
+    setImagePreview("");
     setIsCreateModalOpen(true);
   };
 
   const closeCreateModal = () => {
     if (isCreating) return;
+
     setIsCreateModalOpen(false);
     setCreateError("");
     setCreateForm(initialCreateForm);
+    setImageFile(null);
+    setImagePreview("");
   };
 
   const handleCreateAd = async (e) => {
     e.preventDefault();
     setCreateError("");
 
+    if (!imageFile) {
+      setCreateError("Please upload an advertisement image");
+      return;
+    }
+
     if (
-      !createForm.placeId ||
       !createForm.startDateUtc ||
       !createForm.endDateUtc ||
       !createForm.priority ||
@@ -167,19 +185,28 @@ const AdminAds = () => {
     try {
       setIsCreating(true);
 
-      await axios.post(
-        `${API_BASE}/Advertisement`,
-        {
-          placeId: Number(createForm.placeId),
-          startDateUtc: new Date(createForm.startDateUtc).toISOString(),
-          endDateUtc: new Date(createForm.endDateUtc).toISOString(),
-          priority: Number(createForm.priority),
-          adminNote: createForm.adminNote.trim(),
-        },
-        {
-          headers: authHeaders,
-        }
+      const formData = new FormData();
+
+      formData.append(
+        "startDateUtc",
+        new Date(createForm.startDateUtc).toISOString()
       );
+
+      formData.append(
+        "endDateUtc",
+        new Date(createForm.endDateUtc).toISOString()
+      );
+
+      formData.append("priority", Number(createForm.priority));
+      formData.append("adminNote", createForm.adminNote.trim());
+      formData.append("imageFile", imageFile);
+
+      await axios.post(`${API_BASE}/Advertisement`, formData, {
+        headers: {
+          ...authHeaders,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       closeCreateModal();
       await fetchAds();
@@ -198,6 +225,7 @@ const AdminAds = () => {
 
   const formatDate = (value) => {
     if (!value) return "-";
+
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "-";
 
@@ -208,12 +236,12 @@ const AdminAds = () => {
     });
   };
 
-  const getPlaceImage = (placeId) => {
-    const selectedPlace = places.find((p) => String(p.id) === String(placeId));
-    return (
-      selectedPlace?.imageUrl ||
-      `https://picsum.photos/seed/place-${placeId}/120/80`
-    );
+  const getAdImage = (ad) => {
+    if (ad.imageUrl) {
+      return getFullImageUrl(ad.imageUrl);
+    }
+
+    return "https://via.placeholder.com/400x250";
   };
 
   return (
@@ -252,7 +280,7 @@ const AdminAds = () => {
               <thead>
                 <tr>
                   <th>Image</th>
-                  <th>Place</th>
+                  <th>Advertisement</th>
                   <th>Start</th>
                   <th>End</th>
                   <th>Priority</th>
@@ -280,12 +308,15 @@ const AdminAds = () => {
                         <td>
                           <img
                             className="ad-image"
-                            src={getPlaceImage(ad.placeId)}
-                            alt={ad.placeName || "Place"}
+                            src={getAdImage(ad)}
+                            alt={ad.adminNote || "Advertisement"}
                           />
                         </td>
 
-                        <td className="place-name">{ad.placeName || "-"}</td>
+                        <td className="place-name">
+                          {ad.placeName || ad.adminNote || "Custom Advertisement"}
+                        </td>
+
                         <td>{formatDate(ad.startDateUtc)}</td>
                         <td>{formatDate(ad.endDateUtc)}</td>
                         <td>{ad.priority ?? 0}</td>
@@ -336,36 +367,22 @@ const AdminAds = () => {
 
             <form onSubmit={handleCreateAd} className="create-ad-form">
               <div className="create-ad-field">
-                <label>Place</label>
-                <select
-                  name="placeId"
-                  value={createForm.placeId}
-                  onChange={handleCreateInputChange}
+                <label>Advertisement Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
                   required
-                >
-                  <option value="">Select a place</option>
-                  {Array.isArray(places) && places.length > 0 ? (
-                    places.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>No places available</option>
-                  )}
-                </select>
+                />
+                <small>
+                  Upload the image that will be displayed as the sponsored ad.
+                </small>
               </div>
 
-              {createForm.placeId && (
+              {imagePreview && (
                 <div className="place-preview">
-                  <img
-                    src={
-                      places.find(
-                        (p) => String(p.id) === String(createForm.placeId)
-                      )?.imageUrl || "https://via.placeholder.com/400"
-                    }
-                    alt="Preview"
-                  />
+                  <p className="preview-label">Ad Image Preview</p>
+                  <img src={imagePreview} alt="Ad preview" />
                 </div>
               )}
 
@@ -409,16 +426,14 @@ const AdminAds = () => {
                 <input
                   type="text"
                   name="adminNote"
-                  placeholder="Note"
+                  placeholder="Advertisement title or note"
                   value={createForm.adminNote}
                   onChange={handleCreateInputChange}
                   required
                 />
               </div>
 
-              {createError && (
-                <p className="create-ad-error">{createError}</p>
-              )}
+              {createError && <p className="create-ad-error">{createError}</p>}
 
               <div className="create-ad-actions">
                 <button

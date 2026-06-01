@@ -50,6 +50,7 @@ namespace Senior2.Api.Controllers
 
             return Ok(places);
         }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreatePlace(
@@ -58,7 +59,6 @@ namespace Senior2.Api.Controllers
         {
             string imageUrl = null;
 
-            // 🔥 Save image
             if (image != null)
             {
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
@@ -88,6 +88,7 @@ namespace Senior2.Api.Controllers
 
             return Ok(place);
         }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePlace(int id)

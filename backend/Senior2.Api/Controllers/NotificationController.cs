@@ -1,41 +1,90 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Senior2.Api.Data;
-using Microsoft.AspNetCore.Authorization;
-[ApiController]
-[Route("api/notifications")]
-public class NotificationController : ControllerBase
+using System.Security.Claims;
+
+namespace Senior2.Api.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public NotificationController(AppDbContext context)
+    [ApiController]
+    [Route("api/notifications")]
+    [Authorize]
+    public class NotificationController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUserNotifications(int userId)
-    {
-        var notifications = await _context.Notifications
-            .Where(n => n.UserId == userId)
-            .OrderByDescending(n => n.CreatedAt)
-            .ToListAsync();
+        public NotificationController(AppDbContext context)
+        {
+            _context = context;
+        }
 
-        return Ok(notifications);
-    }
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyNotifications()
+        {
+            var userId = GetUserId();
 
-    [HttpPut("read/{id}")]
-    public async Task<IActionResult> MarkAsRead(int id)
-    {
-        var notification = await _context.Notifications.FindAsync(id);
+            var notifications = await _context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
 
-        if (notification == null)
-            return NotFound();
+            return Ok(notifications);
+        }
 
-        notification.IsRead = true;
+        [HttpGet("unread-count")]
+        public async Task<IActionResult> GetUnreadCount()
+        {
+            var userId = GetUserId();
 
-        await _context.SaveChangesAsync();
+            var count = await _context.Notifications
+                .CountAsync(n => n.UserId == userId && !n.IsRead);
 
-        return Ok();
+            return Ok(new
+            {
+                count
+            });
+        }
+
+        [HttpPut("read/{id}")]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            var userId = GetUserId();
+
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
+
+            if (notification == null)
+                return NotFound();
+
+            notification.IsRead = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("read-all")]
+        public async Task<IActionResult> MarkAllAsRead()
+        {
+            var userId = GetUserId();
+
+            var notifications = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        private int GetUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        }
     }
 }

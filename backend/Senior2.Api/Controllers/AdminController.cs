@@ -163,7 +163,7 @@ namespace Senior2.Api.Controllers
             {
                 await _emailService.SendEmailAsync(
                     user.Email,
-                    "Warning بشأن السلوك على المنصة",
+                    "Warning considering your behavior on the website",
                     $@"
             <h2>Hello {user.FirstName},</h2>
             <p>Your account has been flagged for unethical behavior on the platform.</p>

@@ -15,9 +15,7 @@ namespace Senior2.Api.Controllers
             _context = context;
         }
 
-        // ==========================
-        // ADD FAVORITE
-        // ==========================
+        
         [HttpPost("add")]
         public async Task<IActionResult> AddFavorite(int userId, int placeId)
         {
@@ -39,9 +37,7 @@ namespace Senior2.Api.Controllers
             return Ok();
         }
 
-        // ==========================
-        // REMOVE FAVORITE
-        // ==========================
+    
         [HttpDelete("remove")]
         public async Task<IActionResult> RemoveFavorite(int userId, int placeId)
         {
@@ -57,9 +53,7 @@ namespace Senior2.Api.Controllers
             return Ok();
         }
 
-        // ==========================
-        // GET USER FAVORITES
-        // ==========================
+      
         [HttpGet("{userId}")]
         public IActionResult GetFavorites(int userId)
         {

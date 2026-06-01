@@ -671,3 +671,37 @@
   object-fit: cover;
   border-radius: 8px;
 }
+.create-ad-field input[type="file"] {
+  padding: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.create-ad-field small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.78rem;
+}
+
+.preview-label {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.place-preview {
+  margin-top: 8px;
+}
+
+.place-preview img {
+  width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}

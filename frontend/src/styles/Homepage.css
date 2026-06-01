@@ -438,101 +438,180 @@ footer {
   }
 }
 /* =====================
-   SPONSORED ADS SECTION
+   PREMIUM SPONSORED ADS SECTION
 ===================== */
 
 .ads-section {
-  padding: 60px;
+  padding: 70px 60px;
   background: linear-gradient(135deg, #f8fbff, #eef3ff);
 }
 
 .ads-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+  align-items: end;
+  margin-bottom: 28px;
 }
 
 .ads-header h2 {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 900;
   color: #0f2027;
-  margin: 0;
+  margin: 8px 0 0;
+  letter-spacing: 1px;
 }
 
-.ads-header span {
+.ads-header p {
+  margin: 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.ads-label {
+  display: inline-block;
+  width: fit-content;
   background: rgba(15, 32, 39, 0.08);
   color: #2c5364;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 
+/* Row layout */
 .ads-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  display: flex;
+  gap: 26px;
+  overflow-x: auto;
+  padding: 8px 4px 18px;
+  scroll-snap-type: x mandatory;
 }
 
+.ads-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ads-row::-webkit-scrollbar-thumb {
+  background: rgba(15, 32, 39, 0.25);
+  border-radius: 999px;
+}
+
+/* Card */
 .ad-card {
-  position: relative;
+  min-width: 360px;
+  max-width: 420px;
   background: white;
-  border-radius: 22px;
+  border-radius: 26px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
   transition: 0.3s ease;
+  scroll-snap-align: start;
 }
 
 .ad-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.18);
+  transform: translateY(-7px);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.2);
 }
 
-.ad-card img {
+/* Image */
+.ad-image-wrap {
+  position: relative;
+  height: 230px;
+  overflow: hidden;
+}
+
+.ad-image-wrap img {
   width: 100%;
-  height: 210px;
+  height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+/* dark gradient on image */
+.ad-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05),
+    rgba(0,0,0,0.55)
+  );
 }
 
 .ad-badge {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  background: linear-gradient(135deg, #0f2027, #2c5364);
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  background: rgba(15, 32, 39, 0.92);
   color: white;
-  padding: 7px 12px;
-  border-radius: 20px;
+  padding: 7px 13px;
+  border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 800;
 }
 
+/* Content */
 .ad-content {
-  padding: 20px;
+  padding: 22px;
   text-align: left;
 }
 
 .ad-content h3 {
   margin: 0 0 8px;
   color: #0f2027;
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   font-weight: 900;
 }
 
 .ad-content p {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   color: #555;
   font-size: 0.95rem;
   line-height: 1.5;
 }
 
 .ad-content button {
-  width: 100%;
-  padding: 12px;
+  width: auto;
+  padding: 12px 22px;
   border: none;
-  border-radius: 14px;
+  border-radius: 999px;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
   font-weight: 800;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.ad-content button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .ads-section {
+    padding: 50px 20px;
+  }
+
+  .ads-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .ads-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .ad-card {
+    min-width: 85%;
+  }
+
+  .ad-image-wrap {
+    height: 200px;
+  }
 }

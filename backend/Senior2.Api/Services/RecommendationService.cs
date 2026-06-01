@@ -41,121 +41,246 @@ namespace Senior2.Api.Services
 
             if (pref != null && !string.IsNullOrWhiteSpace(pref.PreferencesJson))
             {
-                var prefs = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(
-                    pref.PreferencesJson,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                );
-
-                if (prefs != null)
+                try
                 {
-                    if (prefs.ContainsKey("activities") && prefs["activities"] != null)
-                        activityPrefs = prefs["activities"];
+                    var prefs = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(
+                        pref.PreferencesJson,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                    );
 
-                    if (prefs.ContainsKey("interests") && prefs["interests"] != null)
-                        interestPrefs = prefs["interests"];
-
-                    if (prefs.ContainsKey("food") && prefs["food"] != null)
-                        foodPrefs = prefs["food"];
+                    if (prefs != null)
+                    {
+                        activityPrefs = GetPreferenceList(prefs, "activities", "activity", "activityPrefs", "selectedActivities");
+                        interestPrefs = GetPreferenceList(prefs, "interests", "interest", "interestPrefs", "selectedInterests");
+                        foodPrefs = GetPreferenceList(prefs, "food", "foods", "foodPrefs", "cuisine", "cuisines");
+                    }
+                }
+                catch
+                {
+                    activityPrefs = new List<string>();
+                    interestPrefs = new List<string>();
+                    foodPrefs = new List<string>();
                 }
             }
 
-            var exploreLebanon = await GetGooglePlaces("top tourist attractions in Lebanon");
+            Console.WriteLine("===== USER RECOMMENDATION DEBUG =====");
+            Console.WriteLine($"User ID: {userId}");
+            Console.WriteLine($"Raw PreferencesJson: {pref?.PreferencesJson}");
+            Console.WriteLine($"Activities: {string.Join(", ", activityPrefs)}");
+            Console.WriteLine($"Interests: {string.Join(", ", interestPrefs)}");
+            Console.WriteLine($"Food: {string.Join(", ", foodPrefs)}");
+            Console.WriteLine("=====================================");
+
             result.Add(new
             {
                 title = "Explore Lebanon",
-                places = exploreLebanon
+                places = Personalize(await GetGooglePlaces("top tourist attractions in Lebanon"), userId, "Explore Lebanon")
             });
 
-            if (foodPrefs.Any(f => f.Contains("lebanese", StringComparison.OrdinalIgnoreCase)))
+            if (HasPreference(activityPrefs, "beach", "beaches", "sea", "swim", "summer", "coast", "coastal"))
             {
-                var lebaneseFood = await GetGooglePlaces("best lebanese restaurants in Lebanon");
-                result.Add(new
-                {
-                    title = "Lebanese Food Picks",
-                    places = lebaneseFood
-                });
-            }
-
-            if (activityPrefs.Any(a => a.Contains("hike", StringComparison.OrdinalIgnoreCase)))
-            {
-                var hiking = await GetGooglePlaces("best hiking places in Lebanon");
-                result.Add(new
-                {
-                    title = "Hiking Adventures",
-                    places = hiking
-                });
-            }
-
-            if (activityPrefs.Any(a =>
-                    a.Contains("beach", StringComparison.OrdinalIgnoreCase) ||
-                    a.Contains("swim", StringComparison.OrdinalIgnoreCase)))
-            {
-                var beaches = await GetGooglePlaces("best beaches in Lebanon");
                 result.Add(new
                 {
                     title = "Beach Escapes",
-                    places = beaches
+                    places = Personalize(await GetGooglePlaces("best beaches in Lebanon"), userId, "Beach Escapes")
+                });
+
+                result.Add(new
+                {
+                    title = "Coastal Restaurants",
+                    places = Personalize(await GetGooglePlaces("best seafood restaurants near beaches in Lebanon"), userId, "Coastal Restaurants")
+                });
+
+                result.Add(new
+                {
+                    title = "Seaside Stays",
+                    places = Personalize(await GetGooglePlaces("beach resorts and seaside guesthouses in Lebanon"), userId, "Seaside Stays")
                 });
             }
 
-            if (activityPrefs.Any(a => a.Contains("ski", StringComparison.OrdinalIgnoreCase)))
+            if (HasPreference(activityPrefs, "hike", "hiking", "trail", "nature", "mountain", "forest", "adventure"))
             {
-                var skiing = await GetGooglePlaces("best ski resorts in Lebanon");
+                result.Add(new
+                {
+                    title = "Hiking Adventures",
+                    places = Personalize(await GetGooglePlaces("best hiking trails in Lebanon"), userId, "Hiking Adventures")
+                });
+
+                result.Add(new
+                {
+                    title = "Mountain Villages",
+                    places = Personalize(await GetGooglePlaces("beautiful mountain villages in Lebanon"), userId, "Mountain Villages")
+                });
+
+                result.Add(new
+                {
+                    title = "Nature Guesthouses",
+                    places = Personalize(await GetGooglePlaces("guesthouses near nature reserves in Lebanon"), userId, "Nature Guesthouses")
+                });
+            }
+
+            if (HasPreference(activityPrefs, "ski", "snow", "winter", "skiing"))
+            {
                 result.Add(new
                 {
                     title = "Skiing Adventures",
-                    places = skiing
+                    places = Personalize(await GetGooglePlaces("best ski resorts in Lebanon"), userId, "Skiing Adventures")
+                });
+
+                result.Add(new
+                {
+                    title = "Mountain Stays",
+                    places = Personalize(await GetGooglePlaces("chalets and mountain hotels in Lebanon"), userId, "Mountain Stays")
+                });
+
+                result.Add(new
+                {
+                    title = "Cozy Winter Restaurants",
+                    places = Personalize(await GetGooglePlaces("cozy restaurants in Faraya Mzaar Lebanon"), userId, "Cozy Winter Restaurants")
                 });
             }
 
-            if (interestPrefs.Any(i => i.Contains("histor", StringComparison.OrdinalIgnoreCase)))
+            if (HasPreference(interestPrefs, "history", "historical", "heritage", "ancient", "old", "archaeology"))
             {
-                var historical = await GetGooglePlaces("historical sites in Lebanon");
                 result.Add(new
                 {
                     title = "Historical Treasures",
-                    places = historical
+                    places = Personalize(await GetGooglePlaces("historical sites in Lebanon"), userId, "Historical Treasures")
+                });
+
+                result.Add(new
+                {
+                    title = "Museums",
+                    places = Personalize(await GetGooglePlaces("best museums in Lebanon"), userId, "Museums")
+                });
+
+                result.Add(new
+                {
+                    title = "Old Souks",
+                    places = Personalize(await GetGooglePlaces("old souks and heritage places in Lebanon"), userId, "Old Souks")
                 });
             }
 
-            if (interestPrefs.Any(i => i.Contains("cultur", StringComparison.OrdinalIgnoreCase)))
+            if (HasPreference(interestPrefs, "culture", "cultural", "art", "local", "traditional", "village", "heritage"))
             {
-                var cultural = await GetGooglePlaces("cultural landmarks in Lebanon");
                 result.Add(new
                 {
                     title = "Cultural Highlights",
-                    places = cultural
+                    places = Personalize(await GetGooglePlaces("cultural landmarks in Lebanon"), userId, "Cultural Highlights")
+                });
+
+                result.Add(new
+                {
+                    title = "Art & Local Experiences",
+                    places = Personalize(await GetGooglePlaces("art galleries and cultural experiences in Beirut Lebanon"), userId, "Art & Local Experiences")
+                });
+
+                result.Add(new
+                {
+                    title = "Traditional Villages",
+                    places = Personalize(await GetGooglePlaces("traditional Lebanese villages to visit"), userId, "Traditional Villages")
                 });
             }
 
-            if (interestPrefs.Any(i => i.Contains("night", StringComparison.OrdinalIgnoreCase)))
+            if (HasPreference(interestPrefs, "night", "nightlife", "party", "bar", "music", "club", "rooftop"))
             {
-                var nightlife = await GetGooglePlaces("best nightlife places in Lebanon");
                 result.Add(new
                 {
                     title = "Nightlife Hotspots",
-                    places = nightlife
+                    places = Personalize(await GetGooglePlaces("best nightlife places in Lebanon"), userId, "Nightlife Hotspots")
+                });
+
+                result.Add(new
+                {
+                    title = "Rooftop Places",
+                    places = Personalize(await GetGooglePlaces("best rooftop lounges in Beirut Lebanon"), userId, "Rooftop Places")
+                });
+
+                result.Add(new
+                {
+                    title = "Live Music Spots",
+                    places = Personalize(await GetGooglePlaces("live music places in Lebanon"), userId, "Live Music Spots")
+                });
+            }
+
+            if (HasPreference(foodPrefs, "lebanese", "traditional", "restaurant", "food", "mezze", "grill", "dessert", "coffee"))
+            {
+                result.Add(new
+                {
+                    title = "Lebanese Food Picks",
+                    places = Personalize(await GetGooglePlaces("best Lebanese restaurants in Lebanon"), userId, "Lebanese Food Picks")
+                });
+
+                result.Add(new
+                {
+                    title = "Dessert & Coffee Spots",
+                    places = Personalize(await GetGooglePlaces("best Lebanese desserts and coffee shops in Lebanon"), userId, "Dessert & Coffee Spots")
+                });
+
+                result.Add(new
+                {
+                    title = "Traditional Food Experiences",
+                    places = Personalize(await GetGooglePlaces("traditional Lebanese food experiences in Lebanon"), userId, "Traditional Food Experiences")
                 });
             }
 
             if (result.Count == 1)
             {
-                var restaurants = await GetGooglePlaces("best restaurants in Lebanon");
+                result.Add(new
+                {
+                    title = "Popular Places",
+                    places = Personalize(await GetGooglePlaces("popular tourist places in Lebanon"), userId, "Popular Places")
+                });
+
                 result.Add(new
                 {
                     title = "Popular Restaurants",
-                    places = restaurants
-                });
-
-                var nature = await GetGooglePlaces("beautiful nature places in Lebanon");
-                result.Add(new
-                {
-                    title = "Nature Spots",
-                    places = nature
+                    places = Personalize(await GetGooglePlaces("best restaurants in Lebanon"), userId, "Popular Restaurants")
                 });
             }
 
             return result;
+        }
+
+        private List<string> GetPreferenceList(Dictionary<string, List<string>> prefs, params string[] possibleKeys)
+        {
+            foreach (var key in possibleKeys)
+            {
+                var match = prefs.FirstOrDefault(p =>
+                    string.Equals(p.Key, key, StringComparison.OrdinalIgnoreCase));
+
+                if (!string.IsNullOrWhiteSpace(match.Key) && match.Value != null)
+                    return match.Value;
+            }
+
+            return new List<string>();
+        }
+
+        private bool HasPreference(List<string> prefs, params string[] keywords)
+        {
+            return prefs.Any(pref =>
+                keywords.Any(keyword =>
+                    pref.Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                )
+            );
+        }
+
+        private List<ItineraryGooglePlaceResult> Personalize(
+            List<ItineraryGooglePlaceResult> places,
+            int userId,
+            string sectionTitle)
+        {
+            return places
+                .Where(p => !string.IsNullOrWhiteSpace(p.Name))
+                .GroupBy(p => p.Name.Trim().ToLower())
+                .Select(g => g.First())
+                .OrderBy(p => GetPersonalSortValue(p.Name + sectionTitle, userId))
+                .ToList();
+        }
+
+        private int GetPersonalSortValue(string text, int userId)
+        {
+            return Math.Abs((text + userId).GetHashCode());
         }
 
         public async Task<List<ItineraryGooglePlaceResult>> GetGooglePlaces(string query, int maxResults = 8)
@@ -342,12 +467,13 @@ namespace Senior2.Api.Services
                 maxResults
             );
         }
+
         public async Task<List<ItineraryGooglePlaceResult>> GetGoogleRestaurantsNearActivity(
-    string activityName,
-    string activityLocation,
-    string region,
-    decimal budget,
-    int maxResults = 8)
+            string activityName,
+            string activityLocation,
+            string region,
+            decimal budget,
+            int maxResults = 8)
         {
             string budgetKeyword;
 
@@ -374,12 +500,13 @@ namespace Senior2.Api.Services
 
             return await GetGooglePlaces("best restaurants in Lebanon", maxResults);
         }
+
         public async Task<List<ItineraryGooglePlaceResult>> GetGoogleStaysNearActivity(
-    string activityName,
-    string activityLocation,
-    string region,
-    decimal budget,
-    int maxResults = 8)
+            string activityName,
+            string activityLocation,
+            string region,
+            decimal budget,
+            int maxResults = 8)
         {
             string budgetKeyword;
 
@@ -406,6 +533,7 @@ namespace Senior2.Api.Services
 
             return await GetGooglePlaces("hotels and guesthouses in Lebanon", maxResults);
         }
+
         public async Task<List<object>> GetItineraryRecommendation(
             string region,
             string tripType,

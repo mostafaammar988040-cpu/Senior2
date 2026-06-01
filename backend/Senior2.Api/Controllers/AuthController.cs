@@ -232,6 +232,13 @@ namespace Senior2.Api.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                if (user.IsBlocked)
+                {
+                    return StatusCode(403, new
+                    {
+                        message = "Your account has been blocked by the administrator."
+                    });
+                }
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

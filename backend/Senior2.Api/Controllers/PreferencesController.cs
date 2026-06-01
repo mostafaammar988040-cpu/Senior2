@@ -17,9 +17,7 @@ namespace Senior2.Api.Controllers
             _context = context;
         }
 
-        // ==========================
-        // SAVE / UPDATE PREFERENCES
-        // ==========================
+       
         [HttpPost]
         public async Task<IActionResult> SavePreferences([FromBody] PreferenceRequest req)
         {
@@ -53,9 +51,7 @@ namespace Senior2.Api.Controllers
             return Ok(new { message = "Preferences saved successfully" });
         }
 
-        // ==========================
-        // GET USER PREFERENCES
-        // ==========================
+       
         [HttpGet("{userId}")]
         public IActionResult GetPreferences(int userId)
         {
@@ -70,9 +66,7 @@ namespace Senior2.Api.Controllers
             return Ok(parsed);
         }
 
-        // ==========================
-        // DELETE PREFERENCES (optional)
-        // ==========================
+      
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeletePreferences(int userId)
         {
@@ -89,18 +83,14 @@ namespace Senior2.Api.Controllers
         }
     }
 
-    // ==========================
-    // REQUEST MODEL
-    // ==========================
+    
     public class PreferenceRequest
     {
         public int UserId { get; set; }
         public PreferencesDto Preferences { get; set; }
     }
 
-    // ==========================
-    // STRONG TYPE (VERY IMPORTANT)
-    // ==========================
+
     public class PreferencesDto
     {
         public List<string> Interests { get; set; } = new();
